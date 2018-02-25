@@ -12,13 +12,17 @@ using System.Windows.Media;
 using System.Windows.Media.Imaging;
 using System.Windows.Navigation;
 using System.Windows.Shapes;
+using KsWare.AppVeyorClient.Api.Contracts;
+using KsWare.AppVeyorClient.Api.Contracts.Common;
 
-namespace KsWare.AppVeyorClient {
+namespace KsWare.AppVeyorClient.UI {
+
 	/// <summary>
-	/// Interaction logic for MainWindow.xaml
+	/// Interaction logic for ProjectEnvironmentVariablesView.xaml
 	/// </summary>
-	public partial class MainWindow : Window {
-		public MainWindow() {
+	public partial class ProjectEnvironmentVariablesView : UserControl {
+
+		public ProjectEnvironmentVariablesView() {
 			InitializeComponent();
 		}
 	}

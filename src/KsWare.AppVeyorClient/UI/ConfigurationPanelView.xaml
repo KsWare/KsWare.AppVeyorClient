@@ -1,0 +1,56 @@
+﻿<UserControl 
+	x:Class="KsWare.AppVeyorClient.UI.ConfigurationPanelView"
+    xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
+    xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+    xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006" 
+    xmlns:d="http://schemas.microsoft.com/expression/blend/2008" 
+    xmlns:local="clr-namespace:KsWare.AppVeyorClient.UI"
+    xmlns:common="clr-namespace:KsWare.AppVeyorClient.UI.Common"
+    mc:Ignorable="d" 
+    d:DesignHeight="300" d:DesignWidth="300"
+	d:DataContext="{d:DesignInstance Type={x:Type local:ConfigurationPanelVM}}"
+>
+
+	<DockPanel>
+		<WrapPanel DockPanel.Dock="Top">
+			<FrameworkElement.Resources>
+				<Style TargetType="Button">
+					<Setter Property="MinWidth" Value="40"/>
+					<Setter Property="Margin" Value="2"/>
+				</Style>
+			</FrameworkElement.Resources>
+			<Button Content="Get" Command="{Binding GetAction}" />
+			<Button Content="Load" Command="{Binding LoadAction}"/>
+			<Button Content="Save" Command="{Binding SaveAction}"/>
+			<Button Content="Send" Command="{Binding PostAction}" />
+			<Canvas Width="12"/>
+			<Button Content="PS" Command="{Binding EditPsAction}"/>
+		</WrapPanel>
+		<Grid>
+			<Grid.RowDefinitions>
+				<RowDefinition/>
+				<RowDefinition/>
+			</Grid.RowDefinitions>
+			<TextBox Grid.Row="0" Text="{Binding PlainText}" FontFamily="Consolas" FontSize="12"
+			         HorizontalScrollBarVisibility="Visible"
+			         VerticalScrollBarVisibility="Visible" AcceptsReturn="True" AcceptsTab="True" Margin="0 0 0 6"
+			         common:TextBoxControllerBehavior.Controller="{Binding YamlTextBoxController}"
+					 IsInactiveSelectionHighlightEnabled="True">
+				<TextBox.Resources>
+					<SolidColorBrush x:Key="{x:Static SystemColors.InactiveSelectionHighlightBrushKey}" Color="LightSkyBlue" />
+				</TextBox.Resources>
+			</TextBox>
+			<GridSplitter Grid.Row="0" Height="6" VerticalAlignment="Bottom" HorizontalAlignment="Stretch" Background="DarkGray"></GridSplitter>
+			<DockPanel Grid.Row="1">
+				<DockPanel DockPanel.Dock="Top" LastChildFill="False">
+					<Button Content="Apply" Command="{Binding ApplyEditAction}"/>
+					<Button Content="Cancel" Command="{Binding CancelEditAction}" />
+				</DockPanel>
+				<TextBox Text="{Binding Content}" FontFamily="Consolas" FontSize="12"
+				         HorizontalScrollBarVisibility="Visible"
+				         VerticalScrollBarVisibility="Visible" AcceptsReturn="True" AcceptsTab="True"
+				         />
+			</DockPanel>
+		</Grid>
+	</DockPanel>
+</UserControl>

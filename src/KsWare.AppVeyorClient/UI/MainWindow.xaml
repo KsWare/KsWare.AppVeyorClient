@@ -1,0 +1,38 @@
+﻿<Window 
+	x:Class="KsWare.AppVeyorClient.UI.MainWindow"
+    xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
+    xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+    xmlns:d="http://schemas.microsoft.com/expression/blend/2008"
+    xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
+    xmlns:local="clr-namespace:KsWare.AppVeyorClient"
+    xmlns:ui="clr-namespace:KsWare.AppVeyorClient.UI"
+    mc:Ignorable="d"
+    Title="Appveyor Client" Height="350" Width="525"
+	d:DataContext="{d:DesignInstance Type={x:Type ui:MainWindowVM}}"
+	>
+	<TabControl>
+		<TabItem Header="Common">
+			<DockPanel>
+				<DockPanel x:Name="TokenPanel" DockPanel.Dock="Top">
+					<TextBlock Text="Token: " Width="45" />
+					<PasswordBox x:Name="TokenPasswordBox" LostFocus="AtTokenTextBoxLostFocus"/>
+				</DockPanel>
+				<WrapPanel DockPanel.Dock="Top">
+					<Button Content="TestMessage" Command="{Binding TestAction}"/>
+				</WrapPanel>
+				<DockPanel DockPanel.Dock="Top">
+					<Button Content="Send" Command="{Binding SendAction}" Width="45"/>
+					<TextBox Text="{Binding Url}"/>
+				</DockPanel>
+				<TextBox Text="{Binding ResultText}" AcceptsReturn="True" AcceptsTab="True" FontFamily="Consolas" FontSize="12" HorizontalScrollBarVisibility="Visible"
+				         VerticalScrollBarVisibility="Visible" />
+			</DockPanel>
+		</TabItem>
+		<TabItem Header="Configuration" DataContext="{Binding ConfigurationPanel}">
+			<ui:ConfigurationPanelView/>
+		</TabItem>
+		<TabItem Header="Project Environment Variables" DataContext="{Binding ProjectEnvironmentVariablesPanel}">
+			<ui:ProjectEnvironmentVariablesView/>
+		</TabItem>
+	</TabControl>
+</Window>
