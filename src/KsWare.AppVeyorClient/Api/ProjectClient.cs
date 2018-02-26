@@ -1,46 +1,20 @@
 ﻿using System;
 using System.Collections.Generic;
 using System.Linq;
-using System.Security;
-using System.Text;
 using System.Threading.Tasks;
 using KsWare.AppVeyorClient.Api.Contracts;
-using KsWare.AppVeyorClient.Api.Contracts.Common;
 using KsWare.AppVeyorClient.Shared;
-using Environment = System.Environment;
 
-namespace KsWare.AppVeyorClient {
-
-	public class Client {
-
-		private HttpClientEx _httpClientEx;
-
-		public Client(SecureString token) {
-			_httpClientEx=new HttpClientEx(token) {
-				Server = "ci.appveyor.com"
-			};
-			BuildWorker =new BuildWorker(_httpClientEx);
-			Project=new ProjectClient(_httpClientEx);
-		}
-
-		public Client(string token) : this(HttpClientEx.CreateSecureToken(token)) { }
-
-		public ProjectClient Project { get; }
-
-		public BuildWorker BuildWorker  { get;}
-
-		public HttpClientEx Base => _httpClientEx;
-
-		public void SetToken(SecureString secureToken) {
-			_httpClientEx.SetToken(secureToken);
-		}
-	}
+namespace KsWare.AppVeyorClient.Api {
 
 	public class ProjectClient {
+
 		private readonly HttpClientEx _client;
 
-		CacheEntry<GetProjectsResponse> _cacheGetProjects=new CacheEntry<GetProjectsResponse>();
-		private GetProjectsResponse.Project _project;
+		private GetProjectsResponse.Project _cachedProject {
+			get => FileStore.Instance.GetValue<GetProjectsResponse.Project>(nameof(ProjectClient) + "." + nameof(_cachedProject));
+			set => FileStore.Instance.SetValue(nameof(ProjectClient) + "." + nameof(_cachedProject), value);
+		}
 
 
 		public ProjectClient(HttpClientEx client) { _client = client; }
@@ -49,22 +23,26 @@ namespace KsWare.AppVeyorClient {
 
 		// GET /api/projects
 		public async Task<GetProjectsResponse> GetProjects() {
-			if (!_cacheGetProjects.IsUsable) {
+			const string n = nameof(ProjectClient) + "." + nameof(GetProjects);
+			var c = FileStore.Instance.GetEntry<GetProjectsResponse>(n);
+
+			if (!c.IsUsable) {
 				var response = await _client.GetJsonAsync<GetProjectsResponse>("/api/projects");
-				_cacheGetProjects.Data = response;
+				c.Data = response;
+				c.CacheTime = TimeSpan.FromMinutes(5);
 			}
 			
-			return _cacheGetProjects.Data;
+			return c.Data;
 		}
 
 		private async Task<GetProjectsResponse.Project> Project() {
-			if (_project == null) {
+			if (_cachedProject == null) {
 				var projects = await GetProjects();
-				if(string.IsNullOrEmpty(ProjectName)) _project = projects.First();
-				else  _project = projects.First(p=>string.Compare(p.Name,ProjectName,StringComparison.OrdinalIgnoreCase)==0);
-				ProjectName = _project.Name;
+				if(string.IsNullOrEmpty(ProjectName)) _cachedProject = projects.First();
+				else  _cachedProject                                 = projects.First(p=>string.Compare(p.Name, ProjectName, StringComparison.OrdinalIgnoreCase) ==0);
+				ProjectName = _cachedProject.Name;
 			}
-			return _project;
+			return _cachedProject;
 		}
 
 		// Request  GET /api/projects/{accountName}/{projectSlug}/settings/yaml
@@ -75,7 +53,7 @@ namespace KsWare.AppVeyorClient {
 		}
 
 		public async Task<string> GetProjectSettingsYaml() {
-			var p = await Project();
+			var p    = await Project();
 			var yaml = await GetProjectSettingsYaml(p.AccountName, p.Slug);
 			return yaml;
 		}

@@ -59,7 +59,7 @@ namespace KsWare.AppVeyorClient {
 				System.Runtime.InteropServices.Marshal.SecureStringToBSTR(_secureToken));
 
 
-		string GetUrl(string api) {
+		private string GetUrl(string api) {
 			if(string.IsNullOrWhiteSpace(Protocoll)) throw new InvalidOperationException("Protocol not specified.");
 			if(string.IsNullOrWhiteSpace(Server)) throw new InvalidOperationException("Server not specified.");
 			if (!api.StartsWith("/")) api = "/" + api;
@@ -79,20 +79,11 @@ namespace KsWare.AppVeyorClient {
 		}
 	
 		public async Task<T> GetJsonAsync<T>(string api) {
-			Debug.WriteLine($"GET {api}");
-
-			using (var response = await _httpClient.GetAsync(GetUrl(api))) {
-				Log(response.StatusCode);
-				response.EnsureSuccessStatusCode();
-
-				var text = await response.Content.ReadAsStringAsync();
-				try {
-					return JsonConvert.DeserializeObject<T>(text);
-				}
-				catch (Exception ex) {
-					ex.Data.Add("ResponseText",text);
-					throw;
-				}
+			var content = await SendAsync("GET", api, null, null);
+			try {return JsonConvert.DeserializeObject<T>(content);}
+			catch (Exception ex) {
+				ex.Data.Add("ResponseText", content);
+				throw;
 			}
 		}
 
@@ -123,62 +114,30 @@ namespace KsWare.AppVeyorClient {
 			},out exception);
 		}
 
-		public async Task<string> GetJsonTextAsync(string api) {
-			Debug.WriteLine($"GET {api}");
-			using (var client = new HttpClient()) {
-				client.DefaultRequestHeaders.Accept.Add(new MediaTypeWithQualityHeaderValue("application/json"));
-				client.DefaultRequestHeaders.Authorization = new AuthenticationHeaderValue("Bearer", UnsecureToken);
+		public async Task<string> GetJsonTextAsync(string api) { return await SendAsync("GET", api); }
 
-				// get the list of roles
-				using (var response = await client.GetAsync(GetUrl(api))) {
-					Log(response.StatusCode);
-					response.EnsureSuccessStatusCode();
-
-					var content = await response.Content.ReadAsStringAsync();
-					return content;
-				}
-			}
-		}
-
-		public async Task<string> GetTextAsync(string api) {
-			Debug.WriteLine($"GET {api}");
-
-			using (var response = await _httpClient.GetAsync(GetUrl(api))) {
-				Log(response.StatusCode);
-				response.EnsureSuccessStatusCode();
-
-				var content = await response.Content.ReadAsStringAsync();
-				return content;
-			}
-		}
+		public async Task<string> GetTextAsync(string api) { return await SendAsync("GET", api); }
 
 		public async Task PutTextAsync(string api, string text) {
-			Debug.WriteLine($"PUT {api} => text: ...");
 			await SendAsync("PUT", api, text, "plain/text");
 		}
 
 		public async Task PutJsonAsync(string api, object json) {
-			Debug.WriteLine($"PUT {api} => json: ...");
 			var jsonString = ToJsonString(json);
 			await SendAsync("PUT", api, jsonString, "application/json");
 		}
 
 		public async Task PutJsonTextAsync(string api, string jsonString) {
-			Debug.WriteLine($"PUT {api} => json: ...");
 			await SendAsync("PUT", api, jsonString, "application/json");
 		}
 
 		public async Task PostJsonAsync(string api, object json) {
-			Debug.WriteLine($"POST {api} => json: ...");
 			var jsonString = JsonConvert.SerializeObject(json);
 			await SendAsync("POST", api, jsonString, "application/json");
 		}
 
-//		private async Task<T> SendAsync<T>(string method, string api, string content, string contentType) {
-//
-//		}
-
-		private async Task<string> SendAsync(string method, string api, string content, string contentType) {
+		private async Task<string> SendAsync(string method, string api, string content = null, string contentType=null) {
+			Debug.WriteLine($"{method} {api}");
 			var httpContent = new StringContent(content, Encoding.UTF8, contentType);
 			using (var response = await _httpClient.SendAsync(method,GetUrl(api), httpContent)) {
 				Log(response.StatusCode);
@@ -199,13 +158,9 @@ namespace KsWare.AppVeyorClient {
 			}
 		}
 
-		
-
 		private string ToJsonString(object json) {
 			return JsonConvert.SerializeObject(json,settings: JsonSerializerSettings);
 		}
-
-		
 
 		public async Task PutXml<T>(string api, T o) {
 			var content = ToXmlContent(o);

@@ -88,8 +88,10 @@
       <Generator>MSBuild:Compile</Generator>
       <SubType>Designer</SubType>
     </ApplicationDefinition>
+    <Compile Include="Api\ProjectClient.cs" />
+    <Compile Include="Shared\FileStore.cs" />
     <Compile Include="UI\AppVM.cs" />
-    <Compile Include="BuildWorker.cs" />
+    <Compile Include="Api\BuildWorker.cs" />
     <Compile Include="Helpers\TaskExtension.cs" />
     <Compile Include="Helpers\YamlHelper.cs" />
     <Compile Include="UI\Common\TextBoxControllerVM.cs" />
@@ -111,9 +113,9 @@
       <DependentUpon>App.xaml</DependentUpon>
       <SubType>Code</SubType>
     </Compile>
-    <Compile Include="HttpClientEx.cs" />
+    <Compile Include="Shared\HttpClientEx.cs" />
     <Compile Include="Shared\CacheEntry.cs" />
-    <Compile Include="Client.cs" />
+    <Compile Include="Api\Client.cs" />
     <Compile Include="Api\Contracts\Common\BuildMessage.cs" />
     <Compile Include="Api\Contracts\Common\CompilationMessage.cs" />
     <Compile Include="Api\Contracts\Common\NameValueSecurePair.cs" />

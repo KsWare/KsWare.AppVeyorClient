@@ -6,6 +6,8 @@ using System.Security.Cryptography;
 using System.Text;
 using System.Windows;
 using JetBrains.Annotations;
+using KsWare.AppVeyorClient.Api;
+using KsWare.AppVeyorClient.Shared;
 using KsWare.Presentation.ViewModelFramework;
 
 namespace KsWare.AppVeyorClient.UI {
@@ -18,6 +20,7 @@ namespace KsWare.AppVeyorClient.UI {
 		}
 
 		internal static Client Client { get; } = new Client("");
+		public static FileStore FileStore { get; private set; }
 
 		internal static void StoreToken([NotNull]SecureString secureToken) {
 			if (secureToken == null) throw new ArgumentNullException(nameof(secureToken));
@@ -87,6 +90,10 @@ namespace KsWare.AppVeyorClient.UI {
 			var ss = new SecureString();
 			foreach (var c in Encoding.UTF8.GetString(plaintext)) ss.AppendChar(c);
 			Client.SetToken(ss);
+		}
+
+		internal static void InitFileStore() {
+			FileStore=FileStore.Instance=new FileStore(Path.Combine(Directory.GetCurrentDirectory(),"Cache"));
 		}
 	}
 }

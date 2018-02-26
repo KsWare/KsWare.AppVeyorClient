@@ -8,6 +8,7 @@ using System.Text;
 using System.Threading.Tasks;
 using System.Windows;
 using JetBrains.Annotations;
+using KsWare.AppVeyorClient.Api;
 using KsWare.Presentation.ViewModelFramework;
 using Newtonsoft.Json;
 
@@ -18,6 +19,7 @@ namespace KsWare.AppVeyorClient.UI {
 		public MainWindowVM() {
 			RegisterChildren(()=>this);
 			AppVM.LoadToken(); // TODO load after UI loaded
+			AppVM.InitFileStore(); // TODO load after UI loaded
 			Url = "/api/users";
 		}
 

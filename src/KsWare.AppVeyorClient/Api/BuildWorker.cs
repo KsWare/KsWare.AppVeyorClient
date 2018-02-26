@@ -2,7 +2,7 @@
 using KsWare.AppVeyorClient.Api.Contracts;
 using KsWare.AppVeyorClient.Api.Contracts.Common;
 
-namespace KsWare.AppVeyorClient {
+namespace KsWare.AppVeyorClient.Api {
 
 	public class BuildWorker {
 		private readonly HttpClientEx _client;
