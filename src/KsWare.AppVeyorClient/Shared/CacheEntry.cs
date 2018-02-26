@@ -10,7 +10,6 @@ namespace KsWare.AppVeyorClient.Shared {
 
 		/// <inheritdoc cref="FileSystemInfo.LastWriteTime"/>
 		DateTime LastWriteTime { get; set; }
-
 		
 		/// <inheritdoc cref="FileInfo.LastAccessTime"/>
 		DateTime LastAccessTime { get; set; }
@@ -26,12 +25,6 @@ namespace KsWare.AppVeyorClient.Shared {
 		/// </summary>
 		/// <value>The valid thru.</value>
 		DateTime ValidThru { get; }
-
-		/// <summary>
-		/// Gets or sets the data.
-		/// </summary>
-		/// <value>The data.</value>
-		object Data { get; set; }
 
 		/// <summary>
 		/// Gets or sets a value indicating whether this instance has data.
@@ -55,6 +48,19 @@ namespace KsWare.AppVeyorClient.Shared {
 		/// </summary>
 		/// <value><c>true</c> if this instance is persistent; otherwise, <c>false</c>.</value>
 		bool IsPersistent { get; set; }
+
+		/// <summary>
+		/// Gets or sets the type of the data.
+		/// </summary>
+		/// <value>The type of the data.</value>
+		string DataType { get; set; }
+
+		/// <summary>
+		/// Gets or sets the data.
+		/// </summary>
+		/// <value>The data.</value>
+		object Data { get; set; }
+
 	}
 
 	public interface ICacheEntry<TData> : ICacheEntry {
@@ -66,6 +72,7 @@ namespace KsWare.AppVeyorClient.Shared {
 	public class CacheEntry : ICacheEntry {
 
 		private object _data;
+		private string _dataType;
 
 		/// <inheritdoc/>
 		public DateTime CreationTime { get; set; }
@@ -81,6 +88,11 @@ namespace KsWare.AppVeyorClient.Shared {
 
 		/// <inheritdoc/>
 		public DateTime ValidThru => LastWriteTime.Add(CacheTime);
+
+		public string DataType {
+			get =>  (HasData && Data!=null ? Data.GetType() : typeof(void)).AssemblyQualifiedName;
+			set => _dataType = value;
+		}
 
 		/// <inheritdoc/>
 		public object Data {
@@ -148,6 +160,8 @@ namespace KsWare.AppVeyorClient.Shared {
 
 		/// <inheritdoc cref="ICacheEntry.ValidThru"/>
 		public DateTime ValidThru => _entry.ValidThru;
+
+		public string DataType { get => _entry.DataType; set => _entry.DataType = value; }
 
 		/// <inheritdoc cref="ICacheEntry.Data"/>
 		public T Data { get => HasData ? (T) _entry.Data : default(T); set => _entry.Data = value; }

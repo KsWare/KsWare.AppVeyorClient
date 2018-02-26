@@ -138,7 +138,7 @@ namespace KsWare.AppVeyorClient {
 
 		private async Task<string> SendAsync(string method, string api, string content = null, string contentType=null) {
 			Debug.WriteLine($"{method} {api}");
-			var httpContent = new StringContent(content, Encoding.UTF8, contentType);
+			var httpContent = content !=null ? new StringContent(content, Encoding.UTF8, contentType) : null;
 			using (var response = await _httpClient.SendAsync(method,GetUrl(api), httpContent)) {
 				Log(response.StatusCode);
 				//TODO response.Content.Headers.ContentType
@@ -263,16 +263,19 @@ namespace KsWare.AppVeyorClient {
 	}
 
 	public static class HttpClientExtention {
-		public static async Task<HttpResponseMessage> SendAsync(this HttpClient client,
-			string method,
-			string api,
-			HttpContent httpContent) {
-			switch (method?.ToUpperInvariant()) {
-				case "GET":    return await client.PutAsync(api, httpContent);
-				case "PUT":    return await client.PutAsync(api, httpContent);
-				case "POST":   return await client.PostAsync(api, httpContent);
-				case "DELETE": return await client.DeleteAsync(api);
-				default:       throw new ArgumentOutOfRangeException(nameof(method), method??"{NULL}", @"Unsupported send method.");
+
+		public static async Task<HttpResponseMessage> SendAsync(this HttpClient client,string method,string url,HttpContent httpContent) {
+			if (client == null) throw new ArgumentNullException(nameof(client));
+			if (method == null) throw new ArgumentNullException(nameof(method));
+			if (url == null) throw new ArgumentNullException(nameof(url));
+			method = method.ToUpperInvariant();
+			if((method=="PUT"||method=="POST") && httpContent==null) throw new ArgumentNullException(nameof(httpContent));
+			switch (method) {
+				case "GET":    return await client.GetAsync(url);
+				case "PUT":    return await client.PutAsync(url, httpContent);
+				case "POST":   return await client.PostAsync(url, httpContent);
+				case "DELETE": return await client.DeleteAsync(url);
+				default:       throw new ArgumentOutOfRangeException(nameof(method), method, $@"Unsupported method. '{method}'");
 			}
 		}
 	}

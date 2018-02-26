@@ -70,32 +70,35 @@ namespace KsWare.AppVeyorClient.Shared {
 		public bool EncryptContent { get; set; }
 
 		public T GetValue<T>(string name, bool throwIfNotExists = false) {
-			if(throwIfNotExists) return (T)_cache[name].Data;
-			if (_cache.TryGetValue(name, out var value)) return (T) value.Data;
-			return default(T);
+			return GetEntry<T>(name, throwIfNotExists).Data;
 		}
 
 		public ICacheEntry<T> GetEntry<T>(string name, bool throwIfNotExists=false) {
 			ICacheEntry entry;
-			if (throwIfNotExists) {
-				entry = _cache[name];
-			}
-			else if (!_cache.TryGetValue(name, out entry)) {
-				entry = new CacheEntry<T>();
+			if (!_cache.TryGetValue(name, out entry)) {
+				var fn = Path.Combine(_baseFolder, name);
+				if (File.Exists(fn)) {
+					entry = LoadEntry<T>(name);
+				}
+				else {
+					entry = new CacheEntry<T>();
+				}
 				_cache.Add(name, entry);
 			}
-			var entryT = (entry as ICacheEntry<T>) ?? new CacheEntryWrapper<T>(entry);
+			var entryT = (entry as ICacheEntry<T>) ?? new CacheEntryWrapper<T>(entry); //TODO maybe clone to new CacheEntry<T>
 			return entryT;
 		}
 
 		public void SetValue<T>(string name, T value) {
-			if(_cache.ContainsKey(name)) _cache[name].Data=value;
-			else _cache.Add(name,new CacheEntry{Data = value});
+			var entry = GetEntry<T>(name);
+			entry.Data = value;
+			SaveEntry(name,entry);
 		}
 
-		public void SetEntry<T>(string name, ICacheEntry<T> value) {
-			if (_cache.ContainsKey(name)) _cache[name].Data = value;
-			else _cache.Add(name, value);
+		public void SetEntry<T>(string name, ICacheEntry<T> entry) {
+			if (_cache.ContainsKey(name)) _cache[name] = entry;
+			else _cache.Add(name, entry);
+			SaveEntry(name, entry);
 		}
 
 		private void Save(string name, string contents) {
@@ -103,14 +106,14 @@ namespace KsWare.AppVeyorClient.Shared {
 			File.WriteAllText(fn, contents);
 		}
 
-		private void Save(string name, object contents) { Save(name, JsonConvert.SerializeObject(contents)); }
+		private void SaveEntry(string name, ICacheEntry entry) { Save(name, JsonConvert.SerializeObject(entry)); }
 
 		private string Load(string name) {
 			var fn = Path.Combine(_baseFolder, name);
 			return File.ReadAllText(fn);
 		}
 
-		private T Load<T>(string name) { return JsonConvert.DeserializeObject<T>(Load(name)); }
+		private CacheEntry<T> LoadEntry<T>(string name) { return JsonConvert.DeserializeObject<CacheEntry<T>>(Load(name)); }
 
 		private void EncryptAndSave(string name, object o) {
 			if (o == null) throw new ArgumentNullException(nameof(o));
@@ -172,12 +175,12 @@ namespace KsWare.AppVeyorClient.Shared {
 			if (!value.IsPersistent || !value.IsUsable)
 				DeleteInternal(name);
 			else
-				Save(name, value.Data);
+				SaveEntry(name, value);
 		}
 
 		public void Flush(string name) {
 			if(!_cache.TryGetValue(name,out var entry )) return; // no exception if not exists
-
+			SaveEntry(name, entry);
 		}
 
 		/// <summary>

@@ -1,5 +1,6 @@
 ﻿using System;
 using System.Collections.Generic;
+using System.Diagnostics;
 using System.IO;
 using System.Linq;
 using System.Text;
@@ -12,6 +13,7 @@ using KsWare.AppVeyorClient.Api;
 using KsWare.AppVeyorClient.Api.Contracts;
 using KsWare.AppVeyorClient.Helpers;
 using KsWare.AppVeyorClient.UI.Common;
+using KsWare.Presentation.ViewFramework;
 using KsWare.Presentation.ViewModelFramework;
 using Microsoft.Win32;
 

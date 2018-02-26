@@ -11,12 +11,6 @@ namespace KsWare.AppVeyorClient.Api {
 
 		private readonly HttpClientEx _client;
 
-		private GetProjectsResponse.Project _cachedProject {
-			get => FileStore.Instance.GetValue<GetProjectsResponse.Project>(nameof(ProjectClient) + "." + nameof(_cachedProject));
-			set => FileStore.Instance.SetValue(nameof(ProjectClient) + "." + nameof(_cachedProject), value);
-		}
-
-
 		public ProjectClient(HttpClientEx client) { _client = client; }
 
 		public string ProjectName { get; set; } = "Playground";
@@ -36,13 +30,18 @@ namespace KsWare.AppVeyorClient.Api {
 		}
 
 		private async Task<GetProjectsResponse.Project> Project() {
-			if (_cachedProject == null) {
+			const string n = nameof(ProjectClient) + "." + nameof(Project);
+			var entry = FileStore.Instance.GetEntry<GetProjectsResponse.Project>(n);
+			if (!entry.HasData) { 
 				var projects = await GetProjects();
-				if(string.IsNullOrEmpty(ProjectName)) _cachedProject = projects.First();
-				else  _cachedProject                                 = projects.First(p=>string.Compare(p.Name, ProjectName, StringComparison.OrdinalIgnoreCase) ==0);
-				ProjectName = _cachedProject.Name;
+				if(string.IsNullOrEmpty(ProjectName)) entry.Data = projects.First();
+				else  entry.Data                                 = projects.First(p=>string.Compare(p.Name, ProjectName, StringComparison.OrdinalIgnoreCase) ==0);
+				ProjectName = entry.Data.Name;
+				entry.IsPersistent = true;
+				entry.CacheTime=TimeSpan.FromHours(24);
+				FileStore.Instance.Flush(n);
 			}
-			return _cachedProject;
+			return entry.Data;
 		}
 
 		// Request  GET /api/projects/{accountName}/{projectSlug}/settings/yaml
