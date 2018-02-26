@@ -11,34 +11,46 @@ using Environment = System.Environment;
 
 namespace KsWare.AppVeyorClient {
 
-	public class Client:BaseClient {
+	public class Client {
 
-		public Client(SecureString token) : base(token) {
-			BuildWorker=new BuildWorker(this);
-			Project=new ProjectClient(this);
+		private HttpClientEx _httpClientEx;
+
+		public Client(SecureString token) {
+			_httpClientEx=new HttpClientEx(token) {
+				Server = "ci.appveyor.com"
+			};
+			BuildWorker =new BuildWorker(_httpClientEx);
+			Project=new ProjectClient(_httpClientEx);
 		}
 
-		public Client(string token) : this(CreateSecureToken(token)) { }
+		public Client(string token) : this(HttpClientEx.CreateSecureToken(token)) { }
 
 		public ProjectClient Project { get; }
 
-		public BuildWorker BuildWorker  { get;} 
+		public BuildWorker BuildWorker  { get;}
+
+		public HttpClientEx Base => _httpClientEx;
+
+		public void SetToken(SecureString secureToken) {
+			_httpClientEx.SetToken(secureToken);
+		}
 	}
 
-	public class ProjectClient:BaseClient {
+	public class ProjectClient {
+		private readonly HttpClientEx _client;
 
 		CacheEntry<GetProjectsResponse> _cacheGetProjects=new CacheEntry<GetProjectsResponse>();
 		private GetProjectsResponse.Project _project;
 
 
-		public ProjectClient(BaseClient client) : base(client) {}
+		public ProjectClient(HttpClientEx client) { _client = client; }
 
 		public string ProjectName { get; set; } = "Playground";
 
 		// GET /api/projects
 		public async Task<GetProjectsResponse> GetProjects() {
 			if (!_cacheGetProjects.IsUsable) {
-				var response = await GetJson<GetProjectsResponse>("/api/projects");
+				var response = await _client.GetJsonAsync<GetProjectsResponse>("/api/projects");
 				_cacheGetProjects.Data = response;
 			}
 			
@@ -58,7 +70,7 @@ namespace KsWare.AppVeyorClient {
 		// Request  GET /api/projects/{accountName}/{projectSlug}/settings/yaml
 		// Response (plain/text)
 		public async Task<string> GetProjectSettingsYaml(string accountName,string projectSlug) {
-			var yaml = await GetText($"/api/projects/{accountName}/{projectSlug}/settings/yaml");
+			var yaml = await _client.GetTextAsync($"/api/projects/{accountName}/{projectSlug}/settings/yaml");
 			return yaml;
 		}
 
@@ -78,19 +90,19 @@ namespace KsWare.AppVeyorClient {
 		// Request: PUT /api/projects/{accountName}/{projectSlug}/settings/yaml
 		// Request body (plain/text):
 		private async Task UpdateProjectSettingsYaml(string accountName, string projectSlug, string yaml) {
-			await PutText($"/api/projects/{accountName}/{projectSlug}/settings/yaml", yaml);
+			await _client.PutTextAsync($"/api/projects/{accountName}/{projectSlug}/settings/yaml", yaml);
 		}
 		
 
 		// GET /api/environments/{deploymentEnvironmentId}/settings
 		public async Task<EnvironmentSettings> GetEnvironmentSettings(int deploymentEnvironmentId) {
-			var result = await GetJson<EnvironmentSettings>($"/api/environments/{deploymentEnvironmentId}/settings");
+			var result = await _client.GetJsonAsync<EnvironmentSettings>($"/api/environments/{deploymentEnvironmentId}/settings");
 			return result;
 		}
 
 		// GET /api/environments
 		public async Task<Api.Contracts.Environment[]> GetEnvironments() {
-			var result = await GetJson<Api.Contracts.Environment[]>("/api/environments");
+			var result = await _client.GetJsonAsync<Api.Contracts.Environment[]>("/api/environments");
 			return result;
 		}
 
@@ -101,7 +113,7 @@ GET /api/projects/{accountName}/{projectSlug}/settings/environment-variables
 */
 		// GET /api/projects/{accountName}/{projectSlug}/settings/environment-variables
 		public async Task<NameValueSecurePair[]> GetProjectEnvironmentVariables(string accountName, string projectSlug) {
-			var result = await GetJson<NameValueSecurePair[]>($"/api/projects/{accountName}/{projectSlug}/settings/environment-variables");
+			var result = await _client.GetJsonAsync<NameValueSecurePair[]>($"/api/projects/{accountName}/{projectSlug}/settings/environment-variables");
 			return result;
 		}
 
@@ -117,13 +129,13 @@ GET /api/projects/{accountName}/{projectSlug}/settings/environment-variables
 
 		// PUT /api/projects/{accountName}/{projectSlug}/settings/environment-variables
 		private async Task UpdateProjectEnvironmentVariables(string accountName, string projectSlug, IEnumerable<NameValueSecurePair> variables) {
-			await PutJson($"/api/projects/{accountName}/{projectSlug}/settings/environment-variables", variables);
+			await _client.PutJsonAsync($"/api/projects/{accountName}/{projectSlug}/settings/environment-variables", variables);
 		}
 
 		// PUT /api/projects/{accountName}/{projectSlug}/settings/build-number
 		private async Task UpdateProjectBuildNumber(string accountName,string projectSlug,int nextBuildNumber) {
 			var s = $@"{{""nextBuildNumber"": {nextBuildNumber}}}";
-			await PutJsonText($"/api/projects/{accountName}/{projectSlug}/settings/build-number", s);
+			await _client.PutJsonTextAsync($"/api/projects/{accountName}/{projectSlug}/settings/build-number", s);
 		}
 	}
 

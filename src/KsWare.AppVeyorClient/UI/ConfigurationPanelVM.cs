@@ -21,10 +21,6 @@ namespace KsWare.AppVeyorClient.UI {
 
 		public ConfigurationPanelVM() {
 			RegisterChildren(()=>this);
-			GetAction.MːDoAction = async () => await OnGet();
-			LoadAction.MːDoAction = async () => await OnLoad();
-			SaveAction.MːDoAction = async () => await OnSave();
-			PostAction.MːDoAction = async () => await OnPost();
 		}
 
 		private Client Client => AppVM.Client;
@@ -88,12 +84,12 @@ namespace KsWare.AppVeyorClient.UI {
 			YamlTextBoxController.SetEnabled("Editor is open", true);
 		}
 
-		private async Task OnGet() {
+		private async Task DoGet() {
 			var yaml = await Client.Project.GetProjectSettingsYaml();
 			YamlTextBoxController.Text = yaml;
 		}
 
-		private async Task OnLoad() {
+		private void DoLoad() {
 			var dlg = new OpenFileDialog {Title = "Load configuration...", Filter = "YAML-File|*.yml", FilterIndex = 1};
 			if (dlg.ShowDialog() != true) return;
 			using (var reader = File.OpenText(dlg.FileName)) {
@@ -101,7 +97,7 @@ namespace KsWare.AppVeyorClient.UI {
 			}
 		}
 
-		private async Task OnSave() {
+		private void DoSave() {
 			var dlg = new SaveFileDialog {Title = "Save configuration as...", Filter = "YAML-File|*.yml", FilterIndex = 1};
 			if (dlg.ShowDialog() != true) return;
 			using (var writer = File.CreateText(dlg.FileName)) {
@@ -110,9 +106,15 @@ namespace KsWare.AppVeyorClient.UI {
 			}
 		}
 
-		private async Task OnPost() {
-			await Client.Project.UpdateProjectSettingsYaml(YamlTextBoxController.Text);
-			MessageBox.Show("Information", "Update done.", MessageBoxButton.OK, MessageBoxImage.Information);
+		private void DoPost() {
+			Client.Project.UpdateProjectSettingsYaml(YamlTextBoxController.Text).ContinueWith(task => {
+				if (task.Exception != null) {
+					MessageBox.Show($"Update failed.\n\nDetails:\n{task.Exception.Message}", "Error", MessageBoxButton.OK, MessageBoxImage.Error);
+				}
+				else {
+					MessageBox.Show("Update done.", "Information", MessageBoxButton.OK, MessageBoxImage.Information);
+				}
+			});
 		}
 	}
 

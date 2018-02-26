@@ -10,7 +10,32 @@ namespace KsWare.AppVeyorClient.Helpers {
 
 	public static class TaskExtension {
 
+		// TODO DOES NOT WORK
+
 		[DebuggerStepThrough, DebuggerHidden]
+		[Obsolete("Dont'use it", true)]
+		public static void WaitForResult(this Task task) {
+			// TODO optimize call
+			var n = new ManualResetEventSlim(false);
+			task.ContinueWith(t => { n.Set(); });
+			n.Wait();
+			if (task.Exception != null) throw task.Exception;
+		}
+
+		[DebuggerStepThrough, DebuggerHidden]
+		[Obsolete("Dont'use it", true)]
+		public static void WaitForResult(this Task task, out Exception ex) {
+			ex = null;
+
+			// TODO optimize call
+			var n = new ManualResetEventSlim(false);
+			task.ContinueWith(t => { n.Set(); });
+			n.Wait();
+			if (task.Exception != null) ex = task.Exception;
+		}
+
+		[DebuggerStepThrough, DebuggerHidden]
+		[Obsolete("Dont'use it", true)]
 		public static T WaitForResult<T>(this Task<T> task) {
 			// TODO optimize call
 			var n = new ManualResetEventSlim(false);
@@ -30,6 +55,7 @@ namespace KsWare.AppVeyorClient.Helpers {
 
 		}
 
+		[Obsolete("Dont'use it",true)]
 		public static T WaitForResult<T>(this Task<T> task, out Exception ex) {
 			ex = null;
 			// TODO optimize call

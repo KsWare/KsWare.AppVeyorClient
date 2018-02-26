@@ -111,7 +111,7 @@
       <DependentUpon>App.xaml</DependentUpon>
       <SubType>Code</SubType>
     </Compile>
-    <Compile Include="BaseClient.cs" />
+    <Compile Include="HttpClientEx.cs" />
     <Compile Include="Shared\CacheEntry.cs" />
     <Compile Include="Client.cs" />
     <Compile Include="Api\Contracts\Common\BuildMessage.cs" />

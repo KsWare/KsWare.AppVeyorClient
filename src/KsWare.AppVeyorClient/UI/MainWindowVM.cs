@@ -54,7 +54,7 @@ namespace KsWare.AppVeyorClient.UI {
 		/// </summary>
 		[UsedImplicitly]
 		private void DoSend() {
-			var result = Client.GetJsonText(Url, out var ex);
+			var result = Client.Base.GetJsonText(Url, out var ex);
 			ResultText = ex?.ToString() ?? JsonConvert.SerializeObject(JsonConvert.DeserializeObject(result), Formatting.Indented);
 		}
 

@@ -15,10 +15,6 @@ namespace KsWare.AppVeyorClient.UI {
 
 		public ProjectEnvironmentVariablesVM() {
 			RegisterChildren(()=>this);
-			GetAction.MːDoAction = async () => await OnGet();
-			LoadAction.MːDoAction = async () => await OnLoad();
-			SaveAction.MːDoAction = async () => await OnSave();
-			PostAction.MːDoAction = async () => await OnPost();
 		}
 
 		private Client Client => AppVM.Client;
@@ -39,11 +35,11 @@ namespace KsWare.AppVeyorClient.UI {
 			PlainText = sb.ToString();
 		}
 
-		private async Task OnLoad() { throw new NotImplementedException();}
+		private void DoLoad() { }
 
-		private async Task OnSave() { }
+		private void DoSave() { }
 
-		private async Task OnPost() {
+		private void DoPost() {
 			if (string.IsNullOrWhiteSpace(PlainText)) { }
 			else {
 				var lines     = PlainText.Split(new[] {"\r\n", "\n", "\r"}, StringSplitOptions.None);
