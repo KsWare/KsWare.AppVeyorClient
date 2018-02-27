@@ -20,6 +20,7 @@ namespace KsWare.AppVeyorClient.UI.Common {
 			var selStart=Data.GetCharacterIndexFromLineIndex(l0);
 			var selEnd = Data.GetCharacterIndexFromLineIndex(l1) + Data.GetLineLength(l1);
 			Data.Select(selStart, selEnd - selStart);
+			Data.ScrollToHorizontalOffset(0);
 		}
 	}
 }

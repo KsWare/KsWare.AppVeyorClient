@@ -1,0 +1,136 @@
+﻿{
+  "projectId": 43682,
+  "accountId": 2,
+  "accountName": "appvyr",
+  "builds": [],
+  "name": "demo-app",
+  "slug": "demo-app-335",
+  "versionFormat": "1.0.{build}",
+  "nextBuildNumber": 1,
+  "repositoryType": "gitHub",
+  "repositoryScm": "git",
+  "repositoryName": "FeodorFitsner/demo-app",
+  "repositoryBranch": "master",
+  "webhookId": "rca5vb5qqu",
+  "webhookUrl": "https://ci.appveyor.com/api/github/webhook?id=rca5vb5qqu",
+  "isPrivate": false,
+  "ignoreAppveyorYml": false,
+  "skipBranchesWithoutAppveyorYml": false,
+  "configuration": {
+    "initScripts": [],
+    "includeBranches": [],
+    "excludeBranches": [],
+    "onBuildSuccessScripts": [],
+    "onBuildErrorScripts": [],
+    "patchAssemblyInfo": false,
+    "assemblyInfoFile": "**\\AssemblyInfo.*",
+    "assemblyVersionFormat": "{version}",
+    "assemblyFileVersionFormat": "{version}",
+    "assemblyInformationalVersionFormat": "{version}",
+    "operatingSystem": [],
+    "services": [],
+    "shallowClone": false,
+    "environmentVariables": [],
+    "environmentVariablesMatrix": [],
+    "installScripts": [],
+    "hostsEntries": [],
+    "buildMode": "msbuild",
+    "platform": [],
+    "configuration": [],
+    "packageWebApplicationProjects": false,
+    "packageWebApplicationProjectsXCopy": false,
+    "packageAzureCloudServiceProjects": false,
+    "packageNuGetProjects": false,
+    "msBuildVerbosity": "minimal",
+    "buildScripts": [],
+    "beforeBuildScripts": [],
+    "afterBuildScripts": [],
+    "testMode": "auto",
+    "testAssemblies": [],
+    "testCategories": [],
+    "testCategoriesMatrix": [],
+    "testScripts": [],
+    "beforeTestScripts": [],
+    "afterTestScripts": [],
+    "deployMode": "providers",
+    "deployments": [],
+    "deployScripts": [],
+    "beforeDeployScripts": [],
+    "afterDeployScripts": [],
+    "matrixFastFinish": false,
+    "matrixAllowFailures": [],
+    "artifacts": [],
+    "notifications": []
+  },
+  "nuGetFeed": {
+    "id": "demo-app-tw5iw2wk3bl1",
+    "name": "Project demo-app",
+    "publishingEnabled": false,
+    "created": "2014-08-16T00:52:16.9886427+00:00"
+  },
+  "securityDescriptor": {
+    "accessRightDefinitions": [
+      {
+        "name": "View",
+        "description": "View"
+      },
+      {
+        "name": "RunBuild",
+        "description": "Run build"
+      },
+      {
+        "name": "Update",
+        "description": "Update settings"
+      },
+      {
+        "name": "Delete",
+        "description": "Delete project"
+      }
+    ],
+    "roleAces": [
+      {
+        "roleId": 4,
+        "name": "Administrator",
+        "isAdmin": true,
+        "accessRights": [
+          {
+            "name": "View",
+            "allowed": true
+          },
+          {
+            "name": "RunBuild",
+            "allowed": true
+          },
+          {
+            "name": "Update",
+            "allowed": true
+          },
+          {
+            "name": "Delete",
+            "allowed": true
+          }
+        ]
+      },
+      {
+        "roleId": 5,
+        "name": "User",
+        "isAdmin": false,
+        "accessRights": [
+          {
+            "name": "View"
+          },
+          {
+            "name": "RunBuild"
+          },
+          {
+            "name": "Update"
+          },
+          {
+            "name": "Delete"
+          }
+        ]
+      }
+    ]
+  },
+  "created": "2014-08-16T00:52:15.6604826+00:00"
+}

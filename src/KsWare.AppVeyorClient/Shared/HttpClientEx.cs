@@ -1,6 +1,7 @@
 ﻿using System;
 using System.Diagnostics;
 using System.Globalization;
+using System.IO;
 using System.Net;
 using System.Net.Http;
 using System.Net.Http.Headers;
@@ -80,7 +81,24 @@ namespace KsWare.AppVeyorClient {
 	
 		public async Task<T> GetJsonAsync<T>(string api) {
 			var content = await SendAsync("GET", api, null, null);
-			try {return JsonConvert.DeserializeObject<T>(content);}
+			try {
+
+				// return JsonConvert.DeserializeObject<T>(content);
+
+				var o = JsonConvert.DeserializeObject<T>(content, JsonSerializerSettings);
+				var ot = JsonConvert.SerializeObject(o,Formatting.Indented, JsonSerializerSettings);
+				var j = JsonConvert.DeserializeObject(content, JsonSerializerSettings);
+				var jt = JsonConvert.SerializeObject(j, Formatting.Indented, JsonSerializerSettings);
+				if (ot != jt) {
+					Debug.WriteLine($"JSON: incomplete deserialized! {typeof(T).FullName}");
+					var p1=Path.Combine(Path.GetTempPath(), "mine - {C29066B1-293D-4CAA-AE55-5EF68764F184}.json");
+					var p2=Path.Combine(Path.GetTempPath(), "origin - {00E1C157-7B19-41C6-87AB-DAA57EFC3D9D}.json");
+					File.WriteAllText(p1,ot);
+					File.WriteAllText(p2,jt);
+					Process.Start(@"C:\Program Files (x86)\WinMerge\WinMergeU.exe", $"\"{p1}\" \"{p2}\"");
+				}
+				return o;
+			}
 			catch (Exception ex) {
 				ex.Data.Add("ResponseText", content);
 				throw;

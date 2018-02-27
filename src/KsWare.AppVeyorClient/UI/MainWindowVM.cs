@@ -9,6 +9,7 @@ using System.Threading.Tasks;
 using System.Windows;
 using JetBrains.Annotations;
 using KsWare.AppVeyorClient.Api;
+using KsWare.AppVeyorClient.Api.Contracts;
 using KsWare.Presentation.ViewModelFramework;
 using Newtonsoft.Json;
 
@@ -47,8 +48,13 @@ namespace KsWare.AppVeyorClient.UI {
 		/// Method for <see cref="TestAction"/>
 		/// </summary>
 		[UsedImplicitly]
-		private void DoTest() {
-			
+		private async void DoTest() {
+			var ps = await Client.Project.GetProjectSettings();
+			var c = ps.Settings;
+			c.NextBuildNumber = 26;
+			c.Configuration.OnBuildFinishScripts = new[]
+				{new ScriptData{Language = "ps", Script = "echo \"--- On build finished script ---\""}};
+			await Client.Project.UpdateProjectSettings(c);
 		}
 
 		/// <summary>

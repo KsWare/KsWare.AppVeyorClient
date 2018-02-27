@@ -88,6 +88,17 @@
       <Generator>MSBuild:Compile</Generator>
       <SubType>Designer</SubType>
     </ApplicationDefinition>
+    <Compile Include="Api\Contracts\Common\AccessRightData.cs" />
+    <Compile Include="Api\Contracts\Common\AccessRightDefinitionData.cs" />
+    <Compile Include="Api\Contracts\Common\NameValue.cs" />
+    <Compile Include="Api\Contracts\Common\UpdateProjectData.cs" />
+    <Compile Include="Api\Contracts\GetProjectSettingsResponse.cs" />
+    <Compile Include="Api\Contracts\Common\NuGetFeedData.cs" />
+    <Compile Include="Api\Contracts\Common\ProjectData.cs" />
+    <Compile Include="Api\Contracts\Common\ProjectSettingsData.cs" />
+    <Compile Include="Api\Contracts\Common\RoleAceData.cs" />
+    <Compile Include="Api\Contracts\Common\ScriptData.cs" />
+    <Compile Include="Api\Contracts\Common\SecurityDescriptorData.cs" />
     <Compile Include="Api\ProjectClient.cs" />
     <Compile Include="Shared\FileStore.cs" />
     <Compile Include="UI\AppVM.cs" />
@@ -120,8 +131,8 @@
     <Compile Include="Api\Contracts\Common\CompilationMessage.cs" />
     <Compile Include="Api\Contracts\Common\NameValueSecurePair.cs" />
     <Compile Include="Api\Contracts\Common\Variable.cs" />
-    <Compile Include="Api\Contracts\Environment.cs" />
-    <Compile Include="Api\Contracts\EnvironmentSettings.cs" />
+    <Compile Include="Api\Contracts\Common\EnvironmentData.cs" />
+    <Compile Include="Api\Contracts\GetEnvironmentSettingsResponse.cs" />
     <Compile Include="Api\Contracts\GetProjectsResponse.cs" />
     <Compile Include="UI\MainWindow.xaml.cs">
       <DependentUpon>MainWindow.xaml</DependentUpon>
@@ -154,7 +165,9 @@
       <Generator>ResXFileCodeGenerator</Generator>
       <LastGenOutput>Resources.Designer.cs</LastGenOutput>
     </EmbeddedResource>
-    <None Include="Api\Contracts\EnvironmentSettings.json" />
+    <None Include="Api\Contracts\Common\ProjectSettings.json" />
+    <None Include="Api\Contracts\Common\UpdateProject.json" />
+    <None Include="Api\Contracts\GetEnvironmentSettingsResponse.json" />
     <None Include="packages.config" />
     <None Include="Properties\Settings.settings">
       <Generator>SettingsSingleFileGenerator</Generator>

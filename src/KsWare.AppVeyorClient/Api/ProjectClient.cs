@@ -44,6 +44,8 @@ namespace KsWare.AppVeyorClient.Api {
 			return entry.Data;
 		}
 
+		#region ProjectSettingsYaml
+
 		// Request  GET /api/projects/{accountName}/{projectSlug}/settings/yaml
 		// Response (plain/text)
 		public async Task<string> GetProjectSettingsYaml(string accountName,string projectSlug) {
@@ -69,17 +71,42 @@ namespace KsWare.AppVeyorClient.Api {
 		private async Task UpdateProjectSettingsYaml(string accountName, string projectSlug, string yaml) {
 			await _client.PutTextAsync($"/api/projects/{accountName}/{projectSlug}/settings/yaml", yaml);
 		}
-		
+
+		#endregion
+
+
+		// Request  GET /api/projects/{accountName}/{projectSlug}/settings
+		// Response (plain/text)
+		public async Task<GetProjectSettingsResponse> GetProjectSettings(string accountName, string projectSlug) {
+			var projectSettings = await _client.GetJsonAsync<GetProjectSettingsResponse>($"/api/projects/{accountName}/{projectSlug}/settings");
+			return projectSettings;
+		}
+
+		public async Task<GetProjectSettingsResponse> GetProjectSettings() {
+			var p    = await Project();
+			var projectSettings = await GetProjectSettings(p.AccountName, p.Slug);
+			return projectSettings;
+		}
+
+		public async Task UpdateProjectSettings(ProjectSettingsData projectSettings) {
+			await _client.PutJsonAsync($"/api/projects", projectSettings);
+		}
+
+		// Request: PUT /api/projects
+		private async Task UpdateProjectSettings(string accountName, string projectSlug, GetProjectSettingsResponse projectSettings) {
+			await _client.PutJsonAsync($"/api/projects", projectSettings);
+		}
+
 
 		// GET /api/environments/{deploymentEnvironmentId}/settings
-		public async Task<EnvironmentSettings> GetEnvironmentSettings(int deploymentEnvironmentId) {
-			var result = await _client.GetJsonAsync<EnvironmentSettings>($"/api/environments/{deploymentEnvironmentId}/settings");
+		public async Task<GetEnvironmentSettingsResponse> GetEnvironmentSettings(int deploymentEnvironmentId) {
+			var result = await _client.GetJsonAsync<GetEnvironmentSettingsResponse>($"/api/environments/{deploymentEnvironmentId}/settings");
 			return result;
 		}
 
 		// GET /api/environments
-		public async Task<Api.Contracts.Environment[]> GetEnvironments() {
-			var result = await _client.GetJsonAsync<Api.Contracts.Environment[]>("/api/environments");
+		public async Task<Api.Contracts.EnvironmentData[]> GetEnvironments() {
+			var result = await _client.GetJsonAsync<Api.Contracts.EnvironmentData[]>("/api/environments");
 			return result;
 		}
 

@@ -3,10 +3,9 @@ using KsWare.AppVeyorClient.Api.Contracts.Common;
 
 namespace KsWare.AppVeyorClient.Api.Contracts {
 
-	public class EnvironmentSettings {
+	public class GetEnvironmentSettingsResponse {
 
 		public Environment2 Environment { get; set; }
-
 
 		public class Environment2 {
 			public int DeploymentEnvironmentId { get; set; }
@@ -18,7 +17,7 @@ namespace KsWare.AppVeyorClient.Api.Contracts {
 			public int ProjectsMode { get; set; }
 			public object[] SelectedProjects { get; set; } // TODO
 			public Project[] Projects { get; set; }
-			public SecurityDescriptor SecurityDescriptor { get; set; }
+			public SecurityDescriptorData SecurityDescriptorData { get; set; }
 			public string Tags { get; set; }
 
 			public DateTime Created { get; set; }
@@ -36,30 +35,6 @@ namespace KsWare.AppVeyorClient.Api.Contracts {
 			public object[] EnvironmentVariables { get; set; } //TODO
 			public object[] Notifications { get; set; }        // TODO
 
-		}
-
-
-
-		public class SecurityDescriptor {
-			public AccessRightDefinition[] AccessRightDefinitions { get; set; }
-			public RoleAce[] RoleAces { get; set; }
-
-		}
-
-		public class AccessRightDefinition {
-			public string Name { get; set; }
-			public string Description { get; set; }
-		} 
-
-		public class RoleAce {
-			public int RoleId { get; set; }
-			public string Name { get; set; }
-			public bool IsAdmin { get; set; }
-			public AccessRight[] AccessRights { get; set; }
-		} 
-		public class AccessRight {
-			public string Name { get; set; }
-			public bool Allowed { get; set; }
 		}
 	}
 

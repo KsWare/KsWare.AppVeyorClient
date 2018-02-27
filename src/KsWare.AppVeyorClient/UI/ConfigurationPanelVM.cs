@@ -47,11 +47,9 @@ namespace KsWare.AppVeyorClient.UI {
 		[UsedImplicitly]
 		private void DoEditPs() {
 			YamlTextBoxController.ExpandSelection();
-
-			_selectedBlock = YamlHelper.ExtractBlock(YamlTextBoxController.SelectedText);
-
-			Content = _selectedBlock.Content;
 			YamlTextBoxController.SetEnabled("Editor is open", false);
+			_selectedBlock = YamlHelper.ExtractBlock(YamlTextBoxController.SelectedText);
+			Content = _selectedBlock.Content;
 		}
 
 		public string Content { get => Fields.GetValue<string>(); set => Fields.SetValue(value); }

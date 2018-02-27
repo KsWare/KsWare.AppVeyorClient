@@ -27,7 +27,7 @@ namespace KsWare.AppVeyorClient.UI {
 
 		public string PlainText { get => Fields.GetValue<string>(); set => Fields.SetValue(value); }
 
-		private async Task OnGet() {
+		private async Task DoGet() {
 			var envvars = await Client.Project.GetProjectEnvironmentVariables();
 			var sb      = new StringBuilder();
 			foreach (var var in envvars) {

@@ -2,7 +2,7 @@
 
 namespace KsWare.AppVeyorClient.Api.Contracts {
 
-	public class Environment {
+	public class EnvironmentData {
 		/*
 			"deploymentEnvironmentId": 14,
 			"name": "azure-blob-1",
