@@ -52,8 +52,6 @@ namespace KsWare.AppVeyorClient.UI {
 			var ps = await Client.Project.GetProjectSettings();
 			var c = ps.Settings;
 			c.NextBuildNumber = 26;
-			c.Configuration.OnBuildFinishScripts = new[]
-				{new ScriptData{Language = "ps", Script = "echo \"--- On build finished script ---\""}};
 			await Client.Project.UpdateProjectSettings(c);
 		}
 

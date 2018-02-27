@@ -65,18 +65,25 @@ namespace KsWare.AppVeyorClient.Api.Contracts {
 			public string DotnetCsprojFileVersionFormat { get; set; }
 
 			public string DotnetCsprojInformationalVersionFormat { get; set; }
+
+			[JsonProperty(DefaultValueHandling = DefaultValueHandling.IgnoreAndPopulate)]
 			public int BaxJobs { get; set; }
 
 			
 			public object[] BuildCloud { get; set; }
 
 			public Value1[] OperatingSystem { get; set; }
+
 			public Value1[] Services { get; set; }
+
+			[JsonProperty(DefaultValueHandling = DefaultValueHandling.IgnoreAndPopulate)]
 			public string CloneFolder { get; set; }
 
 			
 			public bool ShallowClone { get; set; }
 			public bool ForceHttpsClone { get; set; }
+
+			[JsonProperty(DefaultValueHandling = DefaultValueHandling.IgnoreAndPopulate)]
 			public int CloneDepth { get; set; }
 
 			
@@ -91,6 +98,8 @@ namespace KsWare.AppVeyorClient.Api.Contracts {
 			public string BuildMode { get; set; }
 			public Value1[] Platform { get; set; }
 			public Value1[] Configuration { get; set; }
+
+			[JsonProperty(DefaultValueHandling = DefaultValueHandling.IgnoreAndPopulate)]
 			public string MsBuildProjectFileName { get; set; }
 
 			
@@ -108,8 +117,7 @@ namespace KsWare.AppVeyorClient.Api.Contracts {
 
 			public bool MsBuildInParallel { get; set; }
 
-			
-
+			[JsonProperty(DefaultValueHandling = DefaultValueHandling.IgnoreAndPopulate)]
 			public string MsBuildVerbosity { get; set; }
 
 			public ScriptData[] BuildScripts { get; set; }
@@ -180,6 +188,7 @@ namespace KsWare.AppVeyorClient.Api.Contracts {
 			
 			public string Name { get; set; }
 
+			[JsonProperty(DefaultValueHandling = DefaultValueHandling.IgnoreAndPopulate)]
 			public string BuildCloudName { get; set; }
 
 			public string OsType { get; set; }

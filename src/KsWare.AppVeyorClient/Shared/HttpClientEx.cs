@@ -21,7 +21,7 @@ namespace KsWare.AppVeyorClient {
 
 		// TODO remove out of class
 		private static readonly JsonSerializerSettings JsonSerializerSettings = new JsonSerializerSettings {
-			ContractResolver = new CamelCasePropertyNamesContractResolver()
+			ContractResolver = new CamelCasePropertyNamesContractResolver(),
 		};
 
 		private SecureString _secureToken;

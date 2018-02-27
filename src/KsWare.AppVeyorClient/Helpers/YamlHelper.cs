@@ -52,7 +52,7 @@ namespace KsWare.AppVeyorClient.Helpers {
 
 		public static YamlBlock ExtractBlock(string s) {
 			// - ps: "...\"..."
-			var m = Regex.Match(s, @"^(?<indent>\s*)(?<suffix>-\s*(ps|cmd)\s*:)\s*""(?<content>.*?)""\s*$",
+			var m = Regex.Match(s, @"^(?<indent>\s*)(?<suffix>-\s*(ps|cmd|pwsh)\s*:\s)\s*""(?<content>.*?)""\s*$",
 				RegexOptions.Compiled | RegexOptions.IgnoreCase);
 			var b=new YamlBlock() {
 				Indent = m.Groups["indent"].Value.Length,

@@ -9,7 +9,7 @@
 	<s:Boolean x:Key="/Default/PatternsAndTemplates/LiveTemplates/Template/=200ED7BD4BBFDA44A63C2BB7BF023584/Scope/=C3001E7C0DA78E4487072B7E050D86C5/@KeyIndexDefined">True</s:Boolean>
 	<s:String x:Key="/Default/PatternsAndTemplates/LiveTemplates/Template/=200ED7BD4BBFDA44A63C2BB7BF023584/Scope/=C3001E7C0DA78E4487072B7E050D86C5/CustomProperties/=minimumLanguageVersion/@EntryIndexedValue">2.0</s:String>
 	<s:String x:Key="/Default/PatternsAndTemplates/LiveTemplates/Template/=200ED7BD4BBFDA44A63C2BB7BF023584/Scope/=C3001E7C0DA78E4487072B7E050D86C5/Type/@EntryValue">InCSharpFile</s:String>
-	<s:String x:Key="/Default/PatternsAndTemplates/LiveTemplates/Template/=200ED7BD4BBFDA44A63C2BB7BF023584/Shortcut/@EntryValue">pb</s:String>
+	<s:String x:Key="/Default/PatternsAndTemplates/LiveTemplates/Template/=200ED7BD4BBFDA44A63C2BB7BF023584/Shortcut/@EntryValue">pbool</s:String>
 	<s:Boolean x:Key="/Default/PatternsAndTemplates/LiveTemplates/Template/=200ED7BD4BBFDA44A63C2BB7BF023584/ShortenQualifiedReferences/@EntryValue">True</s:Boolean>
 	<s:String x:Key="/Default/PatternsAndTemplates/LiveTemplates/Template/=200ED7BD4BBFDA44A63C2BB7BF023584/Text/@EntryValue">public bool $name$ { get; set; }&#xD;
 &#xD;

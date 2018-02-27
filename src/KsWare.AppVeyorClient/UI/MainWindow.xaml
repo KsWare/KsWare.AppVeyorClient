@@ -10,29 +10,38 @@
     Title="Appveyor Client" Height="350" Width="525"
 	d:DataContext="{d:DesignInstance Type={x:Type ui:MainWindowVM}}"
 	>
-	<TabControl>
-		<TabItem Header="Common">
-			<DockPanel>
-				<DockPanel x:Name="TokenPanel" DockPanel.Dock="Top">
-					<TextBlock Text="Token: " Width="45" />
-					<PasswordBox x:Name="TokenPasswordBox" LostFocus="AtTokenTextBoxLostFocus"/>
+	<DockPanel>
+		<DockPanel DockPanel.Dock="Top" LastChildFill="False">
+			<TextBlock Text="Project " VerticalAlignment="Center"/>
+			<ComboBox ItemsSource="{Binding Projects}" Width="164">
+
+			</ComboBox>
+		</DockPanel>
+		<TabControl>
+			<TabItem Header="Common">
+				<DockPanel>
+					<DockPanel x:Name="TokenPanel" DockPanel.Dock="Top">
+						<TextBlock Text="Token: " Width="45" />
+						<PasswordBox x:Name="TokenPasswordBox" LostFocus="AtTokenTextBoxLostFocus"/>
+					</DockPanel>
+					<WrapPanel DockPanel.Dock="Top">
+						<Button Content="TestMessage" Command="{Binding TestAction}"/>
+					</WrapPanel>
+					<DockPanel DockPanel.Dock="Top">
+						<Button Content="Send" Command="{Binding SendAction}" Width="45"/>
+						<TextBox Text="{Binding Url}"/>
+					</DockPanel>
+					<TextBox Text="{Binding ResultText}" AcceptsReturn="True" AcceptsTab="True" FontFamily="Consolas" FontSize="12" HorizontalScrollBarVisibility="Visible"
+							 VerticalScrollBarVisibility="Visible" />
 				</DockPanel>
-				<WrapPanel DockPanel.Dock="Top">
-					<Button Content="TestMessage" Command="{Binding TestAction}"/>
-				</WrapPanel>
-				<DockPanel DockPanel.Dock="Top">
-					<Button Content="Send" Command="{Binding SendAction}" Width="45"/>
-					<TextBox Text="{Binding Url}"/>
-				</DockPanel>
-				<TextBox Text="{Binding ResultText}" AcceptsReturn="True" AcceptsTab="True" FontFamily="Consolas" FontSize="12" HorizontalScrollBarVisibility="Visible"
-				         VerticalScrollBarVisibility="Visible" />
-			</DockPanel>
-		</TabItem>
-		<TabItem Header="Configuration" DataContext="{Binding ConfigurationPanel}">
-			<ui:ConfigurationPanelView/>
-		</TabItem>
-		<TabItem Header="Project Environment Variables" DataContext="{Binding ProjectEnvironmentVariablesPanel}">
-			<ui:ProjectEnvironmentVariablesView/>
-		</TabItem>
-	</TabControl>
+			</TabItem>
+			<TabItem Header="Configuration" DataContext="{Binding ConfigurationPanel}">
+				<ui:ConfigurationPanelView/>
+			</TabItem>
+			<TabItem Header="Project Environment Variables" DataContext="{Binding ProjectEnvironmentVariablesPanel}">
+				<ui:ProjectEnvironmentVariablesView/>
+			</TabItem>
+		</TabControl>
+	</DockPanel>
+
 </Window>

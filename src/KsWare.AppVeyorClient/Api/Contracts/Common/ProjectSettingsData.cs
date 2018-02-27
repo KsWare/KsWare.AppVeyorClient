@@ -1,4 +1,5 @@
 ﻿using System;
+using Newtonsoft.Json;
 
 namespace KsWare.AppVeyorClient.Api.Contracts {
 
@@ -36,10 +37,12 @@ namespace KsWare.AppVeyorClient.Api.Contracts {
 
 		public bool IsPrivate { get; set; }
 
+		[JsonProperty(DefaultValueHandling = DefaultValueHandling.IgnoreAndPopulate)]
 		public int BuildPriority { get; set; }
 
 		public bool IgnoreAppveyorYml { get; set; }
 
+		[JsonProperty(DefaultValueHandling = DefaultValueHandling.IgnoreAndPopulate)]
 		public string CommitStatusContextName { get; set; }
 
 		public bool SkipBranchesWithoutAppveyorYml { get; set; }

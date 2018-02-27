@@ -65,7 +65,18 @@ namespace KsWare.AppVeyorClient.UI {
 		/// </summary>
 		[UsedImplicitly]
 		private void DoApplyEdit() {
-			var s=YamlHelper.FormatBlock(Content, BlockFormat.Literal, _selectedBlock.Indent, _selectedBlock.Suffix);
+			string s;
+			switch (BlockFormat) {
+				case "Block":
+					s = YamlHelper.FormatBlock(Content, AppVeyorClient.UI.BlockFormat.Literal, _selectedBlock.Indent,
+						_selectedBlock.Suffix);
+					break;
+				case "Split":
+					s = YamlHelper.FormatBlock(Content, AppVeyorClient.UI.BlockFormat.None, _selectedBlock.Indent,
+						_selectedBlock.Suffix);
+					break;
+				default:return;
+			}
 
 			YamlTextBoxController.SelectedText = s;
 			YamlTextBoxController.SetEnabled("Editor is open", true);
@@ -76,6 +87,8 @@ namespace KsWare.AppVeyorClient.UI {
 		/// </summary>
 		/// <seealso cref="DoCancelEdit"/>
 		public ActionVM CancelEditAction { get; [UsedImplicitly] private set; }
+
+		public string BlockFormat { get => Fields.GetValue<string>(); set => Fields.SetValue(value); }
 
 		/// <summary>
 		/// Method for <see cref="CancelEditAction"/>
