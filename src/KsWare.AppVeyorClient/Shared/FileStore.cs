@@ -158,7 +158,7 @@ namespace KsWare.AppVeyorClient.Shared {
 				plaintext = ProtectedData.Unprotect(ciphertext, entropy, DataProtectionScope.CurrentUser);
 			}
 			catch (Exception ex) {
-				throw new SecurityException(); //TODO message.
+				throw new SecurityException("Decrypt failed",ex); //TODO message.
 			}
 			return JsonConvert.DeserializeObject<T>(Encoding.UTF8.GetString(plaintext));
 		}
