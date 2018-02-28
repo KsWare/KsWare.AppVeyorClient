@@ -10,13 +10,8 @@
     Title="Appveyor Client" Height="350" Width="525"
 	d:DataContext="{d:DesignInstance Type={x:Type ui:MainWindowVM}}"
 	>
-	<DockPanel>
-		<DockPanel DockPanel.Dock="Top" LastChildFill="False">
-			<TextBlock Text="Project " VerticalAlignment="Center"/>
-			<ComboBox ItemsSource="{Binding Projects}" Width="164">
-
-			</ComboBox>
-		</DockPanel>
+	<DockPanel Margin="4 4 4 4">
+		<ui:ProjectSelector DockPanel.Dock="Top" DataContext="{Binding ProjectSelector}" Margin="0 0 0 6"/>
 		<TabControl>
 			<TabItem Header="Common">
 				<DockPanel>

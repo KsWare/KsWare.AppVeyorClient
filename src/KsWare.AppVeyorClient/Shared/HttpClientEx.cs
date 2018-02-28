@@ -5,15 +5,19 @@ using System.IO;
 using System.Net;
 using System.Net.Http;
 using System.Net.Http.Headers;
+using System.Net.Mime;
 using System.Security;
 using System.Text;
 using System.Threading;
 using System.Threading.Tasks;
 using System.Xml.Serialization;
+using Common.Logging;
 using JetBrains.Annotations;
 using Newtonsoft.Json;
 using Newtonsoft.Json.Linq;
 using Newtonsoft.Json.Serialization;
+
+using static System.Net.Http.HttpMethod;
 
 namespace KsWare.AppVeyorClient {
 
@@ -24,24 +28,23 @@ namespace KsWare.AppVeyorClient {
 			ContractResolver = new CamelCasePropertyNamesContractResolver(),
 		};
 
+		private static readonly ILog Log = LogManager.GetLogger<HttpClientEx>();
+
 		private SecureString _secureToken;
 		private readonly HttpClient _httpClient;
 
 		public HttpClientEx(SecureString token) {
 			_secureToken = token;
 			_httpClient = new HttpClient();
-			_httpClient.DefaultRequestHeaders.Accept.Add(new MediaTypeWithQualityHeaderValue("application/json"));
-			_httpClient.DefaultRequestHeaders.Accept.Add(new MediaTypeWithQualityHeaderValue("plain/text"));
-			_httpClient.DefaultRequestHeaders.Authorization = new AuthenticationHeaderValue("Bearer", UnsecureToken);
 		}
 
 		public HttpClientEx(string unsecureToken) : this(CreateSecureToken(unsecureToken)) {}
 
-		public string Protocoll { get; set; } = "https";
-
-		public string Server { get; set; }
+		public Uri BaseUri { get; set; }
 
 		public bool HasToken => _secureToken != null && _secureToken.Length > 0;
+
+		public EventHandler TokenChanged;
 
 		public static SecureString CreateSecureToken(string unsecureToken) {
 			var s = new SecureString();
@@ -51,8 +54,7 @@ namespace KsWare.AppVeyorClient {
 
 		public void SetToken(SecureString secureToken) {
 			_secureToken = secureToken;
-			_httpClient.DefaultRequestHeaders.Authorization = new AuthenticationHeaderValue("Bearer", UnsecureToken); // TODO unsecure
-//			TokenChanged?.BeginInvoke(this, EventArgs.Empty, null, null);
+			TokenChanged?.BeginInvoke(this, EventArgs.Empty, null, null);
 		}
 
 		private string UnsecureToken =>
@@ -60,29 +62,17 @@ namespace KsWare.AppVeyorClient {
 				System.Runtime.InteropServices.Marshal.SecureStringToBSTR(_secureToken));
 
 
-		private string GetUrl(string api) {
-			if(string.IsNullOrWhiteSpace(Protocoll)) throw new InvalidOperationException("Protocol not specified.");
-			if(string.IsNullOrWhiteSpace(Server)) throw new InvalidOperationException("Server not specified.");
-			if (!api.StartsWith("/")) api = "/" + api;
-			return $"{Protocoll}://{Server}{api}";
-		}
+//		private string GetUrl(string api) {
+//			if(string.IsNullOrWhiteSpace(Protocoll)) throw new InvalidOperationException("Protocol not specified.");
+//			if(string.IsNullOrWhiteSpace(Server)) throw new InvalidOperationException("Server not specified.");
+//			if (!api.StartsWith("/")) api = "/" + api;
+//			return $"{Protocoll}://{Server}{api}";
+//			return new Uri(BaseUri, api);
+//		}
 
-		public async Task<JToken[]> GetJTokensAsync(string api) {
-			Debug.WriteLine($"GET {api}");
-
-			using (var response = await _httpClient.GetAsync(GetUrl(api))) {
-				Log(response.StatusCode);
-				response.EnsureSuccessStatusCode();
-
-				var content = await response.Content.ReadAsAsync<JToken[]>();
-				return content;
-			}
-		}
-	
 		public async Task<T> GetJsonAsync<T>(string api) {
 			var content = await SendAsync("GET", api, null, null);
 			try {
-
 				// return JsonConvert.DeserializeObject<T>(content);
 
 				var o = JsonConvert.DeserializeObject<T>(content, JsonSerializerSettings);
@@ -105,40 +95,15 @@ namespace KsWare.AppVeyorClient {
 			}
 		}
 
-		public string GetJsonText(string api) {
-			return RunSync(async () => {
-				Debug.WriteLine($"GET {api}");
+		public string GetJsonText(string api) => RunSync(async () => await GetJsonTextAsync(api));
 
-				using (var response = await _httpClient.GetAsync(GetUrl(api))) {
-					Log(response.StatusCode);
-					response.EnsureSuccessStatusCode();
+		public string GetJsonText(string api, out Exception exception) => RunSync(async () => await GetJsonTextAsync(api),out exception);
 
-					var content = await response.Content.ReadAsStringAsync();
-					return content;
-				}
-			});
-		}
+		public async Task<string> GetJsonTextAsync(string api) => await SendAsync("GET", api); 
 
-		public string GetJsonText(string api, out Exception exception) {
-			return RunSync(async () => {
-				Debug.WriteLine($"GET {api}");
-				// get the list of roles
-				using (var response = await _httpClient.GetAsync(GetUrl(api))) {
-					Log(response.StatusCode);
-					response.EnsureSuccessStatusCode();
-					var content = await response.Content.ReadAsStringAsync();
-					return content;
-				}
-			},out exception);
-		}
+		public async Task<string> GetTextAsync(string api) => await SendAsync("GET", api); 
 
-		public async Task<string> GetJsonTextAsync(string api) { return await SendAsync("GET", api); }
-
-		public async Task<string> GetTextAsync(string api) { return await SendAsync("GET", api); }
-
-		public async Task PutTextAsync(string api, string text) {
-			await SendAsync("PUT", api, text, "plain/text");
-		}
+		public async Task PutTextAsync(string api, string text) => await SendAsync("PUT", api, text, "text/plain");
 
 		public async Task PutJsonAsync(string api, object json) {
 			var jsonString = ToJsonString(json);
@@ -154,17 +119,19 @@ namespace KsWare.AppVeyorClient {
 			await SendAsync("POST", api, jsonString, "application/json");
 		}
 
-		private async Task<string> SendAsync(string method, string api, string content = null, string contentType=null) {
-			Debug.WriteLine($"{method} {api}");
-			var httpContent = content !=null ? new StringContent(content, Encoding.UTF8, contentType) : null;
-			using (var response = await _httpClient.SendAsync(method,GetUrl(api), httpContent)) {
-				Log(response.StatusCode);
+		private async Task<string> SendAsync(HttpRequestMessage message) {
+			Debug.WriteLine($"{message.Method} {message.RequestUri.PathAndQuery}");
+
+			using (var response = await _httpClient.SendAsync(message)) {
+				Log.Trace(response.StatusCode);
 				//TODO response.Content.Headers.ContentType
-				var responseContent = await response.Content.ReadAsStringAsync(); 
+				var responseContent = await response.Content.ReadAsStringAsync();
 				if (!response.IsSuccessStatusCode) {
 					//  400 (Invalid input parameters. See response body for detailed error message.)
 					// {"message":"The request is invalid.","modelState":{"variables.Headers":["An error has occurred."]}}
-					try {response.EnsureSuccessStatusCode();}
+					try {
+						response.EnsureSuccessStatusCode();
+					}
 					catch (Exception ex) {
 						ex.Data.Add("Response.StatusCode", response.StatusCode);
 						ex.Data.Add("Response",            response.ToString());
@@ -176,47 +143,26 @@ namespace KsWare.AppVeyorClient {
 			}
 		}
 
+		private async Task<string> SendAsync(string method, string api, string content = null, string contentType=null) {
+			Debug.WriteLine($"{method} {api}");
+			var message=CreateRequest(method,api,content,contentType);
+			return await SendAsync(message);
+		}
+
+		private HttpRequestMessage CreateRequest(string method, string api, string content, string contentType) {
+			var m = new HttpMethod(method.ToUpperInvariant());
+			var r = new HttpRequestMessage(m, new Uri(BaseUri,api));
+			if(contentType!=null) r.Headers.Accept.Add(new MediaTypeWithQualityHeaderValue(contentType));
+			r.Headers.Authorization = new AuthenticationHeaderValue("Bearer", UnsecureToken); // make optional/configurable
+			if (content != null) {
+				//TODO validate contentType
+				r.Content=new StringContent(content,Encoding.UTF8,contentType);
+			}
+			return r;
+		}
+
 		private string ToJsonString(object json) {
 			return JsonConvert.SerializeObject(json,settings: JsonSerializerSettings);
-		}
-
-		public async Task PutXml<T>(string api, T o) {
-			var content = ToXmlContent(o);
-			using (var client = new HttpClient()) {
-				client.DefaultRequestHeaders.Authorization = new AuthenticationHeaderValue("Bearer", UnsecureToken);
-				using (var response = await client.PutAsXmlAsync(GetUrl(api), content)) {
-					Log(response.StatusCode);
-					response.EnsureSuccessStatusCode();
-				}
-			}
-		}
-
-		public async Task PostXml<T>(string api, T o) {
-			var content = ToXmlContent(o);
-			using (var client = new HttpClient()) {
-				client.DefaultRequestHeaders.Authorization = new AuthenticationHeaderValue("Bearer", UnsecureToken);
-				using (var response = await client.PostAsXmlAsync(GetUrl(api), content)) {
-					Log(response.StatusCode);
-					response.EnsureSuccessStatusCode();
-				}
-			}
-		}
-
-		private static void Log(HttpStatusCode statusCode) {
-			Debug.WriteLine($"done {(int)statusCode} {statusCode}");
-		}
-
-		public static StringContent ToXmlContent<T>(T o) {
-			var stringwriter = new System.IO.StringWriter();
-			var serializer   = new XmlSerializer(typeof(T));
-			serializer.Serialize(stringwriter, o);
-			return new StringContent(stringwriter.ToString(),Encoding.UTF8, "application/xml");
-		}
-
-		public static T FromXmlString<T>(string xmlText) {
-			var stringReader = new System.IO.StringReader(xmlText);
-			var serializer   = new XmlSerializer(typeof(T));
-			return (T)serializer.Deserialize(stringReader);
 		}
 
 		private static readonly TaskFactory _myTaskFactory = new TaskFactory(CancellationToken.None, TaskCreationOptions.None,
@@ -278,23 +224,13 @@ namespace KsWare.AppVeyorClient {
 
 			public Exception Exception { get; }
 		}
+
+
 	}
 
-	public static class HttpClientExtention {
-
-		public static async Task<HttpResponseMessage> SendAsync(this HttpClient client,string method,string url,HttpContent httpContent) {
-			if (client == null) throw new ArgumentNullException(nameof(client));
-			if (method == null) throw new ArgumentNullException(nameof(method));
-			if (url == null) throw new ArgumentNullException(nameof(url));
-			method = method.ToUpperInvariant();
-			if((method=="PUT"||method=="POST") && httpContent==null) throw new ArgumentNullException(nameof(httpContent));
-			switch (method) {
-				case "GET":    return await client.GetAsync(url);
-				case "PUT":    return await client.PutAsync(url, httpContent);
-				case "POST":   return await client.PostAsync(url, httpContent);
-				case "DELETE": return await client.DeleteAsync(url);
-				default:       throw new ArgumentOutOfRangeException(nameof(method), method, $@"Unsupported method. '{method}'");
-			}
+	public static class HttpClientExLogExtension {
+		public static void Trace(this ILog log, HttpStatusCode statusCode) {
+			log.Trace($"done {(int) statusCode} {statusCode}");
 		}
 	}
 }

@@ -22,6 +22,8 @@ namespace KsWare.AppVeyorClient.UI {
 			AppVM.LoadToken(); // TODO load after UI loaded
 			AppVM.InitFileStore(); // TODO load after UI loaded
 			Url = "/api/users";
+			ConfigurationPanel.ProjectSelector = ProjectSelector;
+			ProjectEnvironmentVariablesPanel.ProjectSelector = ProjectSelector;
 		}
 
 		private Client Client => AppVM.Client;
@@ -43,6 +45,8 @@ namespace KsWare.AppVeyorClient.UI {
 		/// </summary>
 		/// <seealso cref="DoTest"/>
 		public ActionVM TestAction { get; [UsedImplicitly] private set; }
+
+		public ProjectSelectorVM ProjectSelector { get; [UsedImplicitly] private set; }
 
 		/// <summary>
 		/// Method for <see cref="TestAction"/>

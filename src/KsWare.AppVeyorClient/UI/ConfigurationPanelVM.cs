@@ -12,7 +12,9 @@ using JetBrains.Annotations;
 using KsWare.AppVeyorClient.Api;
 using KsWare.AppVeyorClient.Api.Contracts;
 using KsWare.AppVeyorClient.Helpers;
+using KsWare.AppVeyorClient.Shared;
 using KsWare.AppVeyorClient.UI.Common;
+using KsWare.Presentation;
 using KsWare.Presentation.ViewFramework;
 using KsWare.Presentation.ViewModelFramework;
 using Microsoft.Win32;
@@ -90,6 +92,11 @@ namespace KsWare.AppVeyorClient.UI {
 
 		public string BlockFormat { get => Fields.GetValue<string>(); set => Fields.SetValue(value); }
 
+		[Hierarchy(HierarchyType.Reference)]
+		public ProjectSelectorVM ProjectSelector { get => Fields.GetValue<ProjectSelectorVM>(); set => Fields.SetValue(value); }
+
+		public string StatusBarText { get => Fields.GetValue<string>(); set => Fields.SetValue(value); }
+
 		/// <summary>
 		/// Method for <see cref="CancelEditAction"/>
 		/// </summary>
@@ -98,9 +105,20 @@ namespace KsWare.AppVeyorClient.UI {
 			YamlTextBoxController.SetEnabled("Editor is open", true);
 		}
 
-		private async Task DoGet() {
-			var yaml = await Client.Project.GetProjectSettingsYaml();
-			YamlTextBoxController.Text = yaml;
+		private void DoGet() {
+			StatusBarText = "Get project settings.";
+			Client.Project.GetProjectSettingsYaml(ProjectSelector.SelectedProject.Data.AccountName, ProjectSelector.SelectedProject.Data.Slug)
+				.ContinueWithDispatcher(Dispatcher.DeprecatedDispatcher, task => {
+				if (task.Exception != null) {
+					StatusBarText = $"Get failed. {task.Exception.Message}";
+					MessageBox.Show($"Get failed.\n\nDetails:\n{task.Exception.Message}", "Error", MessageBoxButton.OK,
+						MessageBoxImage.Error);
+				}
+				else {
+					StatusBarText = "Get done.";
+					YamlTextBoxController.Text = task.Result;
+				}
+			});
 		}
 
 		private void DoLoad() {
@@ -123,10 +141,11 @@ namespace KsWare.AppVeyorClient.UI {
 		private void DoPost() {
 			Client.Project.UpdateProjectSettingsYaml(YamlTextBoxController.Text).ContinueWith(task => {
 				if (task.Exception != null) {
+					StatusBarText = $"Update failed. {task.Exception.Message}";
 					MessageBox.Show($"Update failed.\n\nDetails:\n{task.Exception.Message}", "Error", MessageBoxButton.OK, MessageBoxImage.Error);
 				}
 				else {
-					MessageBox.Show("Update done.", "Information", MessageBoxButton.OK, MessageBoxImage.Information);
+					StatusBarText="Update done.";
 				}
 			});
 		}

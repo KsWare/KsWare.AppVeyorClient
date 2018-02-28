@@ -1,4 +1,5 @@
 ﻿using System;
+using Newtonsoft.Json;
 
 namespace KsWare.AppVeyorClient.Api.Contracts {
 
@@ -22,6 +23,8 @@ namespace KsWare.AppVeyorClient.Api.Contracts {
 
 		public string RepositoryName { get; set; }
 
+		public string RepositoryBranch { get; set; }
+
 		public bool IsPrivate { get; set; }
 
 		public bool SkipBranchesWithoutAppveyorYml { get; set; }
@@ -41,6 +44,7 @@ namespace KsWare.AppVeyorClient.Api.Contracts {
 		public bool AlwaysBuildClosedPullRequests { get; set; }
 
 		public string Tags { get; set; }
+		public NuGetFeedData NuGetFeed { get; set; }
 
 		public SecurityDescriptorData SecurityDescriptor { get; set; }
 

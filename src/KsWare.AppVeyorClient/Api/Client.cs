@@ -1,4 +1,5 @@
-﻿using System.Security;
+﻿using System;
+using System.Security;
 
 namespace KsWare.AppVeyorClient.Api {
 
@@ -7,8 +8,8 @@ namespace KsWare.AppVeyorClient.Api {
 		private HttpClientEx _httpClientEx;
 
 		public Client(SecureString token) {
-			_httpClientEx=new HttpClientEx(token) {
-				Server = "ci.appveyor.com"
+			_httpClientEx=new HttpClientEx( token) {
+				BaseUri = new Uri("https://ci.appveyor.com/")
 			};
 			BuildWorker =new BuildWorker(_httpClientEx);
 			Project=new ProjectClient(_httpClientEx);

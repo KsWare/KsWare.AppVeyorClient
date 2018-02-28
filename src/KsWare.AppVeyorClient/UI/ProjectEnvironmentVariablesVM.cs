@@ -8,6 +8,7 @@ using System.Windows.Controls;
 using JetBrains.Annotations;
 using KsWare.AppVeyorClient.Api;
 using KsWare.AppVeyorClient.Api.Contracts;
+using KsWare.Presentation;
 using KsWare.Presentation.ViewModelFramework;
 
 namespace KsWare.AppVeyorClient.UI {
@@ -26,6 +27,9 @@ namespace KsWare.AppVeyorClient.UI {
 		public  ActionVM PostAction { get; [UsedImplicitly] private set; }
 
 		public string PlainText { get => Fields.GetValue<string>(); set => Fields.SetValue(value); }
+
+		[Hierarchy(HierarchyType.Reference)]
+		public ProjectSelectorVM ProjectSelector { get => Fields.GetValue<ProjectSelectorVM>(); set => Fields.SetValue(value); }
 
 		private async Task DoGet() {
 			var envvars = await Client.Project.GetProjectEnvironmentVariables();

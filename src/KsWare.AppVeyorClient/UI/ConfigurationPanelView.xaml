@@ -27,6 +27,11 @@
 			<Canvas Width="12"/>
 			<Button Content="PS" Command="{Binding EditPsAction}"/>
 		</WrapPanel>
+		<StatusBar DockPanel.Dock="Bottom">
+			<StatusBarItem>
+				<TextBlock Text="{Binding StatusBarText}" />
+			</StatusBarItem>
+		</StatusBar>
 		<Grid>
 			<Grid.RowDefinitions>
 				<RowDefinition/>

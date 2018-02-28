@@ -8,11 +8,11 @@ using System.Windows;
 // set of attributes. Change these attribute values to modify the information
 // associated with an assembly.
 [assembly: AssemblyTitle("KsWare AppVeyorClient")]
-[assembly: AssemblyDescription("A window client for AppVeyor")]
+[assembly: AssemblyDescription("A window client for AppVeyor. (www.appveyor.com)")]
 [assembly: AssemblyConfiguration("")]
 [assembly: AssemblyCompany("KsWare")]
 [assembly: AssemblyProduct("AppVeyorClient")]
-[assembly: AssemblyCopyright("Copyright ©  2018")]
+[assembly: AssemblyCopyright("Copyright © 2018 by KsWare")]
 [assembly: AssemblyTrademark("")]
 [assembly: AssemblyCulture("")]
 

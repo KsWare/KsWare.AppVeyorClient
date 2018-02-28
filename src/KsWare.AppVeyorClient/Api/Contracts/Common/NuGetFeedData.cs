@@ -1,4 +1,5 @@
 ﻿using System;
+using Newtonsoft.Json;
 
 namespace KsWare.AppVeyorClient.Api.Contracts {
 
@@ -14,6 +15,7 @@ namespace KsWare.AppVeyorClient.Api.Contracts {
 
 		public bool IsPrivateProject { get; set; }
 
+		[JsonProperty(DefaultValueHandling = DefaultValueHandling.IgnoreAndPopulate)]
 		public string ApiKey { get; set; }
 
 		public bool PublishingEnabled { get; set; }
@@ -22,6 +24,7 @@ namespace KsWare.AppVeyorClient.Api.Contracts {
 
 		public DateTime Created { get; set; }
 
+		[JsonProperty(DefaultValueHandling = DefaultValueHandling.IgnoreAndPopulate)]
 		public DateTime Updated { get; set; }
 
 	}

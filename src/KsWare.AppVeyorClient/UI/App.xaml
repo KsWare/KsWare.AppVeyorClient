@@ -6,7 +6,11 @@
     xmlns:viewFramework="clr-namespace:KsWare.Presentation.ViewFramework;assembly=KsWare.Presentation.ViewFramework"
     xmlns:ui="clr-namespace:KsWare.AppVeyorClient.UI">
     <Application.Resources>
-         
+         <ResourceDictionary>
+			<ResourceDictionary.MergedDictionaries>
+				<ResourceDictionary Source="pack://application:,,,/KsWare.AppVeyorClient;component/UI/Resources/Generic.xaml"/>
+			</ResourceDictionary.MergedDictionaries>
+         </ResourceDictionary>
     </Application.Resources>
 </viewFramework:ViewModelApplication>
 

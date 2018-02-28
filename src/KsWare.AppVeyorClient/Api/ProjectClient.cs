@@ -29,9 +29,9 @@ namespace KsWare.AppVeyorClient.Api {
 			return c.Data;
 		}
 
-		private async Task<GetProjectsResponse.Project> Project() {
+		private async Task<ProjectData> Project() {
 			const string n = nameof(ProjectClient) + "." + nameof(Project);
-			var entry = FileStore.Instance.GetEntry<GetProjectsResponse.Project>(n);
+			var entry = FileStore.Instance.GetEntry<ProjectData>(n);
 			if (!entry.HasData) { 
 				var projects = await GetProjects();
 				if(string.IsNullOrEmpty(ProjectName)) entry.Data = projects.First();
@@ -58,8 +58,6 @@ namespace KsWare.AppVeyorClient.Api {
 			var yaml = await GetProjectSettingsYaml(p.AccountName, p.Slug);
 			return yaml;
 		}
-
-
 
 		public async Task UpdateProjectSettingsYaml(string yaml) {
 			var project = await Project();

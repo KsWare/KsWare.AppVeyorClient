@@ -1,0 +1,22 @@
+﻿<UserControl
+	x:Class="KsWare.AppVeyorClient.UI.ProjectSelector"
+	xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
+	xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+	xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
+	xmlns:d="http://schemas.microsoft.com/expression/blend/2008"
+	xmlns:local="clr-namespace:KsWare.AppVeyorClient.UI"
+	mc:Ignorable="d"
+	d:DesignWidth="300"
+	d:DataContext="{d:DesignInstance Type=local:ProjectSelectorVM}"
+	>
+	<DockPanel LastChildFill="False">
+		<TextBlock Text="Project " VerticalAlignment="Center" />
+		<ComboBox 
+			Style="{DynamicResource ComboBoxFlatStyle}"
+			ItemsSource="{Binding Projects.CollectionView}" 
+			SelectedItem="{Binding SelectedProject}" 
+			DisplayMemberPath="DisplayName"
+			IsSynchronizedWithCurrentItem="True"
+			Width="164" />
+	</DockPanel>
+</UserControl>
