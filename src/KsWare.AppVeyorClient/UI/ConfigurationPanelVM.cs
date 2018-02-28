@@ -108,7 +108,7 @@ namespace KsWare.AppVeyorClient.UI {
 		private void DoGet() {
 			StatusBarText = "Get project settings.";
 			Client.Project.GetProjectSettingsYaml(ProjectSelector.SelectedProject.Data.AccountName, ProjectSelector.SelectedProject.Data.Slug)
-				.ContinueWithDispatcher(Dispatcher.DeprecatedDispatcher, task => {
+				.ContinueWithUIDispatcher(task => {
 				if (task.Exception != null) {
 					StatusBarText = $"Get failed. {task.Exception.Message}";
 					MessageBox.Show($"Get failed.\n\nDetails:\n{task.Exception.Message}", "Error", MessageBoxButton.OK,
@@ -139,7 +139,11 @@ namespace KsWare.AppVeyorClient.UI {
 		}
 
 		private void DoPost() {
-			Client.Project.UpdateProjectSettingsYaml(YamlTextBoxController.Text).ContinueWith(task => {
+			Client.Project.UpdateProjectSettingsYaml(
+				ProjectSelector.SelectedProject.Data.AccountName,
+				ProjectSelector.SelectedProject.Data.Slug, 
+				YamlTextBoxController.Text)
+				.ContinueWithUIDispatcher(task => {
 				if (task.Exception != null) {
 					StatusBarText = $"Update failed. {task.Exception.Message}";
 					MessageBox.Show($"Update failed.\n\nDetails:\n{task.Exception.Message}", "Error", MessageBoxButton.OK, MessageBoxImage.Error);

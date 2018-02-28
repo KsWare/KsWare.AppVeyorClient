@@ -8,6 +8,7 @@ using System.Windows.Controls;
 using JetBrains.Annotations;
 using KsWare.AppVeyorClient.Api;
 using KsWare.AppVeyorClient.Api.Contracts;
+using KsWare.AppVeyorClient.Shared;
 using KsWare.Presentation;
 using KsWare.Presentation.ViewModelFramework;
 
@@ -31,13 +32,26 @@ namespace KsWare.AppVeyorClient.UI {
 		[Hierarchy(HierarchyType.Reference)]
 		public ProjectSelectorVM ProjectSelector { get => Fields.GetValue<ProjectSelectorVM>(); set => Fields.SetValue(value); }
 
-		private async Task DoGet() {
-			var envvars = await Client.Project.GetProjectEnvironmentVariables();
-			var sb      = new StringBuilder();
-			foreach (var var in envvars) {
-				sb.AppendLine($"{var}");
-			}
-			PlainText = sb.ToString();
+		private void DoGet() {
+//			StatusBarText = "Get project environment variables.";
+			Client.Project
+				.GetProjectEnvironmentVariables(ProjectSelector.SelectedProject.Data.AccountName, ProjectSelector.SelectedProject.Data.Slug)
+				.ContinueWithUIDispatcher(task => {
+					if (task.Exception != null) {
+//						StatusBarText = $"Get failed. {task.Exception.Message}";
+						MessageBox.Show($"Get failed.\n\nDetails:\n{task.Exception.Message}", "Error", MessageBoxButton.OK,
+							MessageBoxImage.Error);
+					}
+					else {
+//						StatusBarText              = "Get done.";
+						var sb = new StringBuilder();
+						var envvars = task.Result;
+						foreach (var var in envvars) {
+							sb.AppendLine($"{var}");
+						}
+						PlainText = sb.ToString();
+					}
+				});
 		}
 
 		private void DoLoad() { }
@@ -45,21 +59,30 @@ namespace KsWare.AppVeyorClient.UI {
 		private void DoSave() { }
 
 		private void DoPost() {
-			if (string.IsNullOrWhiteSpace(PlainText)) { }
-			else {
-				var lines     = PlainText.Split(new[] {"\r\n", "\n", "\r"}, StringSplitOptions.None);
-				var variables = new List<NameValueSecurePair>();
-				foreach (var line in lines) {
-					if (string.IsNullOrWhiteSpace(line)) continue;
-					var tokens      = line.Split(new[] {":"}, 2, StringSplitOptions.None);
-					var name        = tokens[0].Trim();
-					var value       = tokens[1].Trim();
-					var isEncrypted = value.StartsWith("secure!");
-					value = isEncrypted ? value.Substring(7).Trim() : value;
-					variables.Add(new NameValueSecurePair(name, value, isEncrypted));
-				}
-				Client.Project.UpdateProjectEnvironmentVariables(variables);
+			if (string.IsNullOrWhiteSpace(PlainText)) return;
+			var lines     = PlainText.Split(new[] {"\r\n", "\n", "\r"}, StringSplitOptions.None);
+			var variables = new List<NameValueSecurePair>();
+			foreach (var line in lines) {
+				if (string.IsNullOrWhiteSpace(line)) continue;
+				var tokens      = line.Split(new[] {":"}, 2, StringSplitOptions.None);
+				var name        = tokens[0].Trim();
+				var value       = tokens[1].Trim();
+				var isEncrypted = value.StartsWith("secure!");
+				value = isEncrypted ? value.Substring(7).Trim() : value;
+				variables.Add(new NameValueSecurePair(name, value, isEncrypted));
 			}
+			Client.Project
+				.UpdateProjectEnvironmentVariables(ProjectSelector.SelectedProject.Data.AccountName,
+					ProjectSelector.SelectedProject.Data.Slug, variables).ContinueWithUIDispatcher(task => {
+					if (task.Exception != null) {
+//						StatusBarText = $"Update failed. {task.Exception.Message}";
+						MessageBox.Show($"Update failed.\n\nDetails:\n{task.Exception.Message}", "Error", MessageBoxButton.OK,
+							MessageBoxImage.Error);
+					}
+					else {
+//						StatusBarText = "Update done.";
+					}
+				});
 		}
 
 	

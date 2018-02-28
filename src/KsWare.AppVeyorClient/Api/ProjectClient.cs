@@ -66,7 +66,7 @@ namespace KsWare.AppVeyorClient.Api {
 
 		// Request: PUT /api/projects/{accountName}/{projectSlug}/settings/yaml
 		// Request body (plain/text):
-		private async Task UpdateProjectSettingsYaml(string accountName, string projectSlug, string yaml) {
+		public async Task UpdateProjectSettingsYaml(string accountName, string projectSlug, string yaml) {
 			await _client.PutTextAsync($"/api/projects/{accountName}/{projectSlug}/settings/yaml", yaml);
 		}
 
@@ -130,12 +130,12 @@ GET /api/projects/{accountName}/{projectSlug}/settings/environment-variables
 		}
 
 		// PUT /api/projects/{accountName}/{projectSlug}/settings/environment-variables
-		private async Task UpdateProjectEnvironmentVariables(string accountName, string projectSlug, IEnumerable<NameValueSecurePair> variables) {
+		public async Task UpdateProjectEnvironmentVariables(string accountName, string projectSlug, IEnumerable<NameValueSecurePair> variables) {
 			await _client.PutJsonAsync($"/api/projects/{accountName}/{projectSlug}/settings/environment-variables", variables);
 		}
 
 		// PUT /api/projects/{accountName}/{projectSlug}/settings/build-number
-		private async Task UpdateProjectBuildNumber(string accountName,string projectSlug,int nextBuildNumber) {
+		public async Task UpdateProjectBuildNumber(string accountName,string projectSlug,int nextBuildNumber) {
 			var s = $@"{{""nextBuildNumber"": {nextBuildNumber}}}";
 			await _client.PutJsonTextAsync($"/api/projects/{accountName}/{projectSlug}/settings/build-number", s);
 		}
