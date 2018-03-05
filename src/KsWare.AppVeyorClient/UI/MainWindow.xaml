@@ -11,7 +11,12 @@
 	d:DataContext="{d:DesignInstance Type={x:Type ui:MainWindowVM}}"
 	>
 	<DockPanel Margin="4 4 4 4">
-		<ui:ProjectSelector DockPanel.Dock="Top" DataContext="{Binding ProjectSelector}" Margin="0 0 0 6"/>
+		<DockPanel DockPanel.Dock="Top">
+			<StackPanel DockPanel.Dock="Right">
+				<Button Content="New Window" Command="{Binding NewWindowAction}"/>
+			</StackPanel>
+			<ui:ProjectSelector DataContext="{Binding ProjectSelector}" Margin="0 0 0 6" />
+		</DockPanel>
 		<TabControl>
 			<TabItem Header="Common">
 				<DockPanel>

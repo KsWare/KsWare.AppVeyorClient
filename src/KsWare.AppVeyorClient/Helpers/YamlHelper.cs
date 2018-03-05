@@ -49,7 +49,6 @@ namespace KsWare.AppVeyorClient.Helpers {
 			return sb.ToString().TrimEnd();
 		}
 
-
 		public static YamlBlock ExtractBlock(string s) {
 			// - ps: "...\"..."
 			var m = Regex.Match(s, @"^(?<indent>\s*)(?<suffix>-\s*(ps|cmd|pwsh)\s*:\s)\s*""(?<content>.*?)""\s*$",

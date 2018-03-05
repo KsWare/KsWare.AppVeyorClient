@@ -7,7 +7,6 @@ using System.Windows;
 using System.Windows.Controls;
 using System.Windows.Data;
 using KsWare.Presentation.Core.Providers;
-using KsWare.Presentation.ViewFramework.AttachedBehavior;
 using KsWare.Presentation.ViewModelFramework;
 
 namespace KsWare.AppVeyorClient.UI.Common {
@@ -42,17 +41,20 @@ namespace KsWare.AppVeyorClient.UI.Common {
 			}
 		}
 
-		protected override void OnDataChanged(DataChangedEventArgs e) {
+		protected sealed override void OnDataChanged(DataChangedEventArgs e) {
 			base.OnDataChanged(e);
 			if (e.NewData != null) {
-				OnViewConntected();
+				OnViewConnected();
 			}
 		}
 
-		protected virtual void OnViewConntected() {
+		protected virtual void OnViewConnected() {
+			ActivePoint = new ActivePoint(Data);
 			Data.Text = _data.Text;
 			Data.IsEnabled = _data.IsEnabled;
 		}
+
+		public ActivePoint ActivePoint { get; private set; }
 	}
 
 	public class TextBoxData {
@@ -60,26 +62,4 @@ namespace KsWare.AppVeyorClient.UI.Common {
 		public string Text { get; set; }
 	}
 
-	public class TextBoxControllerBehavior : BehaviorBase<TextBox> {
-
-		public static readonly DependencyProperty ControllerProperty = DependencyProperty.RegisterAttached("Controller", typeof(TextBoxControllerVM), typeof(TextBoxControllerBehavior), new FrameworkPropertyMetadata(default(TextBoxControllerVM),new PropertyChangedCallback(PropertyChangedCallback)));
-
-		public static void SetController(DependencyObject element, TextBoxControllerVM value) { element.SetValue(ControllerProperty, value); }
-
-		public static TextBoxControllerVM GetController(DependencyObject element) { return (TextBoxControllerVM) element.GetValue(ControllerProperty); }
-
-		private static void PropertyChangedCallback(DependencyObject d,DependencyPropertyChangedEventArgs e) {
-			Attach<TextBoxControllerBehavior>(d);
-		}
-
-
-		protected TextBoxControllerBehavior(TextBox dependencyObject) : base(dependencyObject) { }
-
-		protected override void OnAttached() {
-			base.OnAttached();
-			var controller= GetController(AssociatedObject);
-			if(controller==null) return;
-			controller.Data = AssociatedObject;
-		}
-	}
 }

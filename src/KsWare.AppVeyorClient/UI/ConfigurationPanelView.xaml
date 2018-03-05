@@ -37,9 +37,9 @@
 				<RowDefinition/>
 				<RowDefinition/>
 			</Grid.RowDefinitions>
-			<TextBox Grid.Row="0" Text="{Binding PlainText}" FontFamily="Consolas" FontSize="12"
+			<TextBox Grid.Row="0" FontFamily="Consolas" FontSize="14"
 			         HorizontalScrollBarVisibility="Visible"
-			         VerticalScrollBarVisibility="Visible" AcceptsReturn="True" AcceptsTab="True" Margin="0 0 0 6"
+			         VerticalScrollBarVisibility="Visible" Margin="0 0 0 6"
 			         common:TextBoxControllerBehavior.Controller="{Binding YamlTextBoxController}"
 					 IsInactiveSelectionHighlightEnabled="True">
 				<TextBox.Resources>
@@ -57,10 +57,11 @@
 						<system:String>Split</system:String>
 					</ComboBox>
 				</DockPanel>
-				<TextBox Text="{Binding Content}" FontFamily="Consolas" FontSize="12"
+				<TextBox FontFamily="Consolas" FontSize="14"
 				         HorizontalScrollBarVisibility="Visible"
-				         VerticalScrollBarVisibility="Visible" AcceptsReturn="True" AcceptsTab="True"
-				         />
+				         VerticalScrollBarVisibility="Visible"
+				         common:TextBoxControllerBehavior.Controller="{Binding CodeTextBoxController}"
+				         IsInactiveSelectionHighlightEnabled="True"/>
 			</DockPanel>
 		</Grid>
 	</DockPanel>

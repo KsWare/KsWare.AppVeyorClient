@@ -16,7 +16,13 @@ namespace KsWare.AppVeyorClient.UI {
 			OnPropertyChanged(nameof(DisplayName));
 		}
 
-		public string DisplayName => Data?.Name;
+		public string DisplayName {
+			get {
+				if (Data == null) return null;
+				var tags = !string.IsNullOrWhiteSpace(Data.Tags) ? $" ({Data.Tags})" : "";
+				return Data.Name + tags ;
+			}
+		}
 	}
 
 }

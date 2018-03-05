@@ -1,4 +1,6 @@
-﻿using System.Diagnostics;
+﻿using System;
+using System.Diagnostics;
+using Common.Logging.Configuration;
 
 namespace KsWare.AppVeyorClient.UI {
 	/// <summary>

@@ -61,12 +61,12 @@ namespace KsWare.AppVeyorClient.Api {
 
 		public async Task UpdateProjectSettingsYaml(string yaml) {
 			var project = await Project();
-			await UpdateProjectSettingsYaml(project.AccountName, project.Slug, yaml);
+			await UpdateProjectSettingsYamlAsync(project.AccountName, project.Slug, yaml);
 		}
 
 		// Request: PUT /api/projects/{accountName}/{projectSlug}/settings/yaml
 		// Request body (plain/text):
-		public async Task UpdateProjectSettingsYaml(string accountName, string projectSlug, string yaml) {
+		public async Task UpdateProjectSettingsYamlAsync(string accountName, string projectSlug, string yaml) {
 			await _client.PutTextAsync($"/api/projects/{accountName}/{projectSlug}/settings/yaml", yaml);
 		}
 

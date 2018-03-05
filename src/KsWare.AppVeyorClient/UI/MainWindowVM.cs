@@ -49,6 +49,20 @@ namespace KsWare.AppVeyorClient.UI {
 		public ProjectSelectorVM ProjectSelector { get; [UsedImplicitly] private set; }
 
 		/// <summary>
+		/// Gets the <see cref="ActionVM"/> to NewWindow
+		/// </summary>
+		/// <seealso cref="DoNewWindow"/>
+		public ActionVM NewWindowAction { get; [UsedImplicitly] private set; }
+
+		/// <summary>
+		/// Method for <see cref="NewWindowAction"/>
+		/// </summary>
+		[UsedImplicitly]
+		private void DoNewWindow() {
+			new MainWindowVM().Show();
+		}
+
+		/// <summary>
 		/// Method for <see cref="TestAction"/>
 		/// </summary>
 		[UsedImplicitly]

@@ -36,6 +36,7 @@ namespace KsWare.AppVeyorClient.UI {
 		public  ActionVM PostAction { get; [UsedImplicitly] private set; }
 
 		public YamlTextBoxControllerVM YamlTextBoxController { get; [UsedImplicitly] private set; }
+		public TextBoxControllerVM CodeTextBoxController { get; [UsedImplicitly] private set; }
 
 		/// <summary>
 		/// Gets the <see cref="ActionVM"/> to EditPs
@@ -51,10 +52,8 @@ namespace KsWare.AppVeyorClient.UI {
 			YamlTextBoxController.ExpandSelection();
 			YamlTextBoxController.SetEnabled("Editor is open", false);
 			_selectedBlock = YamlHelper.ExtractBlock(YamlTextBoxController.SelectedText);
-			Content = _selectedBlock.Content;
+			CodeTextBoxController.Text = _selectedBlock.Content;
 		}
-
-		public string Content { get => Fields.GetValue<string>(); set => Fields.SetValue(value); }
 
 		/// <summary>
 		/// Gets the <see cref="ActionVM"/> to ApplyEdit
@@ -70,11 +69,11 @@ namespace KsWare.AppVeyorClient.UI {
 			string s;
 			switch (BlockFormat) {
 				case "Block":
-					s = YamlHelper.FormatBlock(Content, AppVeyorClient.UI.BlockFormat.Literal, _selectedBlock.Indent,
+					s = YamlHelper.FormatBlock(CodeTextBoxController.Text, AppVeyorClient.UI.BlockFormat.Literal, _selectedBlock.Indent,
 						_selectedBlock.Suffix);
 					break;
 				case "Split":
-					s = YamlHelper.FormatBlock(Content, AppVeyorClient.UI.BlockFormat.None, _selectedBlock.Indent,
+					s = YamlHelper.FormatBlock(CodeTextBoxController.Text, AppVeyorClient.UI.BlockFormat.None, _selectedBlock.Indent,
 						_selectedBlock.Suffix);
 					break;
 				default:return;
@@ -105,6 +104,10 @@ namespace KsWare.AppVeyorClient.UI {
 			YamlTextBoxController.SetEnabled("Editor is open", true);
 		}
 
+		/// <summary>
+		/// Method for <see cref="GetAction"/>
+		/// </summary>
+		[UsedImplicitly]
 		private void DoGet() {
 			StatusBarText = "Get project settings.";
 			Client.Project.GetProjectSettingsYaml(ProjectSelector.SelectedProject.Data.AccountName, ProjectSelector.SelectedProject.Data.Slug)
@@ -121,6 +124,10 @@ namespace KsWare.AppVeyorClient.UI {
 			});
 		}
 
+		/// <summary>
+		/// Method for <see cref="LoadAction"/>
+		/// </summary>
+		[UsedImplicitly]
 		private void DoLoad() {
 			var dlg = new OpenFileDialog {Title = "Load configuration...", Filter = "YAML-File|*.yml", FilterIndex = 1};
 			if (dlg.ShowDialog() != true) return;
@@ -129,6 +136,10 @@ namespace KsWare.AppVeyorClient.UI {
 			}
 		}
 
+		/// <summary>
+		/// Method for <see cref="SaveAction"/>
+		/// </summary>
+		[UsedImplicitly]
 		private void DoSave() {
 			var dlg = new SaveFileDialog {Title = "Save configuration as...", Filter = "YAML-File|*.yml", FilterIndex = 1};
 			if (dlg.ShowDialog() != true) return;
@@ -138,15 +149,19 @@ namespace KsWare.AppVeyorClient.UI {
 			}
 		}
 
+		/// <summary>
+		/// Method for <see cref="PostAction"/>
+		/// </summary>
+		[UsedImplicitly]
 		private void DoPost() {
-			Client.Project.UpdateProjectSettingsYaml(
+			Client.Project.UpdateProjectSettingsYamlAsync(
 				ProjectSelector.SelectedProject.Data.AccountName,
 				ProjectSelector.SelectedProject.Data.Slug, 
 				YamlTextBoxController.Text)
 				.ContinueWithUIDispatcher(task => {
 				if (task.Exception != null) {
-					StatusBarText = $"Update failed. {task.Exception.Message}";
-					MessageBox.Show($"Update failed.\n\nDetails:\n{task.Exception.Message}", "Error", MessageBoxButton.OK, MessageBoxImage.Error);
+					StatusBarText = $"Update failed. {task.Exception.InnerException?.Message}";
+					MessageBox.Show($"Update failed.\n\nDetails:\n{task.Exception.InnerException?.Message}", "Error", MessageBoxButton.OK, MessageBoxImage.Error);
 				}
 				else {
 					StatusBarText="Update done.";
@@ -165,9 +180,9 @@ namespace KsWare.AppVeyorClient.UI {
 
 	public enum ChompingIndicator {
 		None,
-		Clip,              //		"clip": keep the line feed, remove the trailing blank lines. (TrimEnd)
-		Strip,              // -	"strip": remove the line feed, remove the trailing blank lines.	(Trim)
-		Keep,               // +	"keep": keep the line feed, keep trailing blank lines.	
+		Clip,       //		"clip": keep the line feed, remove the trailing blank lines. (TrimEnd)
+		Strip,      // -	"strip": remove the line feed, remove the trailing blank lines.	(Trim)
+		Keep,       // +	"keep": keep the line feed, keep trailing blank lines.	
 	}
 
 }

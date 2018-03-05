@@ -16,8 +16,10 @@ using JetBrains.Annotations;
 using Newtonsoft.Json;
 using Newtonsoft.Json.Linq;
 using Newtonsoft.Json.Serialization;
+using static KsWare.AppVeyorClient.Shared.TaskExtensions;
 
 using static System.Net.Http.HttpMethod;
+
 
 namespace KsWare.AppVeyorClient {
 
@@ -164,68 +166,6 @@ namespace KsWare.AppVeyorClient {
 		private string ToJsonString(object json) {
 			return JsonConvert.SerializeObject(json,settings: JsonSerializerSettings);
 		}
-
-		private static readonly TaskFactory _myTaskFactory = new TaskFactory(CancellationToken.None, TaskCreationOptions.None,
-			TaskContinuationOptions.None, TaskScheduler.Default);
-
-		public static T RunSync<T>(Func<Task<T>> func) {
-			var cultureUi = CultureInfo.CurrentUICulture;
-			var culture   = CultureInfo.CurrentCulture;
-			return _myTaskFactory.StartNew<Task<T>>(delegate {
-				Thread.CurrentThread.CurrentCulture   = culture;
-				Thread.CurrentThread.CurrentUICulture = cultureUi;
-				return func();
-			}).Unwrap<T>().GetAwaiter().GetResult();
-		}
-		// Helper.RunSync(new Func<Task<ReturnTypeGoesHere>>(async () => await AsyncCallGoesHere(myparameter)));
-
-		public static RunSyncResult<T> RunSync2<T>(Func<Task<T>> func) {
-			try {
-				var cultureUi = CultureInfo.CurrentUICulture;
-				var culture   = CultureInfo.CurrentCulture;
-				var r = _myTaskFactory.StartNew<Task<T>>(delegate {
-					Thread.CurrentThread.CurrentCulture   = culture;
-					Thread.CurrentThread.CurrentUICulture = cultureUi;
-					return func();
-				}).Unwrap<T>().GetAwaiter().GetResult();
-				return new RunSyncResult<T>(r);
-			}
-			catch (Exception ex) {
-				return new RunSyncResult<T>(ex);
-			}
-		}
-
-		public static T RunSync<T>(Func<Task<T>> func, out Exception exception) {
-			exception = null;
-			try {
-				var cultureUi = CultureInfo.CurrentUICulture;
-				var culture   = CultureInfo.CurrentCulture;
-				return _myTaskFactory.StartNew<Task<T>>(delegate {
-					Thread.CurrentThread.CurrentCulture   = culture;
-					Thread.CurrentThread.CurrentUICulture = cultureUi;
-					return func();
-				}).Unwrap<T>().GetAwaiter().GetResult();
-			}
-			catch (Exception ex) {
-				exception = ex;
-				return default(T);
-			}
-		}
-
-		public class RunSyncResult<T> {
-
-			public RunSyncResult(T result) { Result = result; }
-
-			public RunSyncResult([NotNull] Exception exception) {
-				Exception = exception ?? throw new ArgumentNullException(nameof(exception));
-			}
-
-			public T Result { get; }
-
-			public Exception Exception { get; }
-		}
-
-
 	}
 
 	public static class HttpClientExLogExtension {
