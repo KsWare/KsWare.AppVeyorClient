@@ -126,6 +126,8 @@
     <Compile Include="Helpers\YamlHelper.cs" />
     <Compile Include="UI\Common\ActivePoint.cs" />
     <Compile Include="UI\Common\CodeTextBoxControllerVM.cs" />
+    <Compile Include="UI\Common\KeyAction.cs" />
+    <Compile Include="UI\Common\SearchPanelVM.cs" />
     <Compile Include="UI\Common\TextBoxControllerBehavior.cs" />
     <Compile Include="UI\Common\TextBoxControllerVM.cs" />
     <Compile Include="UI\Common\YamlTextBoxControllerVM.cs" />

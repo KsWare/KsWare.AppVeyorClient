@@ -26,6 +26,8 @@ namespace KsWare.AppVeyorClient.UI {
 
 		public ConfigurationPanelVM() {
 			RegisterChildren(()=>this);
+
+			SearchPanel.Editor = YamlTextBoxController;
 		}
 
 		private Client Client => AppVM.Client;
@@ -96,6 +98,8 @@ namespace KsWare.AppVeyorClient.UI {
 
 		public string StatusBarText { get => Fields.GetValue<string>(); set => Fields.SetValue(value); }
 
+		public SearchPanelVM SearchPanel { get; private set; }
+
 		/// <summary>
 		/// Method for <see cref="CancelEditAction"/>
 		/// </summary>
@@ -154,6 +158,7 @@ namespace KsWare.AppVeyorClient.UI {
 		/// </summary>
 		[UsedImplicitly]
 		private void DoPost() {
+			StatusBarText = "Send project settings...";
 			Client.Project.UpdateProjectSettingsYamlAsync(
 				ProjectSelector.SelectedProject.Data.AccountName,
 				ProjectSelector.SelectedProject.Data.Slug, 

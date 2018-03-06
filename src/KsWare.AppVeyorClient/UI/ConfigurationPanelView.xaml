@@ -7,6 +7,7 @@
     xmlns:local="clr-namespace:KsWare.AppVeyorClient.UI"
     xmlns:common="clr-namespace:KsWare.AppVeyorClient.UI.Common"
     xmlns:system="clr-namespace:System;assembly=mscorlib"
+    xmlns:i="http://schemas.microsoft.com/expression/2010/interactivity"
     mc:Ignorable="d" 
     d:DesignHeight="300" d:DesignWidth="300"
 	d:DataContext="{d:DesignInstance Type={x:Type local:ConfigurationPanelVM}}"
@@ -37,15 +38,42 @@
 				<RowDefinition/>
 				<RowDefinition/>
 			</Grid.RowDefinitions>
-			<TextBox Grid.Row="0" FontFamily="Consolas" FontSize="14"
-			         HorizontalScrollBarVisibility="Visible"
-			         VerticalScrollBarVisibility="Visible" Margin="0 0 0 6"
-			         common:TextBoxControllerBehavior.Controller="{Binding YamlTextBoxController}"
-					 IsInactiveSelectionHighlightEnabled="True">
-				<TextBox.Resources>
-					<SolidColorBrush x:Key="{x:Static SystemColors.InactiveSelectionHighlightBrushKey}" Color="LightSkyBlue" />
-				</TextBox.Resources>
-			</TextBox>
+			<DockPanel>
+				<DockPanel.InputBindings>
+					<KeyBinding Command="{Binding SearchPanel.NextResultAction}" Key="F3" />
+					<KeyBinding Command="{Binding SearchPanel.PreviousResultAction}" Key="F3" Modifiers="Shift" />
+<!--					<DataTrigger Binding="{Binding ElementName=CodeDigit1, Path=Text.Length}" Value="1">-->
+<!--						<Setter Property="FocusManager.FocusedElement" Value="{Binding ElementName=CodeDigit2}" />-->
+<!--					</DataTrigger>-->
+				</DockPanel.InputBindings>
+				<i:Interaction.Triggers>
+					<i:EventTrigger EventName="PreviewKeyDown">
+						<common:KeyAction Key="F" Modifiers="Control" Target="{Binding ElementName=SearchTextBox}">
+						</common:KeyAction>
+					</i:EventTrigger>
+				</i:Interaction.Triggers>
+
+				<DockPanel Dock="Top" LastChildFill="False">
+					<StackPanel Orientation="Horizontal" DockPanel.Dock="Right" DataContext="{Binding SearchPanel}">
+						<TextBox x:Name="SearchTextBox" Text="{Binding SearchText, UpdateSourceTrigger=PropertyChanged}" Width="150"/>
+						<TextBlock Text="{Binding CurrentResultIndex}" Foreground="LightGray" Margin="4 0 0 0"/>
+						<TextBlock Text="/" Foreground="LightGray"  />
+						<TextBlock Text="{Binding ResultCount}" Foreground="LightGray" />
+						<Button Content="" Command="{Binding NextResultAction}" FontFamily="Wingdings 3" Width="18" Margin="4 0 0 0"/>
+						<Button Content="" Command="{Binding PreviousResultAction}" FontFamily="Wingdings 3" Width="18"/>
+					</StackPanel>
+				</DockPanel>
+				<TextBox Grid.Row="0" FontFamily="Consolas" FontSize="14"
+						 HorizontalScrollBarVisibility="Visible"
+						 VerticalScrollBarVisibility="Visible" Margin="0 0 0 6"
+						 common:TextBoxControllerBehavior.Controller="{Binding YamlTextBoxController}"
+						 IsInactiveSelectionHighlightEnabled="True">
+					<FrameworkElement.Resources>
+						<SolidColorBrush x:Key="{x:Static SystemColors.InactiveSelectionHighlightBrushKey}" Color="LightSkyBlue" />
+					</FrameworkElement.Resources>
+				</TextBox>
+			</DockPanel>
+
 			<GridSplitter Grid.Row="0" Height="6" VerticalAlignment="Bottom" HorizontalAlignment="Stretch" Background="DarkGray"></GridSplitter>
 			<DockPanel Grid.Row="1">
 				<DockPanel DockPanel.Dock="Top" LastChildFill="False">
@@ -66,3 +94,4 @@
 		</Grid>
 	</DockPanel>
 </UserControl>
+
