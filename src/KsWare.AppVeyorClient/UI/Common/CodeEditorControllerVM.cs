@@ -10,11 +10,21 @@ namespace KsWare.AppVeyorClient.UI.Common {
 		}
 
 		public void ExpandSelection() {
-			var li0 = Data.TextArea.Selection.StartPosition.Line;
-			var li1 = Data.TextArea.Selection.EndPosition.Line;
-			var selStart = Data.Document.GetLineByNumber(li0).Offset;
-			var l1 = Data.Document.GetLineByNumber(li1);
-			var selEnd = l1.Offset + l1.TotalLength - l1.DelimiterLength;
+			int selStart;
+			int selEnd;
+			if (Data.SelectionLength == 0) {
+				var li = Data.TextArea.Caret.Line;
+				var l = Data.Document.GetLineByNumber(li);
+				selStart = l.Offset;
+				selEnd = l.Offset + l.TotalLength - l.DelimiterLength;
+			}
+			else {
+				var li0 = Data.TextArea.Selection.StartPosition.Line;
+				var li1 = Data.TextArea.Selection.EndPosition.Line;
+				selStart = Data.Document.GetLineByNumber(li0).Offset;
+				var l1 = Data.Document.GetLineByNumber(li1);
+				selEnd = l1.Offset + l1.TotalLength - l1.DelimiterLength;				
+			}
 			
 			Data.Focus();
 			Data.Select(selStart, selEnd - selStart);
