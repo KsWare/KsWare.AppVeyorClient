@@ -6,6 +6,7 @@
     xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
     xmlns:local="clr-namespace:KsWare.AppVeyorClient"
     xmlns:ui="clr-namespace:KsWare.AppVeyorClient.UI"
+    xmlns:common="clr-namespace:KsWare.AppVeyorClient.UI.Common"
     mc:Ignorable="d"
     Title="Appveyor Client" Height="350" Width="525"
 	d:DataContext="{d:DesignInstance Type={x:Type ui:MainWindowVM}}"
@@ -40,6 +41,9 @@
 			</TabItem>
 			<TabItem Header="Project Environment Variables" DataContext="{Binding ProjectEnvironmentVariablesPanel}">
 				<ui:ProjectEnvironmentVariablesView/>
+			</TabItem>
+			<TabItem Header="Avalon Editor">
+				<common:AvalonEditorPanel/>
 			</TabItem>
 		</TabControl>
 	</DockPanel>

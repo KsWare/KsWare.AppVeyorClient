@@ -27,7 +27,7 @@ namespace KsWare.AppVeyorClient.UI {
 		public ConfigurationPanelVM() {
 			RegisterChildren(()=>this);
 
-			SearchPanel.Editor = YamlTextBoxController;
+			SearchPanel.Editor = YamlEditorController;
 		}
 
 		private Client Client => AppVM.Client;
@@ -37,8 +37,8 @@ namespace KsWare.AppVeyorClient.UI {
 		public  ActionVM SaveAction { get; [UsedImplicitly] private set; }
 		public  ActionVM PostAction { get; [UsedImplicitly] private set; }
 
-		public YamlTextBoxControllerVM YamlTextBoxController { get; [UsedImplicitly] private set; }
-		public TextBoxControllerVM CodeTextBoxController { get; [UsedImplicitly] private set; }
+		public YamlEditorControllerVM YamlEditorController { get; [UsedImplicitly] private set; }
+		public TextEditorControllerVM CodeTextBoxController { get; [UsedImplicitly] private set; }
 
 		/// <summary>
 		/// Gets the <see cref="ActionVM"/> to EditPs
@@ -51,9 +51,9 @@ namespace KsWare.AppVeyorClient.UI {
 		/// </summary>
 		[UsedImplicitly]
 		private void DoEditPs() {
-			YamlTextBoxController.ExpandSelection();
-			YamlTextBoxController.SetEnabled("Editor is open", false);
-			_selectedBlock = YamlHelper.ExtractBlock(YamlTextBoxController.SelectedText);
+			YamlEditorController.ExpandSelection();
+			YamlEditorController.SetEnabled("Editor is open", false);
+			_selectedBlock = YamlHelper.ExtractBlock(YamlEditorController.SelectedText);
 			CodeTextBoxController.Text = _selectedBlock.Content;
 		}
 
@@ -81,8 +81,8 @@ namespace KsWare.AppVeyorClient.UI {
 				default:return;
 			}
 
-			YamlTextBoxController.SelectedText = s;
-			YamlTextBoxController.SetEnabled("Editor is open", true);
+			YamlEditorController.SelectedText = s;
+			YamlEditorController.SetEnabled("Editor is open", true);
 		}
 
 		/// <summary>
@@ -105,7 +105,7 @@ namespace KsWare.AppVeyorClient.UI {
 		/// </summary>
 		[UsedImplicitly]
 		private void DoCancelEdit() {
-			YamlTextBoxController.SetEnabled("Editor is open", true);
+			YamlEditorController.SetEnabled("Editor is open", true);
 		}
 
 		/// <summary>
@@ -123,7 +123,7 @@ namespace KsWare.AppVeyorClient.UI {
 				}
 				else {
 					StatusBarText = "Get done.";
-					YamlTextBoxController.Text = task.Result;
+					YamlEditorController.Text = task.Result;
 				}
 			});
 		}
@@ -136,7 +136,7 @@ namespace KsWare.AppVeyorClient.UI {
 			var dlg = new OpenFileDialog {Title = "Load configuration...", Filter = "YAML-File|*.yml", FilterIndex = 1};
 			if (dlg.ShowDialog() != true) return;
 			using (var reader = File.OpenText(dlg.FileName)) {
-				YamlTextBoxController.Text = reader.ReadToEnd();
+				YamlEditorController.Text = reader.ReadToEnd();
 			}
 		}
 
@@ -148,7 +148,7 @@ namespace KsWare.AppVeyorClient.UI {
 			var dlg = new SaveFileDialog {Title = "Save configuration as...", Filter = "YAML-File|*.yml", FilterIndex = 1};
 			if (dlg.ShowDialog() != true) return;
 			using (var writer = File.CreateText(dlg.FileName)) {
-				writer.Write(YamlTextBoxController.Text);
+				writer.Write(YamlEditorController.Text);
 				writer.Flush();
 			}
 		}
@@ -162,7 +162,7 @@ namespace KsWare.AppVeyorClient.UI {
 			Client.Project.UpdateProjectSettingsYamlAsync(
 				ProjectSelector.SelectedProject.Data.AccountName,
 				ProjectSelector.SelectedProject.Data.Slug, 
-				YamlTextBoxController.Text)
+				YamlEditorController.Text)
 				.ContinueWithUIDispatcher(task => {
 				if (task.Exception != null) {
 					StatusBarText = $"Update failed. {task.Exception.InnerException?.Message}";

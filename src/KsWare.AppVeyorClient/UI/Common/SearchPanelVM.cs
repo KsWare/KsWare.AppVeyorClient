@@ -36,7 +36,7 @@ namespace KsWare.AppVeyorClient.UI.Common {
 		/// <seealso cref="DoPreviousResult"/>
 		public ActionVM PreviousResultAction { get; [UsedImplicitly] private set; }
 
-		public YamlTextBoxControllerVM Editor { get; set; }
+		public YamlEditorControllerVM Editor { get; set; }
 
 		private List<int> SearchResults { get; set; } = new List<int>();
 
@@ -71,6 +71,7 @@ namespace KsWare.AppVeyorClient.UI.Common {
 			}
 			Editor.Data.Focus();
 			Editor.Data.Select(SearchResults[CurrentResultIndex-1], SearchText.Length);
+			Editor.Data.ScrollToLine(Editor.Data.TextArea.Selection.StartPosition.Line);
 		}
 
 		/// <summary>
@@ -83,7 +84,7 @@ namespace KsWare.AppVeyorClient.UI.Common {
 			}
 			Editor.Data.Focus();
 			Editor.Data.Select(SearchResults[CurrentResultIndex-1],SearchText.Length);
-			
+			Editor.Data.ScrollToLine(Editor.Data.TextArea.Selection.StartPosition.Line);
 		}
 	}
 }

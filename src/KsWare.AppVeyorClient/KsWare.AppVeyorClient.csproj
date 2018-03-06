@@ -125,12 +125,15 @@
     <Compile Include="Api\BuildWorker.cs" />
     <Compile Include="Helpers\YamlHelper.cs" />
     <Compile Include="UI\Common\ActivePoint.cs" />
-    <Compile Include="UI\Common\CodeTextBoxControllerVM.cs" />
+    <Compile Include="UI\Common\AvalonEditorPanel.xaml.cs">
+      <DependentUpon>AvalonEditorPanel.xaml</DependentUpon>
+    </Compile>
+    <Compile Include="UI\Common\CodeEditorControllerVM.cs" />
     <Compile Include="UI\Common\KeyAction.cs" />
     <Compile Include="UI\Common\SearchPanelVM.cs" />
     <Compile Include="UI\Common\TextBoxControllerBehavior.cs" />
-    <Compile Include="UI\Common\TextBoxControllerVM.cs" />
-    <Compile Include="UI\Common\YamlTextBoxControllerVM.cs" />
+    <Compile Include="UI\Common\TextEditorControllerVM.cs" />
+    <Compile Include="UI\Common\YamlEditorControllerVM.cs" />
     <Compile Include="UI\MainWindowVM.cs" />
     <Compile Include="UI\ConfigurationPanelView.xaml.cs">
       <DependentUpon>ConfigurationPanelView.xaml</DependentUpon>
@@ -145,6 +148,10 @@
     </Compile>
     <Compile Include="UI\ProjectSelectorVM.cs" />
     <Compile Include="UI\ProjectVM.cs" />
+    <Page Include="UI\Common\AvalonEditorPanel.xaml">
+      <SubType>Designer</SubType>
+      <Generator>MSBuild:Compile</Generator>
+    </Page>
     <Page Include="UI\MainWindow.xaml">
       <Generator>MSBuild:Compile</Generator>
       <SubType>Designer</SubType>
@@ -220,6 +227,9 @@
   </ItemGroup>
   <ItemGroup>
     <Resource Include="UI\Resources\appveyor_blue.ico" />
+  </ItemGroup>
+  <ItemGroup>
+    <Folder Include="UI\Common\Obsolete\" />
   </ItemGroup>
   <Import Project="$(MSBuildToolsPath)\Microsoft.CSharp.targets" />
 </Project>
