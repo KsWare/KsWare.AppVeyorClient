@@ -7,6 +7,7 @@ using System.Windows;
 using System.Windows.Controls;
 using System.Windows.Data;
 using ICSharpCode.AvalonEdit;
+using KsWare.AppVeyorClient.Helpers;
 using KsWare.Presentation.Core.Providers;
 using KsWare.Presentation.ViewModelFramework;
 
@@ -50,12 +51,15 @@ namespace KsWare.AppVeyorClient.UI.Common {
 		}
 
 		protected virtual void OnViewConnected() {
-			ActivePoint = new ActivePoint(Data);
 			Data.Text = _data.Text;
 			Data.IsEnabled = _data.IsEnabled;
 		}
 
-		public ActivePoint ActivePoint { get; private set; }
+		public DocumentPosition SelectionStartPosition => Data.GetSelectionStartPosition();
+
+		public DocumentPosition SelectionEndPosition => Data.GetSelectionEndPosition();
+
+		public DocumentPosition CarretPosition => Data.GetCaretPosition();
 	}
 
 	public class TextBoxData {

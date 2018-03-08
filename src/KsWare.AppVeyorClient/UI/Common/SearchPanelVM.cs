@@ -3,6 +3,7 @@ using System.Collections.Generic;
 using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
+using ICSharpCode.AvalonEdit.Search;
 using JetBrains.Annotations;
 using KsWare.Presentation;
 using KsWare.Presentation.ViewModelFramework;
@@ -15,8 +16,6 @@ namespace KsWare.AppVeyorClient.UI.Common {
 			RegisterChildren(()=>this);
 			Fields[nameof(SearchText)].ValueChangedEvent.add=OnSearchTextChanged;
 		}
-
-		
 
 		public string SearchText { get => Fields.GetValue<string>(); set => Fields.SetValue(value); }
 
@@ -86,5 +85,13 @@ namespace KsWare.AppVeyorClient.UI.Common {
 			Editor.Data.Select(SearchResults[CurrentResultIndex-1],SearchText.Length);
 			Editor.Data.ScrollToLine(Editor.Data.TextArea.Selection.StartPosition.Line);
 		}
+
+//		public void Search(string pattern, SearchMode searchMode) {
+//			_skipSearch = true;
+//			SearchText = pattern;
+//			SearchMode = searchMode;
+//			_skipSearch = false;
+//			DoNextResult();
+//		}
 	}
 }

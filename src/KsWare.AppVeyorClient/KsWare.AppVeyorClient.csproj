@@ -119,12 +119,13 @@
     <Compile Include="Api\Contracts\Common\ScriptData.cs" />
     <Compile Include="Api\Contracts\Common\SecurityDescriptorData.cs" />
     <Compile Include="Api\ProjectClient.cs" />
+    <Compile Include="AvalonEdit\TextEditorExtensions.cs" />
     <Compile Include="Shared\FileStore.cs" />
     <Compile Include="Shared\TaskExtensions.cs" />
     <Compile Include="UI\AppVM.cs" />
     <Compile Include="Api\BuildWorker.cs" />
     <Compile Include="Helpers\YamlHelper.cs" />
-    <Compile Include="UI\Common\ActivePoint.cs" />
+    <Compile Include="AvalonEdit\DocumentPosition.cs" />
     <Compile Include="UI\Common\AvalonEditorPanel.xaml.cs">
       <DependentUpon>AvalonEditorPanel.xaml</DependentUpon>
     </Compile>
@@ -138,6 +139,7 @@
     <Compile Include="UI\ConfigurationPanelView.xaml.cs">
       <DependentUpon>ConfigurationPanelView.xaml</DependentUpon>
     </Compile>
+    <Compile Include="UI\NavigationItemVM.cs" />
     <Compile Include="UI\ProjectEnvironmentVariablesView.xaml.cs">
       <DependentUpon>ProjectEnvironmentVariablesView.xaml</DependentUpon>
     </Compile>

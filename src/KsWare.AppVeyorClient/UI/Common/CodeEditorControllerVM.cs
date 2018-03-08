@@ -1,5 +1,11 @@
-﻿using System.Text.RegularExpressions;
+﻿using System;
+using System.Diagnostics;
+using System.Text.RegularExpressions;
 using System.Windows.Input;
+using ICSharpCode.AvalonEdit;
+using ICSharpCode.AvalonEdit.Document;
+using ICSharpCode.AvalonEdit.Search;
+using KsWare.AppVeyorClient.Helpers;
 
 namespace KsWare.AppVeyorClient.UI.Common {
 
@@ -33,19 +39,22 @@ namespace KsWare.AppVeyorClient.UI.Common {
 
 		protected override void OnViewConnected() {
 			base.OnViewConnected();
-			Data.Options.ConvertTabsToSpaces = true;
+			Data.Options.ConvertTabsToSpaces = false;
 			Data.Options.IndentationSize = 4;
 			Data.Options.CutCopyWholeLine = false;
 
 			Data.PreviewKeyDown += DataOnPreviewKeyDown;
 			Data.PreviewKeyUp   += DataOnPreviewKeyUp;
 //			Data.SelectionChanged+=DataOnSelectionChanged;
+
+			// internal search panel
+			// SearchPanel.Install(Data);
 		}
 
 //		private void DataOnSelectionChanged(object s, RoutedEventArgs e) {
 //			if (Data.SelectionLength == 0) {
-//				if (ActivePoint.IsInIndentRegion && ActivePoint.CharPosition % 4 != 0) {
-//					Data.Select(ActivePoint.LineStart + ActivePoint.IndentPosition*4,0);
+//				if (DocumentPosition.IsInIndentRegion && DocumentPosition.LineCharPosition % 4 != 0) {
+//					Data.Select(DocumentPosition.LineStart + DocumentPosition.IndentPosition*4,0);
 //				}
 //			}
 //		}
@@ -54,8 +63,8 @@ namespace KsWare.AppVeyorClient.UI.Common {
 			var modKey = e.KeyboardDevice.Modifiers;
 			var combinedKey = (Key) ((int) modKey << 16 | (int) e.Key);
 			switch (combinedKey) {
-//				case (Key) ((int) Key.Tab | (int) ModifierKeys.None << 16): e.Handled = true; break;
-//				case (Key) ((int) Key.Tab | (int) ModifierKeys.Shift << 16): e.Handled = true; break;
+				case (Key) ((int) Key.Tab | (int) ModifierKeys.None << 16): OnTabPressed(e); break;
+//				case (Key) ((int) Key.Tab | (int) ModifierKeys.Shift << 16): OnTabBackPressed(e); break;
 				case (Key) ((int) Key.Back | (int) ModifierKeys.None << 16): e.Handled = true; break;
 			}
 		}
@@ -64,8 +73,8 @@ namespace KsWare.AppVeyorClient.UI.Common {
 
 			var combinedKey = (Key) ((int) modKey << 16 | (int) e.Key);
 			switch (combinedKey) {
-//				case (Key)((int)Key.Tab | (int)ModifierKeys.None<<16) : e.Handled = true; OnTabPressed(); break;
-//				case (Key)((int)Key.Tab | (int)ModifierKeys.Shift<<16) : e.Handled = true; OnTabBackPressed(); break;
+				case (Key)((int)Key.Tab | (int)ModifierKeys.None<<16) : OnTabPressed(e); break;
+//				case (Key)((int)Key.Tab | (int)ModifierKeys.Shift<<16) : OnTabBackPressed(e); break;
 				case (Key)((int)Key.Back | (int)ModifierKeys.None<<16) : e.Handled = true; OnBackPressed(); break;
 			}
 		}
@@ -75,21 +84,23 @@ namespace KsWare.AppVeyorClient.UI.Common {
 				Data.SelectedText = "";
 			}
 			else {
-				ActivePoint.Refresh();
-				if (ActivePoint.IsInIndentRegion && ActivePoint.CharPosition>0) {
-					if (ActivePoint.CharPosition % 4 == 0) {
-						Data.Select(ActivePoint.LineStart + (ActivePoint.IndentPosition-1) * 4, 4);
+				var pos = Data.GetCaretPosition();
+				if (pos.IsInIndentRegion && pos.LineCharPosition>1) {
+					if (pos.LineCharIndex % 4 == 0) {
+						Data.Select(pos.LineOffset + (pos.IndentIndex-1) * 4, 4);
 					}
 					else {
-						Data.Select(ActivePoint.LineStart + (ActivePoint.IndentPosition) * 4, 4);
+						var p0 = pos.LineOffset + (pos.IndentIndex) * 4;
+						var le = pos.Offset - p0;
+						Data.Select(p0, le);
 					}
 					Data.SelectedText = "";
 				}
 				else {
-					if(Data.SelectionStart==0) return;
+					if(pos.Offset==0) return;
 					var m = 1;
-					if (Data.Text[Data.SelectionStart - 1] == '\n') {
-						if (Data.SelectionStart>1 && Data.Text[Data.SelectionStart - 2] == '\r') m = 2;
+					if (Data.Document.GetCharAt(pos.Offset - 1) == '\n') {
+						if (Data.SelectionStart>1 && Data.Document.GetCharAt(pos.Offset - 2) == '\r') m = 2;
 					}
 					Data.Select(Data.SelectionStart-m,m);
 					Data.SelectedText = "";					
@@ -97,67 +108,54 @@ namespace KsWare.AppVeyorClient.UI.Common {
 			}
 		}
 
-//		private void OnTabPressed() {
-//			if (Data.SelectionLength > 0) {
-//				var li0 = Data.GetLineIndexFromCharacterIndex(Data.SelectionStart);
-//				var lp0 = Data.GetCharacterIndexFromLineIndex(li0);
-//				var cp0 = Data.SelectionStart - lp0;
-//				var li1 = Data.GetLineIndexFromCharacterIndex(Data.SelectionStart + Data.SelectionLength);
-//				var lp1 = Data.GetCharacterIndexFromLineIndex(li1);
-//				var cp1 = Data.SelectionStart + Data.SelectionLength - lp1;
-//				for (int i = li0; i <= li1; i++) {
-//					var ci = Data.GetCharacterIndexFromLineIndex(i);
-//					Data.Select(ci,0);
-//					Data.SelectedText = new string(' ', 4);
-//				}
-//				var p0 = lp0 + cp0 + 4;
-//				var p1 = Data.GetCharacterIndexFromLineIndex(li1) + cp1 + 4;
-//				Data.Select(p0,p1-p0);
-//			}
-//			else {
-//				var li=Data.GetLineIndexFromCharacterIndex(Data.SelectionStart);
-//				var lci=Data.GetCharacterIndexFromLineIndex(li);
-//				var cp = Data.SelectionStart - lci;
-//				var t=Data.GetLineText(li);
-//				var sp= Regex.Match(t, @"^\x20*");
-//				if (cp <= sp.Length) {
-//					var ti = cp / 4;
-//					var ind = sp.Length / 4;
-//					var sp1 = (ind + 1) * 4;
-//					Data.SelectedText=new string(' ',sp1-sp.Length);
-//					Data.Select(lci + (ti+1) * 4, 0);
-//				}
-//				else {
-////					int i = (cp / 4) * 4;
-////					Data.SelectedText = new string(' ', sp1 - sp0);
-//				}
-//			}
-//		}
+		private void OnTabPressed(KeyEventArgs e) {
+//			Debug.WriteLine($"e.KeyStates {e.KeyStates}"); // Down Down ... None
+			Debug.WriteLine($"{e.IsDown,-5} {e.IsUp,-5} {e.IsRepeat}");
+			// D 
+			// D IsRepeat
+			// ..
+			// U
 
-//		private void OnTabBackPressed() {
-//			if (Data.SelectionLength > 0) {
-//				var li0 = Data.GetLineIndexFromCharacterIndex(Data.SelectionStart);
-//				var lp0 = Data.GetCharacterIndexFromLineIndex(li0);
-//				var cp0 = Data.SelectionStart - lp0;
-//				var li1 = Data.GetLineIndexFromCharacterIndex(Data.SelectionStart + Data.SelectionLength);
-//				var lp1 = Data.GetCharacterIndexFromLineIndex(li1);
-//				var cp1 = Data.SelectionStart + Data.SelectionLength - lp1;
-//				var x0 = false;
-//				var x1 = false;
-//				for (int i = li0; i <= li1; i++) {
-//					if (Data.GetLineText(i).StartsWith("    ")) {
-//						if (i == li0) x0 = true;
-//						if (i == li1) x1 = true;
-//						var ci = Data.GetCharacterIndexFromLineIndex(i);
-//						Data.Select(ci, 4);
-//						Data.SelectedText = "";
-//					}
-//				}
-//				var p0 = lp0                                      + cp0 + (x0 ? 4 : 0);
-//				var p1 = Data.GetCharacterIndexFromLineIndex(li1) + cp1 + (x1 ? 4 : 0);
-//				Data.Select(p0, p1 - p0);
-//			}
-//		}
+			if (Data.Options.ConvertTabsToSpaces == false) e.Handled = true; // handled in OnTabPressed
+			else return;
+			if (e.IsDown && !e.IsRepeat) return;
+
+			if (Data.SelectionLength > 0) {
+				var li0 = Data.TextArea.Selection.StartPosition.Line;
+				var cp0 = Data.TextArea.Selection.StartPosition.Column;
+				var li1 = Data.TextArea.Selection.EndPosition.Line;
+				var cp1 = Data.TextArea.Selection.EndPosition.Column;
+				var l0 = Data.Document.GetLineByNumber(li0);
+
+				for (int i = li0; i <= li1; i++) {
+					var l = i == li0 ? l0 : Data.Document.GetLineByNumber(i);
+					Data.Select(l.Offset,0);
+					Data.SelectedText=new string(' ', 4);
+				}
+
+				var ss = l0.Offset + cp0 - 1 + 4;
+				var sl = li0 == li1 ? l0.Offset + cp1 - 1 + 4 : (li1 - li0 - 1) * 4;
+				Data.Select(ss,sl);
+			}
+			else {
+				var l=Data.Document.GetLineByOffset(Data.SelectionStart);
+				var lci=l.Offset;
+				var cp = Data.SelectionStart - lci;
+				var t = Data.Text.Substring(l.Offset, l.Length);
+				var sp= Regex.Match(t, @"^\x20*");
+				if (cp <= sp.Length) {
+					var ti = cp / 4;
+					var ind = sp.Length / 4;
+					var sp1 = (ind + 1) * 4;
+					Data.SelectedText=new string(' ',sp1-sp.Length);
+					Data.Select(lci + (ti+1) * 4, 0);
+				}
+				else {
+//					int i = (cp / 4) * 4;
+//					Data.SelectedText = new string(' ', sp1 - sp0);
+				}
+			}
+		}
 	}
 
 }

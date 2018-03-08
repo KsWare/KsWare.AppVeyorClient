@@ -40,29 +40,49 @@
 			</Grid.RowDefinitions>
 			<DockPanel>
 				<DockPanel.InputBindings>
-					<KeyBinding Command="{Binding SearchPanel.NextResultAction}" Key="F3" />
-					<KeyBinding Command="{Binding SearchPanel.PreviousResultAction}" Key="F3" Modifiers="Shift" />
+<!--					<KeyBinding Command="{Binding SearchPanel.NextResultAction}" Key="F3" />-->
+<!--					<KeyBinding Command="{Binding SearchPanel.PreviousResultAction}" Key="F3" Modifiers="Shift" />-->
 <!--					<DataTrigger Binding="{Binding ElementName=CodeDigit1, Path=Text.Length}" Value="1">-->
 <!--						<Setter Property="FocusManager.FocusedElement" Value="{Binding ElementName=CodeDigit2}" />-->
 <!--					</DataTrigger>-->
 				</DockPanel.InputBindings>
-				<i:Interaction.Triggers>
-					<i:EventTrigger EventName="PreviewKeyDown">
-						<common:KeyAction Key="F" Modifiers="Control" Target="{Binding ElementName=SearchTextBox}">
-						</common:KeyAction>
-					</i:EventTrigger>
-				</i:Interaction.Triggers>
+<!--				<i:Interaction.Triggers>-->
+<!--					<i:EventTrigger EventName="PreviewKeyDown">-->
+<!--						<common:KeyAction Key="F" Modifiers="Control" Target="{Binding ElementName=SearchTextBox}">-->
+<!--						</common:KeyAction>-->
+<!--					</i:EventTrigger>-->
+<!--				</i:Interaction.Triggers>-->
 
-				<DockPanel Dock="Top" LastChildFill="False">
-					<StackPanel Orientation="Horizontal" DockPanel.Dock="Right" DataContext="{Binding SearchPanel}">
-						<TextBox x:Name="SearchTextBox" Text="{Binding SearchText, UpdateSourceTrigger=PropertyChanged}" Width="150"/>
-						<TextBlock Text="{Binding CurrentResultIndex}" Foreground="LightGray" Margin="4 0 0 0"/>
-						<TextBlock Text="/" Foreground="LightGray"  />
-						<TextBlock Text="{Binding ResultCount}" Foreground="LightGray" />
-						<Button Content="" Command="{Binding NextResultAction}" FontFamily="Wingdings 3" Width="18" Margin="4 0 0 0"/>
-						<Button Content="" Command="{Binding PreviousResultAction}" FontFamily="Wingdings 3" Width="18"/>
-					</StackPanel>
-				</DockPanel>
+				<StackPanel DockPanel.Dock="Top">
+					<DockPanel LastChildFill="False" Margin="0">
+						<ComboBox 
+							Style="{StaticResource ComboBoxFlatStyle}" 
+							ItemsSource="{Binding NavigationItems}"
+							SelectedItem="{Binding SelectedNavigationItem}"
+							Width="150">
+							<ComboBox.ItemTemplate>
+								<DataTemplate DataType="{x:Type local:NavigationItemVM}">
+									<TextBlock x:Name="TextBlock" Text="{Binding DisplayName}"/>
+									<DataTemplate.Triggers>
+										<DataTrigger Binding="{Binding ExistsInDocument}" Value="false">
+											<Setter TargetName="TextBlock"  Property="Foreground" Value="LightGray"/>
+										</DataTrigger>
+									</DataTemplate.Triggers>
+								</DataTemplate>
+							</ComboBox.ItemTemplate>
+						</ComboBox>
+						<StackPanel Orientation="Horizontal" DockPanel.Dock="Right" DataContext="{Binding SearchPanel}">
+							<TextBox x:Name="SearchTextBox" Text="{Binding SearchText, UpdateSourceTrigger=PropertyChanged}" Width="150"/>
+							<TextBlock Text="{Binding CurrentResultIndex}" Foreground="LightGray" Margin="4 0 0 0"/>
+							<TextBlock Text="/" Foreground="LightGray"  />
+							<TextBlock Text="{Binding ResultCount}" Foreground="LightGray" />
+							<Button Content="" Command="{Binding NextResultAction}" FontFamily="Wingdings 3" Width="18" Margin="4 0 0 0"/>
+							<Button Content="" Command="{Binding PreviousResultAction}" FontFamily="Wingdings 3" Width="18"/>
+						</StackPanel>
+					</DockPanel>
+					<Line Height="1" Stroke="DarkGray" StrokeThickness="1" Y1="0.5" Y2="0.5" X2="{Binding ActualWidth, RelativeSource={RelativeSource Self}}"  />
+				</StackPanel>
+
 				<avalonEdit:TextEditor
 					xmlns:avalonEdit="http://icsharpcode.net/sharpdevelop/avalonedit"
 					Name="textEditor"
@@ -111,6 +131,10 @@
 		</Grid>
 	</DockPanel>
 </UserControl>
+
+
+
+
 
 
 

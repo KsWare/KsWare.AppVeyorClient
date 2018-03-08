@@ -8,6 +8,7 @@ using System.Text.RegularExpressions;
 using System.Threading.Tasks;
 using System.Windows;
 using System.Windows.Controls;
+using ICSharpCode.AvalonEdit.Search;
 using JetBrains.Annotations;
 using KsWare.AppVeyorClient.Api;
 using KsWare.AppVeyorClient.Api.Contracts;
@@ -22,12 +23,98 @@ using Microsoft.Win32;
 namespace KsWare.AppVeyorClient.UI {
 
 	public class ConfigurationPanelVM : ObjectVM {
+
 		private YamlBlock _selectedBlock;
 
 		public ConfigurationPanelVM() {
 			RegisterChildren(()=>this);
 
 			SearchPanel.Editor = YamlEditorController;
+
+			FillNavigation();
+			Fields[nameof(SelectedNavigationItem)].ValueChangedEvent.add = AtNavigationKeyChanged;
+		}
+
+		public ListVM<NavigationItemVM> NavigationItems { get; [UsedImplicitly] private set; }
+
+		private void FillNavigation() {
+			Nav("-- General --");
+			Nav("version:             ");
+			Nav("pull_requests:       ");
+			Nav("branches:			  ");
+			Nav("skip_non_tags:		  ");
+			Nav("skip_branch_with_pr: ");
+			Nav("max_jobs:			  ");
+			Nav("clone_depth:		  ");
+			Nav("clone_script:		  ");
+			Nav("assembly_info:		  ");
+			Nav("dotnet_csproj:		  ");
+//			Nav("build:				  ");
+//			Nav("on_success:		  ");
+//			Nav("on_failure:		  ");
+//			Nav("on_finish:			  ");
+
+			Nav("-- Environment --");
+			Nav("image:               ");
+			Nav("clone_folder:		  ");
+			Nav("init:				  ");
+			Nav("environment:		  ");
+			Nav("services:			  ");
+			Nav("hosts:				  ");
+			Nav("install:			  ");
+			Nav("cache:				  ");
+
+
+			Nav("-- Build --");
+			Nav("configuration:       ");
+			Nav("platform:			  ");
+			Nav("before_build:		  ");
+			Nav("build:				  ");
+			Nav("before_package:	  ");
+			Nav("after_build:		  ");
+
+			Nav("-- Tests --");
+			Nav("before_test:         ");
+			Nav("test:				  ");
+			Nav("after_test:		  ");
+
+			Nav("-- Artifacts --");
+			Nav("artifacts:");
+
+			Nav("-- Deploy --");
+			Nav("before_deploy:                         ");
+			Nav("deploy:								");
+			Nav("- provider: WebDeploy					");
+			Nav("- provider: FTP						");
+			Nav("- provider: NuGet						");
+			Nav("- provider: Octopus					");
+			Nav("- provider: AzureWebJob				");
+			Nav("- provider: AzureAppServiceZipDeploy	");
+			Nav("after_deploy:");
+
+			Nav("-- Nuget --");
+			Nav("nuget:");
+
+			Nav("-- Notifications --");
+			Nav("notifications:                 ");
+			Nav("- provider: Email				");
+			Nav("- provider: Webhook			");
+			Nav("- provider: HipChat			");
+			Nav("- provider: Slack				");
+			Nav("- provider: Campfire			");
+			Nav("- provider: GitHubPullRequest	");
+			Nav("- provider: VSOTeamRoom		");
+		}
+
+		private void Nav(string key) {
+			key = key.Trim(); 
+			// (?mnx-is)^on_finish:(\x20|\r\n|\n)
+			var pattern = @"(?mnx-is)^" + key + @"(\x20|\r\n|\n)";
+			NavigationItems.Add(new NavigationItemVM {
+				DisplayName = key,
+				RegexPattern = pattern,
+				Regex = new Regex(pattern,RegexOptions.Compiled)
+			});
 		}
 
 		private Client Client => AppVM.Client;
@@ -85,6 +172,16 @@ namespace KsWare.AppVeyorClient.UI {
 			YamlEditorController.SetEnabled("Editor is open", true);
 		}
 
+		private void AtNavigationKeyChanged(object sender, ValueChangedEventArgs e) {
+			if(SelectedNavigationItem==null) return;
+
+			var match = SelectedNavigationItem.Regex.Match(YamlEditorController.Data.Text);
+			SelectedNavigationItem.ExistsInDocument = match.Success;
+			if (!match.Success) return;
+			YamlEditorController.Data.Select(match.Index+match.Length,0);
+			YamlEditorController.Data.ScrollTo(YamlEditorController.Data.TextArea.Caret.Line,0);
+		}
+
 		/// <summary>
 		/// Gets the <see cref="ActionVM"/> to CancelEdit
 		/// </summary>
@@ -99,6 +196,9 @@ namespace KsWare.AppVeyorClient.UI {
 		public string StatusBarText { get => Fields.GetValue<string>(); set => Fields.SetValue(value); }
 
 		public SearchPanelVM SearchPanel { get; private set; }
+
+		[Hierarchy(HierarchyType.Reference)]
+		public NavigationItemVM SelectedNavigationItem { get => Fields.GetValue<NavigationItemVM>(); set => Fields.SetValue(value); }
 
 		/// <summary>
 		/// Method for <see cref="CancelEditAction"/>
