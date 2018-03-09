@@ -4,7 +4,7 @@ A windows client for [AppVeyor](https://www.appveyor.com/).
 
 ## Version: 0.2 Alpha
 
-![Screenshot_842](docs\images\Screenshot_842.png)
+![Screenshot_842](docs/images&Screenshot_842.png)
 
 ## Used Technologies
 
