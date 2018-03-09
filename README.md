@@ -2,8 +2,7 @@
 
 A windows client for [AppVeyor](https://www.appveyor.com/).
 
-[Homepage](https://ksware.github.io/KsWare.AppVeyorClient/)
-
+[Homepage](https://ksware.github.io/KsWare.AppVeyorClient/) 
 [Wiki](https://github.com/KsWare/KsWare.AppVeyorClient/wiki)
 
 ## Version: 0.2 Alpha
