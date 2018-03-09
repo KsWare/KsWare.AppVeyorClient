@@ -46,7 +46,7 @@ namespace KsWare.AppVeyorClient.Shared {
 
 		public void SetToken(SecureString secureToken) {
 			_secureToken = secureToken;
-			TokenChanged?.BeginInvoke(this, EventArgs.Empty, null, null);
+			TokenChanged?.Invoke(this, EventArgs.Empty);
 		}
 
 		internal string UnsecureToken =>

@@ -22,7 +22,10 @@ namespace KsWare.AppVeyorClient.UI {
 
 		private async void Initialize() {
 			try {
-				if(!_watchTokenChanged) { _watchTokenChanged = true; Client.Base.TokenChanged += (s, e) => Initialize(); _watchTokenChanged = true; }
+				if (!_watchTokenChanged) {
+					_watchTokenChanged = true; 
+					Client.Base.TokenChanged += (s, e) => Initialize();
+				}
 				if (!Client.Base.HasToken) return;
 				var projects=await AppVM.Client.Project.GetProjects();
 				Projects.MːData=projects;
