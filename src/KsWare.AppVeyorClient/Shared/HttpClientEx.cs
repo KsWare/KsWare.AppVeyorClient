@@ -1,27 +1,17 @@
 ﻿using System;
 using System.Diagnostics;
-using System.Globalization;
 using System.IO;
 using System.Net;
 using System.Net.Http;
 using System.Net.Http.Headers;
-using System.Net.Mime;
 using System.Security;
 using System.Text;
-using System.Threading;
 using System.Threading.Tasks;
-using System.Xml.Serialization;
 using Common.Logging;
-using JetBrains.Annotations;
 using Newtonsoft.Json;
-using Newtonsoft.Json.Linq;
 using Newtonsoft.Json.Serialization;
-using static KsWare.AppVeyorClient.Shared.TaskExtensions;
 
-using static System.Net.Http.HttpMethod;
-
-
-namespace KsWare.AppVeyorClient {
+namespace KsWare.AppVeyorClient.Shared {
 
 	public sealed class HttpClientEx {
 
@@ -46,7 +36,7 @@ namespace KsWare.AppVeyorClient {
 
 		public bool HasToken => _secureToken != null && _secureToken.Length > 0;
 
-		public EventHandler TokenChanged;
+		public event EventHandler TokenChanged;
 
 		public static SecureString CreateSecureToken(string unsecureToken) {
 			var s = new SecureString();
@@ -59,7 +49,7 @@ namespace KsWare.AppVeyorClient {
 			TokenChanged?.BeginInvoke(this, EventArgs.Empty, null, null);
 		}
 
-		private string UnsecureToken =>
+		internal string UnsecureToken =>
 			System.Runtime.InteropServices.Marshal.PtrToStringAuto(
 				System.Runtime.InteropServices.Marshal.SecureStringToBSTR(_secureToken));
 
@@ -97,9 +87,9 @@ namespace KsWare.AppVeyorClient {
 			}
 		}
 
-		public string GetJsonText(string api) => RunSync(async () => await GetJsonTextAsync(api));
+		public string GetJsonText(string api) => TaskExtensions.RunSync(async () => await GetJsonTextAsync(api));
 
-		public string GetJsonText(string api, out Exception exception) => RunSync(async () => await GetJsonTextAsync(api),out exception);
+		public string GetJsonText(string api, out Exception exception) => TaskExtensions.RunSync(async () => await GetJsonTextAsync(api),out exception);
 
 		public async Task<string> GetJsonTextAsync(string api) => await SendAsync("GET", api); 
 
@@ -121,7 +111,11 @@ namespace KsWare.AppVeyorClient {
 			await SendAsync("POST", api, jsonString, "application/json");
 		}
 
-		private async Task<string> SendAsync(HttpRequestMessage message) {
+		public string Send(HttpRequestMessage message, out Exception exception) =>
+			TaskExtensions.RunSync(async () => await SendAsync(message), out exception);
+		
+
+		public async Task<string> SendAsync(HttpRequestMessage message) {
 			Debug.WriteLine($"{message.Method} {message.RequestUri.PathAndQuery}");
 
 			using (var response = await _httpClient.SendAsync(message)) {
@@ -146,9 +140,13 @@ namespace KsWare.AppVeyorClient {
 		}
 
 		private async Task<string> SendAsync(string method, string api, string content = null, string contentType=null) {
-			Debug.WriteLine($"{method} {api}");
 			var message=CreateRequest(method,api,content,contentType);
 			return await SendAsync(message);
+		}
+
+		public string Send(string method, string api, string content, string contentType, out Exception exception) {
+			var message = CreateRequest(method, api, content, contentType);
+			return Send(message,out exception);
 		}
 
 		private HttpRequestMessage CreateRequest(string method, string api, string content, string contentType) {
@@ -166,6 +164,8 @@ namespace KsWare.AppVeyorClient {
 		private string ToJsonString(object json) {
 			return JsonConvert.SerializeObject(json,settings: JsonSerializerSettings);
 		}
+
+
 	}
 
 	public static class HttpClientExLogExtension {

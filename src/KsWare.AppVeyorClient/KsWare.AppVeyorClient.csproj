@@ -119,22 +119,30 @@
     <Compile Include="Api\Contracts\Common\ScriptData.cs" />
     <Compile Include="Api\Contracts\Common\SecurityDescriptorData.cs" />
     <Compile Include="Api\ProjectClient.cs" />
-    <Compile Include="AvalonEdit\TextEditorExtensions.cs" />
+    <Compile Include="Shared\AvalonEditExtension\%28ViewModels%29\TextEditorControllerBehavior.cs" />
+    <Compile Include="Shared\AvalonEditExtension\%28ViewModels%29\TextEditorBehavior.cs" />
+    <Compile Include="Shared\AvalonEditExtension\TextEditorExtensions.cs" />
     <Compile Include="Shared\FileStore.cs" />
+    <Compile Include="Shared\PresentationFramework\%28TextBox%29\CodeTextBoxControllerVM.cs" />
+    <Compile Include="Shared\PresentationFramework\%28TextBox%29\TextBoxControllerBehavior.cs" />
+    <Compile Include="Shared\PresentationFramework\%28TextBox%29\TextBoxControllerVM.cs" />
     <Compile Include="Shared\TaskExtensions.cs" />
+    <Compile Include="UI\ApiTesterPanel.xaml.cs">
+      <DependentUpon>ApiTesterPanel.xaml</DependentUpon>
+    </Compile>
+    <Compile Include="UI\ApiTesterPanelVM.cs" />
     <Compile Include="UI\AppVM.cs" />
     <Compile Include="Api\BuildWorker.cs" />
     <Compile Include="Helpers\YamlHelper.cs" />
-    <Compile Include="AvalonEdit\DocumentPosition.cs" />
-    <Compile Include="UI\Common\AvalonEditorPanel.xaml.cs">
+    <Compile Include="Shared\AvalonEditExtension\DocumentPosition.cs" />
+    <Compile Include="UI\AvalonEditorPanel.xaml.cs">
       <DependentUpon>AvalonEditorPanel.xaml</DependentUpon>
     </Compile>
-    <Compile Include="UI\Common\CodeEditorControllerVM.cs" />
+    <Compile Include="Shared\AvalonEditExtension\%28ViewModels%29\CodeEditorControllerVM.cs" />
     <Compile Include="UI\Common\KeyAction.cs" />
-    <Compile Include="UI\Common\SearchPanelVM.cs" />
-    <Compile Include="UI\Common\TextBoxControllerBehavior.cs" />
-    <Compile Include="UI\Common\TextEditorControllerVM.cs" />
-    <Compile Include="UI\Common\YamlEditorControllerVM.cs" />
+    <Compile Include="UI\SearchPanelVM.cs" />
+    <Compile Include="Shared\AvalonEditExtension\%28ViewModels%29\TextEditorControllerVM.cs" />
+    <Compile Include="Shared\AvalonEditExtension\%28ViewModels%29\YamlEditorControllerVM.cs" />
     <Compile Include="UI\MainWindowVM.cs" />
     <Compile Include="UI\ConfigurationPanelView.xaml.cs">
       <DependentUpon>ConfigurationPanelView.xaml</DependentUpon>
@@ -150,7 +158,11 @@
     </Compile>
     <Compile Include="UI\ProjectSelectorVM.cs" />
     <Compile Include="UI\ProjectVM.cs" />
-    <Page Include="UI\Common\AvalonEditorPanel.xaml">
+    <Page Include="UI\ApiTesterPanel.xaml">
+      <SubType>Designer</SubType>
+      <Generator>MSBuild:Compile</Generator>
+    </Page>
+    <Page Include="UI\AvalonEditorPanel.xaml">
       <SubType>Designer</SubType>
       <Generator>MSBuild:Compile</Generator>
     </Page>
@@ -218,6 +230,9 @@
     <None Include="Api\Contracts\Common\ProjectSettings.json" />
     <None Include="Api\Contracts\Common\UpdateProject.json" />
     <None Include="Api\Contracts\GetEnvironmentSettingsResponse.json" />
+    <None Include="AppVeyor-Yaml.xshd">
+      <CopyToOutputDirectory>Always</CopyToOutputDirectory>
+    </None>
     <None Include="packages.config" />
     <None Include="Properties\Settings.settings">
       <Generator>SettingsSingleFileGenerator</Generator>
@@ -230,8 +245,6 @@
   <ItemGroup>
     <Resource Include="UI\Resources\appveyor_blue.ico" />
   </ItemGroup>
-  <ItemGroup>
-    <Folder Include="UI\Common\Obsolete\" />
-  </ItemGroup>
+  <ItemGroup />
   <Import Project="$(MSBuildToolsPath)\Microsoft.CSharp.targets" />
 </Project>

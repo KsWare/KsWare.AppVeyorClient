@@ -33,6 +33,7 @@ namespace KsWare.AppVeyorClient.UI {
 		public ProjectSelectorVM ProjectSelector { get => Fields.GetValue<ProjectSelectorVM>(); set => Fields.SetValue(value); }
 
 		private void DoGet() {
+			if(ProjectSelector.SelectedProject==null) return;
 //			StatusBarText = "Get project environment variables.";
 			Client.Project
 				.GetProjectEnvironmentVariables(ProjectSelector.SelectedProject.Data.AccountName, ProjectSelector.SelectedProject.Data.Slug)
@@ -59,6 +60,8 @@ namespace KsWare.AppVeyorClient.UI {
 		private void DoSave() { }
 
 		private void DoPost() {
+			if (ProjectSelector.SelectedProject == null) return;
+
 			if (string.IsNullOrWhiteSpace(PlainText)) return;
 			var lines     = PlainText.Split(new[] {"\r\n", "\n", "\r"}, StringSplitOptions.None);
 			var variables = new List<NameValueSecurePair>();

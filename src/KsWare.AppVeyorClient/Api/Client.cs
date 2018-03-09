@@ -1,5 +1,6 @@
 ﻿using System;
 using System.Security;
+using KsWare.AppVeyorClient.Shared;
 
 namespace KsWare.AppVeyorClient.Api {
 

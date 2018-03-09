@@ -1,6 +1,7 @@
 ﻿using System.Threading.Tasks;
 using KsWare.AppVeyorClient.Api.Contracts;
 using KsWare.AppVeyorClient.Api.Contracts.Common;
+using KsWare.AppVeyorClient.Shared;
 
 namespace KsWare.AppVeyorClient.Api {
 

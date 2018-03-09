@@ -1,13 +1,9 @@
 ﻿using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
 using System.Windows.Controls;
 using ICSharpCode.AvalonEdit;
-using KsWare.AppVeyorClient.UI.Common;
+using ICSharpCode.AvalonEdit.Document;
 
-namespace KsWare.AppVeyorClient.Helpers {
+namespace KsWare.AppVeyorClient.Shared.AvalonEditExtension {
 
 	public static class TextEditorExtensions {
 
@@ -21,6 +17,10 @@ namespace KsWare.AppVeyorClient.Helpers {
 			var line = textEditor.Document.GetLineByNumber(lineIndex+1);
 			return textEditor.Document.GetText(line.Offset, line.Length);
 		}
+
+		/// <inheritdoc cref="TextDocument.GetText(ISegment)"/>
+		//[Obsolete("Use Document.GetText(line)")]
+		public static string GetLineText(this TextEditor textEditor, DocumentLine line) => textEditor.Document.GetText(line); 
 
 		/// <inheritdoc cref="TextBox.GetCharacterIndexFromLineIndex"/>
 		[Obsolete("Document.GetLineByNumber(lineIndex).Offset")]
@@ -64,5 +64,7 @@ namespace KsWare.AppVeyorClient.Helpers {
 		public static DocumentPosition GetSelectionEndPosition(this TextEditor editor) => new DocumentPosition(editor, editor.SelectionStart+editor.SelectionLength);
 		
 		public static DocumentPosition GetCaretPosition(this TextEditor editor) => new DocumentPosition(editor, editor.CaretOffset);
+
+
 	}
 }

@@ -5,6 +5,7 @@ using System.Text;
 using System.Threading.Tasks;
 using ICSharpCode.AvalonEdit.Search;
 using JetBrains.Annotations;
+using KsWare.AppVeyorClient.Shared.AvalonEditExtension;
 using KsWare.Presentation;
 using KsWare.Presentation.ViewModelFramework;
 

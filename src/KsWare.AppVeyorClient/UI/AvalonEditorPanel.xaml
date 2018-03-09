@@ -10,9 +10,10 @@
     <DockPanel>
 	    <avalonEdit:TextEditor
 		    xmlns:avalonEdit="http://icsharpcode.net/sharpdevelop/avalonedit"
-		    Name="textEditor"
-		    SyntaxHighlighting="YAML"
+		    SyntaxHighlighting="C#"
 		    FontFamily="Consolas"
-		    FontSize="12pt" />
+		    FontSize="12pt" 
+		    
+		    />
     </DockPanel>
 </UserControl>

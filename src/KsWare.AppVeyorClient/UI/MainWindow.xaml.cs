@@ -22,6 +22,8 @@ namespace KsWare.AppVeyorClient.UI {
 
 		public MainWindow() {
 			InitializeComponent();
+			AppVM.Client.Base.TokenChanged += (s, e) => TokenPasswordBox.Password = AppVM.Client.Base.UnsecureToken;
+			TokenPasswordBox.Password = AppVM.Client.Base.UnsecureToken;
 		}
 
 		private void AtTokenTextBoxLostFocus(object sender, RoutedEventArgs e) {

@@ -1,12 +1,12 @@
 ﻿using System;
-using System.Net.Mime;
-using System.Text.RegularExpressions;
-using System.Windows.Controls;
 using ICSharpCode.AvalonEdit;
 using ICSharpCode.AvalonEdit.Document;
 
-namespace KsWare.AppVeyorClient.UI.Common {
+namespace KsWare.AppVeyorClient.Shared.AvalonEditExtension {
 
+	/// <summary>
+	/// Represents a position in <see cref="TextEditor"/>.<see cref="TextDocument"/>.
+	/// </summary>
 	public class DocumentPosition {
 
 		private readonly TextEditor _editor;
@@ -41,7 +41,6 @@ namespace KsWare.AppVeyorClient.UI.Common {
 		/// </summary>
 		/// <value>The character index.</value>
 		public int LineCharIndex => LineCharPosition - 1;
-
 
 		/// <inheritdoc cref="DocumentLine.Offset"/>
 		public int LineOffset => Line.Offset;

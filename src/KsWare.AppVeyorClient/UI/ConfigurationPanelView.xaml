@@ -5,9 +5,10 @@
     xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006" 
     xmlns:d="http://schemas.microsoft.com/expression/blend/2008" 
     xmlns:local="clr-namespace:KsWare.AppVeyorClient.UI"
-    xmlns:common="clr-namespace:KsWare.AppVeyorClient.UI.Common"
     xmlns:system="clr-namespace:System;assembly=mscorlib"
     xmlns:i="http://schemas.microsoft.com/expression/2010/interactivity"
+    xmlns:presentationFramework="clr-namespace:KsWare.AppVeyorClient.Shared.PresentationFramework"
+    xmlns:avalonEditExtension="clr-namespace:KsWare.AppVeyorClient.Shared.AvalonEditExtension"
     mc:Ignorable="d" 
     d:DesignHeight="300" d:DesignWidth="300"
 	d:DataContext="{d:DesignInstance Type={x:Type local:ConfigurationPanelVM}}"
@@ -26,7 +27,7 @@
 			<Button Content="Save" Command="{Binding SaveAction}"/>
 			<Button Content="Send" Command="{Binding PostAction}" />
 			<Canvas Width="12"/>
-			<Button Content="PS" Command="{Binding EditPsAction}"/>
+			<Button Content="Edit PS" Command="{Binding EditPsAction}" ToolTip="Edits selected PowerShell block" Padding="6 0"/>
 		</WrapPanel>
 		<StatusBar DockPanel.Dock="Bottom">
 			<StatusBarItem>
@@ -90,17 +91,8 @@
 					SyntaxHighlighting="YAML"
 					FontFamily="Consolas"
 					FontSize="12pt"
-					common:TextBoxControllerBehavior.Controller="{Binding YamlEditorController}"
+					avalonEditExtension:TextEditorControllerBehavior.Controller="{Binding YamlEditorController}"
 					/>
-<!--				<TextBox Grid.Row="0" FontFamily="Consolas" FontSize="14"-->
-<!--						 HorizontalScrollBarVisibility="Visible"-->
-<!--						 VerticalScrollBarVisibility="Visible" Margin="0 0 0 6"-->
-<!--						 common:TextBoxControllerBehavior.Controller="{Binding YamlTextBoxController}"-->
-<!--						 IsInactiveSelectionHighlightEnabled="True">-->
-<!--					<FrameworkElement.Resources>-->
-<!--						<SolidColorBrush x:Key="{x:Static SystemColors.InactiveSelectionHighlightBrushKey}" Color="LightSkyBlue" />-->
-<!--					</FrameworkElement.Resources>-->
-<!--				</TextBox>-->
 			</DockPanel>
 
 			<GridSplitter Grid.Row="0" Height="6" VerticalAlignment="Bottom" HorizontalAlignment="Stretch" Background="DarkGray"></GridSplitter>
@@ -117,10 +109,10 @@
 				<avalonEdit:TextEditor
 					xmlns:avalonEdit="http://icsharpcode.net/sharpdevelop/avalonedit"
 					Margin="0 0 0 0"
-					SyntaxHighlighting="PS"
+					SyntaxHighlighting="PowerShell"
 					FontFamily="Consolas"
 					FontSize="12pt"
-					common:TextBoxControllerBehavior.Controller="{Binding CodeTextBoxController}"
+					avalonEditExtension:TextEditorControllerBehavior.Controller="{Binding CodeTextBoxController}"
 					/>
 <!--				<TextBox FontFamily="Consolas" FontSize="14"-->
 <!--				         HorizontalScrollBarVisibility="Visible"-->

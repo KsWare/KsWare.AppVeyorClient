@@ -1,13 +1,8 @@
-﻿using System;
-using System.Diagnostics;
+﻿using System.Diagnostics;
 using System.Text.RegularExpressions;
 using System.Windows.Input;
-using ICSharpCode.AvalonEdit;
-using ICSharpCode.AvalonEdit.Document;
-using ICSharpCode.AvalonEdit.Search;
-using KsWare.AppVeyorClient.Helpers;
 
-namespace KsWare.AppVeyorClient.UI.Common {
+namespace KsWare.AppVeyorClient.Shared.AvalonEditExtension {
 
 	public class CodeEditorControllerVM : TextEditorControllerVM {
 

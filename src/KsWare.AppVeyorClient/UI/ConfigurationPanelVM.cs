@@ -14,6 +14,7 @@ using KsWare.AppVeyorClient.Api;
 using KsWare.AppVeyorClient.Api.Contracts;
 using KsWare.AppVeyorClient.Helpers;
 using KsWare.AppVeyorClient.Shared;
+using KsWare.AppVeyorClient.Shared.AvalonEditExtension;
 using KsWare.AppVeyorClient.UI.Common;
 using KsWare.Presentation;
 using KsWare.Presentation.ViewFramework;
@@ -138,7 +139,7 @@ namespace KsWare.AppVeyorClient.UI {
 		/// </summary>
 		[UsedImplicitly]
 		private void DoEditPs() {
-			YamlEditorController.ExpandSelection();
+			YamlEditorController.ExpandCodeBlock();
 			YamlEditorController.SetEnabled("Editor is open", false);
 			_selectedBlock = YamlHelper.ExtractBlock(YamlEditorController.SelectedText);
 			CodeTextBoxController.Text = _selectedBlock.Content;

@@ -11,30 +11,33 @@
     Title="Appveyor Client" Height="350" Width="525"
 	d:DataContext="{d:DesignInstance Type={x:Type ui:MainWindowVM}}"
 	>
+	<Window.Resources>
+		<Style x:Key="HelpButton" TargetType="Button">
+			<Setter Property="Content" Value="?" />
+			<Setter Property="Padding" Value="8 0" />
+			<Setter Property="Background" Value="Transparent" />
+			<Setter Property="BorderThickness" Value="0" />
+			<Setter Property="Foreground" Value="Blue" />
+		</Style>
+	</Window.Resources>
 	<DockPanel Margin="4 4 4 4">
 		<DockPanel DockPanel.Dock="Top">
 			<StackPanel DockPanel.Dock="Right">
-				<Button Content="New Window" Command="{Binding NewWindowAction}"/>
+				<Button Content="New Window" Command="{Binding NewWindowAction}" />
 			</StackPanel>
 			<ui:ProjectSelector DataContext="{Binding ProjectSelector}" Margin="0 0 0 6" />
 		</DockPanel>
 		<TabControl>
 			<TabItem Header="Common">
-				<DockPanel>
-					<DockPanel x:Name="TokenPanel" DockPanel.Dock="Top">
-						<TextBlock Text="Token: " Width="45" />
-						<PasswordBox x:Name="TokenPasswordBox" LostFocus="AtTokenTextBoxLostFocus"/>
-					</DockPanel>
-					<WrapPanel DockPanel.Dock="Top">
-						<Button Content="TestMessage" Command="{Binding TestAction}"/>
-					</WrapPanel>
-					<DockPanel DockPanel.Dock="Top">
-						<Button Content="Send" Command="{Binding SendAction}" Width="45"/>
-						<TextBox Text="{Binding Url}"/>
-					</DockPanel>
-					<TextBox Text="{Binding ResultText}" AcceptsReturn="True" AcceptsTab="True" FontFamily="Consolas" FontSize="12" HorizontalScrollBarVisibility="Visible"
-							 VerticalScrollBarVisibility="Visible" />
-				</DockPanel>
+				<StackPanel>
+					<StackPanel x:Name="TokenPanel" >
+						<DockPanel Margin="0 0 4 0">
+							<Button DockPanel.Dock="Right" Style="{StaticResource HelpButton}" Command="{Binding HelpUrlAction}" CommandParameter="https://ci.appveyor.com/api-token"/>
+							<Label Content="AppVeyor API Token: " />
+						</DockPanel>
+						<PasswordBox x:Name="TokenPasswordBox" LostFocus="AtTokenTextBoxLostFocus" Margin="4 0"/>
+					</StackPanel>
+				</StackPanel>
 			</TabItem>
 			<TabItem Header="Configuration" DataContext="{Binding ConfigurationPanel}">
 				<ui:ConfigurationPanelView/>
@@ -44,6 +47,9 @@
 			</TabItem>
 			<TabItem Header="Avalon Editor">
 				<common:AvalonEditorPanel/>
+			</TabItem>
+			<TabItem Header="API Tester" DataContext="{Binding ApiTesterPanel}">
+				<ui:ApiTesterPanel />
 			</TabItem>
 		</TabControl>
 	</DockPanel>

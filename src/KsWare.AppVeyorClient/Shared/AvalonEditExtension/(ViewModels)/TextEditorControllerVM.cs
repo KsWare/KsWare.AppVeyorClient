@@ -1,21 +1,16 @@
 ﻿using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
 using System.Windows;
-using System.Windows.Controls;
-using System.Windows.Data;
+using ICSharpCode.AvalonEdit;
 using KsWare.Presentation.Core.Providers;
 using KsWare.Presentation.ViewModelFramework;
 
-namespace KsWare.AppVeyorClient.UI.Common {
+namespace KsWare.AppVeyorClient.Shared.AvalonEditExtension {
 
-	public class TextBoxControllerVM:DataVM<TextBox> {
+	public class TextEditorControllerVM:DataVM<TextEditor> {
 
-		TextBoxData _data=new TextBoxData();
+		TextEditorData _data=new TextEditorData();
 
-		public TextBoxControllerVM() {
+		public TextEditorControllerVM() {
 			RegisterChildren(()=>this);
 
 			IsEnabledChanged+=AtIsEnabledChanged;
@@ -49,17 +44,22 @@ namespace KsWare.AppVeyorClient.UI.Common {
 		}
 
 		protected virtual void OnViewConnected() {
-			ActivePoint = new ActivePoint(Data);
 			Data.Text = _data.Text;
 			Data.IsEnabled = _data.IsEnabled;
 		}
 
-		public ActivePoint ActivePoint { get; private set; }
+		public DocumentPosition SelectionStartPosition => Data.GetSelectionStartPosition();
+
+		public DocumentPosition SelectionEndPosition => Data.GetSelectionEndPosition();
+
+		public DocumentPosition CarretPosition => Data.GetCaretPosition();
+
+		private class TextEditorData {
+			public bool IsEnabled { get; set; } = true;
+			public string Text { get; set; }
+		}
 	}
 
-	public class TextBoxData {
-		public bool IsEnabled { get; set; } = true;
-		public string Text { get; set; }
-	}
+
 
 }

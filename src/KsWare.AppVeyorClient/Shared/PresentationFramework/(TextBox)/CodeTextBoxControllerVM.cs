@@ -1,7 +1,7 @@
 ﻿using System.Text.RegularExpressions;
 using System.Windows.Input;
 
-namespace KsWare.AppVeyorClient.UI.Common {
+namespace KsWare.AppVeyorClient.Shared.PresentationFramework {
 
 	public class CodeTextBoxControllerVM : TextBoxControllerVM {
 
@@ -20,8 +20,8 @@ namespace KsWare.AppVeyorClient.UI.Common {
 
 //		private void DataOnSelectionChanged(object s, RoutedEventArgs e) {
 //			if (Data.SelectionLength == 0) {
-//				if (ActivePoint.IsInIndentRegion && ActivePoint.CharPosition % 4 != 0) {
-//					Data.Select(ActivePoint.LineStart + ActivePoint.IndentPosition*4,0);
+//				if (TextPoint.IsInIndentRegion && TextPoint.CharPosition % 4 != 0) {
+//					Data.Select(TextPoint.LineStart + TextPoint.IndentPosition*4,0);
 //				}
 //			}
 //		}

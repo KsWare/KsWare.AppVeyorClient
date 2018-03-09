@@ -1,5 +1,6 @@
 ﻿using System;
 using System.Collections.Generic;
+using System.Diagnostics;
 using System.IO;
 using System.Linq;
 using System.Net.Http;
@@ -21,32 +22,21 @@ namespace KsWare.AppVeyorClient.UI {
 			RegisterChildren(()=>this);
 			AppVM.LoadToken(); // TODO load after UI loaded
 			AppVM.InitFileStore(); // TODO load after UI loaded
-			Url = "/api/users";
+			
 			ConfigurationPanel.ProjectSelector = ProjectSelector;
 			ProjectEnvironmentVariablesPanel.ProjectSelector = ProjectSelector;
 		}
 
 		private Client Client => AppVM.Client;
 
+		public ProjectSelectorVM ProjectSelector { get; [UsedImplicitly] private set; }
+
 		public ProjectEnvironmentVariablesVM ProjectEnvironmentVariablesPanel { get; [UsedImplicitly] private set; }
+
 		public ConfigurationPanelVM ConfigurationPanel { get; [UsedImplicitly] private set; }
 
-		public string Url { get => Fields.GetValue<string>(); set => Fields.SetValue(value); }
-		public string ResultText { get => Fields.GetValue<string>(); set => Fields.SetValue(value); }
+		public ApiTesterPanelVM ApiTesterPanel { get; [UsedImplicitly] private set; }
 
-		/// <summary>
-		/// Gets the <see cref="ActionVM"/> to Send
-		/// </summary>
-		/// <seealso cref="DoSend"/>
-		public ActionVM SendAction { get; [UsedImplicitly] private set; }
-
-		/// <summary>
-		/// Gets the <see cref="ActionVM"/> to Test
-		/// </summary>
-		/// <seealso cref="DoTest"/>
-		public ActionVM TestAction { get; [UsedImplicitly] private set; }
-
-		public ProjectSelectorVM ProjectSelector { get; [UsedImplicitly] private set; }
 
 		/// <summary>
 		/// Gets the <see cref="ActionVM"/> to NewWindow
@@ -55,32 +45,26 @@ namespace KsWare.AppVeyorClient.UI {
 		public ActionVM NewWindowAction { get; [UsedImplicitly] private set; }
 
 		/// <summary>
+		/// Gets the <see cref="ActionVM"/> to HelpUrl
+		/// </summary>
+		/// <seealso cref="DoHelpUrl"/>
+		public ActionVM HelpUrlAction { get; [UsedImplicitly] private set; }
+
+		/// <summary>
+		/// Method for <see cref="HelpUrlAction"/>
+		/// </summary>
+		[UsedImplicitly]
+		private void DoHelpUrl(object parameter) {
+			string url = (string)parameter;
+			Process.Start(url);
+		}
+
+		/// <summary>
 		/// Method for <see cref="NewWindowAction"/>
 		/// </summary>
 		[UsedImplicitly]
 		private void DoNewWindow() {
 			new MainWindowVM().Show();
 		}
-
-		/// <summary>
-		/// Method for <see cref="TestAction"/>
-		/// </summary>
-		[UsedImplicitly]
-		private async void DoTest() {
-			var ps = await Client.Project.GetProjectSettings();
-			var c = ps.Settings;
-			c.NextBuildNumber = 26;
-			await Client.Project.UpdateProjectSettings(c);
-		}
-
-		/// <summary>
-		/// Method for <see cref="SendAction"/>
-		/// </summary>
-		[UsedImplicitly]
-		private void DoSend() {
-			var result = Client.Base.GetJsonText(Url, out var ex);
-			ResultText = ex?.ToString() ?? JsonConvert.SerializeObject(JsonConvert.DeserializeObject(result), Formatting.Indented);
-		}
-
 	}
 }
