@@ -1,15 +1,11 @@
 ﻿using System;
 using System.Collections.Generic;
-using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
-using ICSharpCode.AvalonEdit.Search;
 using JetBrains.Annotations;
 using KsWare.AppVeyorClient.Shared.AvalonEditExtension;
 using KsWare.Presentation;
 using KsWare.Presentation.ViewModelFramework;
 
-namespace KsWare.AppVeyorClient.UI.Common {
+namespace KsWare.AppVeyorClient.UI.PanelSearch {
 	
 	public class SearchPanelVM : ObjectVM {
 

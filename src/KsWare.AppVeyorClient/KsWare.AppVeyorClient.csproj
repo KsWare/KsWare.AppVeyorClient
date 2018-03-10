@@ -102,7 +102,7 @@
     <Reference Include="WindowsFormsIntegration" />
   </ItemGroup>
   <ItemGroup>
-    <ApplicationDefinition Include="UI\App.xaml">
+    <ApplicationDefinition Include="UI\App\App.xaml">
       <Generator>MSBuild:Compile</Generator>
       <SubType>Designer</SubType>
     </ApplicationDefinition>
@@ -123,46 +123,49 @@
     <Compile Include="Shared\AvalonEditExtension\%28ViewModels%29\TextEditorBehavior.cs" />
     <Compile Include="Shared\AvalonEditExtension\TextEditorExtensions.cs" />
     <Compile Include="Shared\FileStore.cs" />
+    <Compile Include="Shared\IListExtensions.cs" />
     <Compile Include="Shared\PresentationFramework\%28TextBox%29\CodeTextBoxControllerVM.cs" />
     <Compile Include="Shared\PresentationFramework\%28TextBox%29\TextBoxControllerBehavior.cs" />
     <Compile Include="Shared\PresentationFramework\%28TextBox%29\TextBoxControllerVM.cs" />
     <Compile Include="Shared\TaskExtensions.cs" />
-    <Compile Include="UI\ApiTesterPanel.xaml.cs">
+    <Compile Include="UI\PanelApiTester\ApiTesterPanel.xaml.cs">
       <DependentUpon>ApiTesterPanel.xaml</DependentUpon>
     </Compile>
-    <Compile Include="UI\ApiTesterPanelVM.cs" />
-    <Compile Include="UI\AppVM.cs" />
+    <Compile Include="UI\PanelApiTester\ApiTesterPanelVM.cs" />
+    <Compile Include="UI\App\AppVM.cs" />
     <Compile Include="Api\BuildWorker.cs" />
     <Compile Include="Helpers\YamlHelper.cs" />
     <Compile Include="Shared\AvalonEditExtension\DocumentPosition.cs" />
-    <Compile Include="UI\AvalonEditorPanel.xaml.cs">
+    <Compile Include="UI\PanelAvalonEditor\AvalonEditorPanel.xaml.cs">
       <DependentUpon>AvalonEditorPanel.xaml</DependentUpon>
     </Compile>
     <Compile Include="Shared\AvalonEditExtension\%28ViewModels%29\CodeEditorControllerVM.cs" />
     <Compile Include="UI\Common\KeyAction.cs" />
-    <Compile Include="UI\SearchPanelVM.cs" />
+    <Compile Include="UI\PanelConfiguration\AppVeyorYamlEditorControllerVM.cs" />
+    <Compile Include="UI\PanelConfiguration\YamlFoldingStrategy.cs" />
+    <Compile Include="UI\PanelSearch\SearchPanelVM.cs" />
     <Compile Include="Shared\AvalonEditExtension\%28ViewModels%29\TextEditorControllerVM.cs" />
     <Compile Include="Shared\AvalonEditExtension\%28ViewModels%29\YamlEditorControllerVM.cs" />
     <Compile Include="UI\MainWindowVM.cs" />
-    <Compile Include="UI\ConfigurationPanelView.xaml.cs">
+    <Compile Include="UI\PanelConfiguration\ConfigurationPanelView.xaml.cs">
       <DependentUpon>ConfigurationPanelView.xaml</DependentUpon>
     </Compile>
-    <Compile Include="UI\NavigationItemVM.cs" />
-    <Compile Include="UI\ProjectEnvironmentVariablesView.xaml.cs">
+    <Compile Include="UI\ViewModels\NavigationItemVM.cs" />
+    <Compile Include="UI\PanelProjectEnvironmentVariables\ProjectEnvironmentVariablesView.xaml.cs">
       <DependentUpon>ProjectEnvironmentVariablesView.xaml</DependentUpon>
     </Compile>
-    <Compile Include="UI\ConfigurationPanelVM.cs" />
-    <Compile Include="UI\ProjectEnvironmentVariablesVM.cs" />
-    <Compile Include="UI\ProjectSelector.xaml.cs">
+    <Compile Include="UI\PanelConfiguration\ConfigurationPanelVM.cs" />
+    <Compile Include="UI\PanelProjectEnvironmentVariables\ProjectEnvironmentVariablesVM.cs" />
+    <Compile Include="UI\PanelProjectSelector\ProjectSelector.xaml.cs">
       <DependentUpon>ProjectSelector.xaml</DependentUpon>
     </Compile>
-    <Compile Include="UI\ProjectSelectorVM.cs" />
-    <Compile Include="UI\ProjectVM.cs" />
-    <Page Include="UI\ApiTesterPanel.xaml">
+    <Compile Include="UI\PanelProjectSelector\ProjectSelectorVM.cs" />
+    <Compile Include="UI\ViewModels\ProjectVM.cs" />
+    <Page Include="UI\PanelApiTester\ApiTesterPanel.xaml">
       <SubType>Designer</SubType>
       <Generator>MSBuild:Compile</Generator>
     </Page>
-    <Page Include="UI\AvalonEditorPanel.xaml">
+    <Page Include="UI\PanelAvalonEditor\AvalonEditorPanel.xaml">
       <SubType>Designer</SubType>
       <Generator>MSBuild:Compile</Generator>
     </Page>
@@ -170,7 +173,7 @@
       <Generator>MSBuild:Compile</Generator>
       <SubType>Designer</SubType>
     </Page>
-    <Compile Include="UI\App.xaml.cs">
+    <Compile Include="UI\App\App.xaml.cs">
       <DependentUpon>App.xaml</DependentUpon>
       <SubType>Code</SubType>
     </Compile>
@@ -188,15 +191,15 @@
       <DependentUpon>MainWindow.xaml</DependentUpon>
       <SubType>Code</SubType>
     </Compile>
-    <Page Include="UI\ConfigurationPanelView.xaml">
+    <Page Include="UI\PanelConfiguration\ConfigurationPanelView.xaml">
       <Generator>MSBuild:Compile</Generator>
       <SubType>Designer</SubType>
     </Page>
-    <Page Include="UI\ProjectEnvironmentVariablesView.xaml">
+    <Page Include="UI\PanelProjectEnvironmentVariables\ProjectEnvironmentVariablesView.xaml">
       <SubType>Designer</SubType>
       <Generator>MSBuild:Compile</Generator>
     </Page>
-    <Page Include="UI\ProjectSelector.xaml">
+    <Page Include="UI\PanelProjectSelector\ProjectSelector.xaml">
       <SubType>Designer</SubType>
       <Generator>MSBuild:Compile</Generator>
     </Page>
@@ -230,9 +233,9 @@
     <None Include="Api\Contracts\Common\ProjectSettings.json" />
     <None Include="Api\Contracts\Common\UpdateProject.json" />
     <None Include="Api\Contracts\GetEnvironmentSettingsResponse.json" />
-    <None Include="AppVeyor-Yaml.xshd">
+    <Content Include="Data\AppVeyor-Yaml.xshd">
       <CopyToOutputDirectory>Always</CopyToOutputDirectory>
-    </None>
+    </Content>
     <None Include="packages.config" />
     <None Include="Properties\Settings.settings">
       <Generator>SettingsSingleFileGenerator</Generator>
@@ -245,6 +248,10 @@
   <ItemGroup>
     <Resource Include="UI\Resources\appveyor_blue.ico" />
   </ItemGroup>
-  <ItemGroup />
+  <ItemGroup>
+    <Content Include="Data\AppVeyorEnvironmentVariables.txt">
+      <CopyToOutputDirectory>Always</CopyToOutputDirectory>
+    </Content>
+  </ItemGroup>
   <Import Project="$(MSBuildToolsPath)\Microsoft.CSharp.targets" />
 </Project>

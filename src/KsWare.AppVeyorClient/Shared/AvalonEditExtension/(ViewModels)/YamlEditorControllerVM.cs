@@ -13,7 +13,7 @@ namespace KsWare.AppVeyorClient.Shared.AvalonEditExtension {
 
 		protected override void OnViewConnected() {
 			base.OnViewConnected();
-			var reader = XmlReader.Create("AppVeyor-yaml.xshd");
+			var reader = XmlReader.Create("Data\\AppVeyor-yaml.xshd");
 			Data.SyntaxHighlighting = HighlightingLoader.Load(reader, HighlightingManager.Instance);
 		}
 

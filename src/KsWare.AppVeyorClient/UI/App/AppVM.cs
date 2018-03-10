@@ -10,7 +10,7 @@ using KsWare.AppVeyorClient.Api;
 using KsWare.AppVeyorClient.Shared;
 using KsWare.Presentation.ViewModelFramework;
 
-namespace KsWare.AppVeyorClient.UI {
+namespace KsWare.AppVeyorClient.UI.App {
 
 	public class AppVM:ApplicationVM {
 

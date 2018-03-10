@@ -1,14 +1,13 @@
 ﻿using System;
-using System.Collections.Generic;
-using System.Collections.ObjectModel;
 using System.Diagnostics;
-using System.Threading.Tasks;
 using JetBrains.Annotations;
 using KsWare.AppVeyorClient.Api;
+using KsWare.AppVeyorClient.UI.App;
+using KsWare.AppVeyorClient.UI.ViewModels;
 using KsWare.Presentation;
 using KsWare.Presentation.ViewModelFramework;
 
-namespace KsWare.AppVeyorClient.UI {
+namespace KsWare.AppVeyorClient.UI.PanelProjectSelector {
 
 	public class ProjectSelectorVM : ObjectVM {
 		private bool _watchTokenChanged;

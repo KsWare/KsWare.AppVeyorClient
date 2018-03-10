@@ -5,6 +5,7 @@ using System.Text;
 using System.Text.RegularExpressions;
 using System.Threading.Tasks;
 using KsWare.AppVeyorClient.UI;
+using KsWare.AppVeyorClient.UI.PanelConfiguration;
 
 namespace KsWare.AppVeyorClient.Helpers {
 

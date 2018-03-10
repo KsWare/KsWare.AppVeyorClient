@@ -7,6 +7,11 @@
     xmlns:local="clr-namespace:KsWare.AppVeyorClient"
     xmlns:ui="clr-namespace:KsWare.AppVeyorClient.UI"
     xmlns:common="clr-namespace:KsWare.AppVeyorClient.UI.Common"
+    xmlns:panelProjectSelector="clr-namespace:KsWare.AppVeyorClient.UI.PanelProjectSelector"
+    xmlns:panelConfiguration="clr-namespace:KsWare.AppVeyorClient.UI.PanelConfiguration"
+    xmlns:panelProjectEnvironmentVariables="clr-namespace:KsWare.AppVeyorClient.UI.PanelProjectEnvironmentVariables"
+    xmlns:panelAvalonEditor="clr-namespace:KsWare.AppVeyorClient.UI.PanelAvalonEditor"
+    xmlns:panelApiTester="clr-namespace:KsWare.AppVeyorClient.UI.PanelApiTester"
     mc:Ignorable="d"
     Title="Appveyor Client" Height="350" Width="525"
 	d:DataContext="{d:DesignInstance Type={x:Type ui:MainWindowVM}}"
@@ -25,7 +30,7 @@
 			<StackPanel DockPanel.Dock="Right">
 				<Button Content="New Window" Command="{Binding NewWindowAction}" />
 			</StackPanel>
-			<ui:ProjectSelector DataContext="{Binding ProjectSelector}" Margin="0 0 0 6" />
+			<panelProjectSelector:ProjectSelector DataContext="{Binding ProjectSelector}" Margin="0 0 0 6" />
 		</DockPanel>
 		<TabControl>
 			<TabItem Header="Common">
@@ -40,16 +45,16 @@
 				</StackPanel>
 			</TabItem>
 			<TabItem Header="Configuration" DataContext="{Binding ConfigurationPanel}">
-				<ui:ConfigurationPanelView/>
+				<panelConfiguration:ConfigurationPanelView/>
 			</TabItem>
 			<TabItem Header="Project Environment Variables" DataContext="{Binding ProjectEnvironmentVariablesPanel}">
-				<ui:ProjectEnvironmentVariablesView/>
+				<panelProjectEnvironmentVariables:ProjectEnvironmentVariablesView/>
 			</TabItem>
 			<TabItem Header="Avalon Editor">
-				<common:AvalonEditorPanel/>
+				<panelAvalonEditor:AvalonEditorPanel/>
 			</TabItem>
 			<TabItem Header="API Tester" DataContext="{Binding ApiTesterPanel}">
-				<ui:ApiTesterPanel />
+				<panelApiTester:ApiTesterPanel />
 			</TabItem>
 		</TabControl>
 	</DockPanel>

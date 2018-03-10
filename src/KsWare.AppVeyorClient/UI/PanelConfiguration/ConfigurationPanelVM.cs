@@ -1,27 +1,20 @@
-﻿using System;
-using System.Collections.Generic;
-using System.Diagnostics;
-using System.IO;
-using System.Linq;
-using System.Text;
+﻿using System.IO;
 using System.Text.RegularExpressions;
-using System.Threading.Tasks;
 using System.Windows;
-using System.Windows.Controls;
-using ICSharpCode.AvalonEdit.Search;
 using JetBrains.Annotations;
 using KsWare.AppVeyorClient.Api;
-using KsWare.AppVeyorClient.Api.Contracts;
 using KsWare.AppVeyorClient.Helpers;
 using KsWare.AppVeyorClient.Shared;
 using KsWare.AppVeyorClient.Shared.AvalonEditExtension;
-using KsWare.AppVeyorClient.UI.Common;
+using KsWare.AppVeyorClient.UI.App;
+using KsWare.AppVeyorClient.UI.PanelProjectSelector;
+using KsWare.AppVeyorClient.UI.PanelSearch;
+using KsWare.AppVeyorClient.UI.ViewModels;
 using KsWare.Presentation;
-using KsWare.Presentation.ViewFramework;
 using KsWare.Presentation.ViewModelFramework;
 using Microsoft.Win32;
 
-namespace KsWare.AppVeyorClient.UI {
+namespace KsWare.AppVeyorClient.UI.PanelConfiguration {
 
 	public class ConfigurationPanelVM : ObjectVM {
 
@@ -125,7 +118,7 @@ namespace KsWare.AppVeyorClient.UI {
 		public  ActionVM SaveAction { get; [UsedImplicitly] private set; }
 		public  ActionVM PostAction { get; [UsedImplicitly] private set; }
 
-		public YamlEditorControllerVM YamlEditorController { get; [UsedImplicitly] private set; }
+		public AppVeyorYamlEditorControllerVM YamlEditorController { get; [UsedImplicitly] private set; }
 		public TextEditorControllerVM CodeTextBoxController { get; [UsedImplicitly] private set; }
 
 		/// <summary>
@@ -159,11 +152,11 @@ namespace KsWare.AppVeyorClient.UI {
 			string s;
 			switch (BlockFormat) {
 				case "Block":
-					s = YamlHelper.FormatBlock(CodeTextBoxController.Text, AppVeyorClient.UI.BlockFormat.Literal, _selectedBlock.Indent,
+					s = YamlHelper.FormatBlock(CodeTextBoxController.Text, PanelConfiguration.BlockFormat.Literal, _selectedBlock.Indent,
 						_selectedBlock.Suffix);
 					break;
 				case "Split":
-					s = YamlHelper.FormatBlock(CodeTextBoxController.Text, AppVeyorClient.UI.BlockFormat.None, _selectedBlock.Indent,
+					s = YamlHelper.FormatBlock(CodeTextBoxController.Text, PanelConfiguration.BlockFormat.None, _selectedBlock.Indent,
 						_selectedBlock.Suffix);
 					break;
 				default:return;

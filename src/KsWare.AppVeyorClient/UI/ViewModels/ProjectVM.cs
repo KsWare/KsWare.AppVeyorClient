@@ -2,7 +2,7 @@
 using KsWare.Presentation.Core.Providers;
 using KsWare.Presentation.ViewModelFramework;
 
-namespace KsWare.AppVeyorClient.UI {
+namespace KsWare.AppVeyorClient.UI.ViewModels {
 
 	public class ProjectVM : DataVM<ProjectData> {
 

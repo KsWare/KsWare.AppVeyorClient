@@ -1,8 +1,6 @@
-﻿using System;
-using System.Diagnostics;
-using Common.Logging.Configuration;
+﻿using System.Diagnostics;
 
-namespace KsWare.AppVeyorClient.UI {
+namespace KsWare.AppVeyorClient.UI.App {
 	/// <summary>
 	/// Interaction logic for App.xaml
 	/// </summary>

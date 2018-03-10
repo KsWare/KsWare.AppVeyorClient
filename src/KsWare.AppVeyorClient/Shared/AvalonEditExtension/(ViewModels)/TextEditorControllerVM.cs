@@ -1,6 +1,7 @@
 ﻿using System;
 using System.Windows;
 using ICSharpCode.AvalonEdit;
+using ICSharpCode.AvalonEdit.Document;
 using KsWare.Presentation.Core.Providers;
 using KsWare.Presentation.ViewModelFramework;
 
@@ -33,7 +34,12 @@ namespace KsWare.AppVeyorClient.Shared.AvalonEditExtension {
 			set {
 				if (Data == null) _data.Text=value;
 				else Data.Text = value;
+				OnTextChanged(Data.Document);
 			}
+		}
+
+		protected virtual void OnTextChanged(object changedRegion) {
+
 		}
 
 		protected sealed override void OnDataChanged(DataChangedEventArgs e) {

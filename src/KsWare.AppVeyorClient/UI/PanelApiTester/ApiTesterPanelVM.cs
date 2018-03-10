@@ -2,10 +2,11 @@
 using System.Diagnostics;
 using JetBrains.Annotations;
 using KsWare.AppVeyorClient.Api;
+using KsWare.AppVeyorClient.UI.App;
 using KsWare.Presentation.ViewModelFramework;
 using Newtonsoft.Json;
 
-namespace KsWare.AppVeyorClient.UI {
+namespace KsWare.AppVeyorClient.UI.PanelApiTester {
 
 	public class ApiTesterPanelVM : ObjectVM {
 

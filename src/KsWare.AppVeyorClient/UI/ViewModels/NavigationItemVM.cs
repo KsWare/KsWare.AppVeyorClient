@@ -1,7 +1,7 @@
 ﻿using System.Text.RegularExpressions;
 using KsWare.Presentation.ViewModelFramework;
 
-namespace KsWare.AppVeyorClient.UI {
+namespace KsWare.AppVeyorClient.UI.ViewModels {
 
 	public class NavigationItemVM : ObjectVM {
 

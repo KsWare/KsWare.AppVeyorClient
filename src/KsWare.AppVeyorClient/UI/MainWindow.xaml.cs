@@ -9,6 +9,7 @@ using System.Security.Cryptography;
 using System.Text;
 using System.Windows;
 using System.Windows.Controls;
+using KsWare.AppVeyorClient.UI.App;
 using Microsoft.Win32;
 using Newtonsoft.Json;
 

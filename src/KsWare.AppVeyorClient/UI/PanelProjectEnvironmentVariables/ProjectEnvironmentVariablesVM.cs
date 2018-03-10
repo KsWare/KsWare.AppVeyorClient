@@ -1,18 +1,17 @@
 ﻿using System;
 using System.Collections.Generic;
-using System.Linq;
 using System.Text;
-using System.Threading.Tasks;
 using System.Windows;
-using System.Windows.Controls;
 using JetBrains.Annotations;
 using KsWare.AppVeyorClient.Api;
 using KsWare.AppVeyorClient.Api.Contracts;
 using KsWare.AppVeyorClient.Shared;
+using KsWare.AppVeyorClient.UI.App;
+using KsWare.AppVeyorClient.UI.PanelProjectSelector;
 using KsWare.Presentation;
 using KsWare.Presentation.ViewModelFramework;
 
-namespace KsWare.AppVeyorClient.UI {
+namespace KsWare.AppVeyorClient.UI.PanelProjectEnvironmentVariables {
 
 	public class ProjectEnvironmentVariablesVM: ObjectVM {
 

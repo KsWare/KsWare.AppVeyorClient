@@ -11,6 +11,11 @@ using System.Windows;
 using JetBrains.Annotations;
 using KsWare.AppVeyorClient.Api;
 using KsWare.AppVeyorClient.Api.Contracts;
+using KsWare.AppVeyorClient.UI.App;
+using KsWare.AppVeyorClient.UI.PanelApiTester;
+using KsWare.AppVeyorClient.UI.PanelConfiguration;
+using KsWare.AppVeyorClient.UI.PanelProjectEnvironmentVariables;
+using KsWare.AppVeyorClient.UI.PanelProjectSelector;
 using KsWare.Presentation.ViewModelFramework;
 using Newtonsoft.Json;
 

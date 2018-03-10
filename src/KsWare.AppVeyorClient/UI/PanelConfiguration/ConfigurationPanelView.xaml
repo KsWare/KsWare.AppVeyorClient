@@ -1,5 +1,5 @@
 ﻿<UserControl 
-	x:Class="KsWare.AppVeyorClient.UI.ConfigurationPanelView"
+	x:Class="KsWare.AppVeyorClient.UI.PanelConfiguration.ConfigurationPanelView"
     xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
     xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
     xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006" 
@@ -9,9 +9,11 @@
     xmlns:i="http://schemas.microsoft.com/expression/2010/interactivity"
     xmlns:presentationFramework="clr-namespace:KsWare.AppVeyorClient.Shared.PresentationFramework"
     xmlns:avalonEditExtension="clr-namespace:KsWare.AppVeyorClient.Shared.AvalonEditExtension"
+    xmlns:panelConfiguration="clr-namespace:KsWare.AppVeyorClient.UI.PanelConfiguration"
+    xmlns:viewModels="clr-namespace:KsWare.AppVeyorClient.UI.ViewModels"
     mc:Ignorable="d" 
     d:DesignHeight="300" d:DesignWidth="300"
-	d:DataContext="{d:DesignInstance Type={x:Type local:ConfigurationPanelVM}}"
+	d:DataContext="{d:DesignInstance Type={x:Type panelConfiguration:ConfigurationPanelVM}}"
 >
 
 	<DockPanel>
@@ -62,7 +64,7 @@
 							SelectedItem="{Binding SelectedNavigationItem}"
 							Width="150">
 							<ComboBox.ItemTemplate>
-								<DataTemplate DataType="{x:Type local:NavigationItemVM}">
+								<DataTemplate DataType="{x:Type viewModels:NavigationItemVM}">
 									<TextBlock x:Name="TextBlock" Text="{Binding DisplayName}"/>
 									<DataTemplate.Triggers>
 										<DataTrigger Binding="{Binding ExistsInDocument}" Value="false">
