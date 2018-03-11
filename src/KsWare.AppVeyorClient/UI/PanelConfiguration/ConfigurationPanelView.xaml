@@ -7,7 +7,7 @@
     xmlns:local="clr-namespace:KsWare.AppVeyorClient.UI"
     xmlns:system="clr-namespace:System;assembly=mscorlib"
     xmlns:i="http://schemas.microsoft.com/expression/2010/interactivity"
-    xmlns:presentationFramework="clr-namespace:KsWare.AppVeyorClient.Shared.PresentationFramework"
+    xmlns:ksvf="clr-namespace:KsWare.AppVeyorClient.Shared.PresentationFramework"
     xmlns:avalonEditExtension="clr-namespace:KsWare.AppVeyorClient.Shared.AvalonEditExtension"
     xmlns:panelConfiguration="clr-namespace:KsWare.AppVeyorClient.UI.PanelConfiguration"
     xmlns:viewModels="clr-namespace:KsWare.AppVeyorClient.UI.ViewModels"
@@ -15,7 +15,13 @@
     d:DesignHeight="300" d:DesignWidth="300"
 	d:DataContext="{d:DesignInstance Type={x:Type panelConfiguration:ConfigurationPanelVM}}"
 >
-
+<FrameworkElement.Resources>
+	<ResourceDictionary>
+		<ResourceDictionary.MergedDictionaries>
+			<ksvf:SharedResourceDictionary Source="pack://application:,,,/KsWare.AppVeyorClient;component/UI/Resources/Generic.xaml" />
+		</ResourceDictionary.MergedDictionaries>
+	</ResourceDictionary>
+</FrameworkElement.Resources>
 	<DockPanel>
 		<WrapPanel DockPanel.Dock="Top">
 			<FrameworkElement.Resources>

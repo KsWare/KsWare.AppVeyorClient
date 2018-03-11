@@ -53,6 +53,10 @@ namespace KsWare.AppVeyorClient.UI.PanelConfiguration {
 						continue;
 					}
 				}
+				while (yamlFoldStarts.Count>0) {
+					var foldStart = yamlFoldStarts.Pop();
+					if (foldStart.StartLine < reader.LineNumber) CreateElementFold(document, foldMarkers, reader, foldStart);
+				}
 				firstErrorOffset = -1;
 			}
 			catch (XmlException ex) {
@@ -68,13 +72,19 @@ namespace KsWare.AppVeyorClient.UI.PanelConfiguration {
 			var yamlFoldStart = new YamlFoldStart {
 				StartLine   = reader.LineNumber,
 				StartOffset = document.GetOffset(reader.LineNumber, 1),
-				Name        = ""
+				Name        = reader.Key
 			};
 			return yamlFoldStart;
 		}
 
 		private static void CreateElementFold(TextDocument document, List<NewFolding> foldMarkers, YamlReader reader, YamlFoldStart foldStart) {
-			foldStart.EndOffset = reader.LineOffset - 2;
+			if (reader.IsLastLine) {
+				foldStart.EndOffset = reader.LineOffset+reader.LineLength;
+			}
+			else {
+				foldStart.EndOffset = reader.LineOffset - 2;
+			}
+			
 			foldMarkers.Add((NewFolding) foldStart);
 		}
 
@@ -129,6 +139,10 @@ namespace KsWare.AppVeyorClient.UI.PanelConfiguration {
 		public int LineEndTerminatorLength { get; private set; }
 
 		public bool ReadLine() {
+			var v = _textReader.Read();
+			if (v == -1) return false;
+			var isFirstChar = true;
+			
 			_line.Clear();
 			_lineOffset = _offset;
 			LineEndTerminatorLength = 0;
@@ -141,8 +155,9 @@ namespace KsWare.AppVeyorClient.UI.PanelConfiguration {
 			IsSequence = false;
 
 			while (true) {
-				var v = _textReader.Read();
-				if (v == -1 && _line.Length == 0) return false;
+				if (isFirstChar) isFirstChar = false;
+				else v = _textReader.Read();
+				
 				if (v == -1) { IsLastLine = true; break;}
 				_offset++;
 				var c = (char) v;
@@ -180,8 +195,13 @@ namespace KsWare.AppVeyorClient.UI.PanelConfiguration {
 
 		//                                         "             -             keyx:                |+
 		static readonly Regex BlockRegex=new Regex(@"^(?<sequence>-\x20)?(?<key>\w+):(\x20+(?<block>[|>][+-]?))?(?<ws>\s*)$",RegexOptions.Compiled);
+
+		static readonly Regex TopLevelKey = new Regex(@"^(?<key>\w+):", RegexOptions.Compiled);
 		
 		private void ParseLine() {
+			var keyMatch = TopLevelKey.Match(_line.ToString());
+			Key = keyMatch.Success ? keyMatch.Value : null;
+
 //			// only top-level blocks
 //			var match = BlockRegex.Match(_line.ToString());
 //			if (match.Success) {

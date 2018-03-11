@@ -13,6 +13,7 @@ using KsWare.AppVeyorClient.Api;
 using KsWare.AppVeyorClient.Api.Contracts;
 using KsWare.AppVeyorClient.UI.App;
 using KsWare.AppVeyorClient.UI.PanelApiTester;
+using KsWare.AppVeyorClient.UI.PanelCommon;
 using KsWare.AppVeyorClient.UI.PanelConfiguration;
 using KsWare.AppVeyorClient.UI.PanelProjectEnvironmentVariables;
 using KsWare.AppVeyorClient.UI.PanelProjectSelector;
@@ -36,6 +37,8 @@ namespace KsWare.AppVeyorClient.UI {
 
 		public ProjectSelectorVM ProjectSelector { get; [UsedImplicitly] private set; }
 
+		public CommonPanelVM CommonPanel { get; [UsedImplicitly] private set; }
+
 		public ProjectEnvironmentVariablesVM ProjectEnvironmentVariablesPanel { get; [UsedImplicitly] private set; }
 
 		public ConfigurationPanelVM ConfigurationPanel { get; [UsedImplicitly] private set; }
@@ -49,20 +52,7 @@ namespace KsWare.AppVeyorClient.UI {
 		/// <seealso cref="DoNewWindow"/>
 		public ActionVM NewWindowAction { get; [UsedImplicitly] private set; }
 
-		/// <summary>
-		/// Gets the <see cref="ActionVM"/> to HelpUrl
-		/// </summary>
-		/// <seealso cref="DoHelpUrl"/>
-		public ActionVM HelpUrlAction { get; [UsedImplicitly] private set; }
-
-		/// <summary>
-		/// Method for <see cref="HelpUrlAction"/>
-		/// </summary>
-		[UsedImplicitly]
-		private void DoHelpUrl(object parameter) {
-			string url = (string)parameter;
-			Process.Start(url);
-		}
+		
 
 		/// <summary>
 		/// Method for <see cref="NewWindowAction"/>

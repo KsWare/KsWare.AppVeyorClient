@@ -12,19 +12,11 @@
     xmlns:panelProjectEnvironmentVariables="clr-namespace:KsWare.AppVeyorClient.UI.PanelProjectEnvironmentVariables"
     xmlns:panelAvalonEditor="clr-namespace:KsWare.AppVeyorClient.UI.PanelAvalonEditor"
     xmlns:panelApiTester="clr-namespace:KsWare.AppVeyorClient.UI.PanelApiTester"
+    xmlns:panelCommon="clr-namespace:KsWare.AppVeyorClient.UI.PanelCommon"
     mc:Ignorable="d"
     Title="Appveyor Client" Height="350" Width="525"
 	d:DataContext="{d:DesignInstance Type={x:Type ui:MainWindowVM}}"
 	>
-	<Window.Resources>
-		<Style x:Key="HelpButton" TargetType="Button">
-			<Setter Property="Content" Value="?" />
-			<Setter Property="Padding" Value="8 0" />
-			<Setter Property="Background" Value="Transparent" />
-			<Setter Property="BorderThickness" Value="0" />
-			<Setter Property="Foreground" Value="Blue" />
-		</Style>
-	</Window.Resources>
 	<DockPanel Margin="4 4 4 4">
 		<DockPanel DockPanel.Dock="Top">
 			<StackPanel DockPanel.Dock="Right">
@@ -33,16 +25,8 @@
 			<panelProjectSelector:ProjectSelector DataContext="{Binding ProjectSelector}" Margin="0 0 0 6" />
 		</DockPanel>
 		<TabControl>
-			<TabItem Header="Common">
-				<StackPanel>
-					<StackPanel x:Name="TokenPanel" >
-						<DockPanel Margin="0 0 4 0">
-							<Button DockPanel.Dock="Right" Style="{StaticResource HelpButton}" Command="{Binding HelpUrlAction}" CommandParameter="https://ci.appveyor.com/api-token"/>
-							<Label Content="AppVeyor API Token: " />
-						</DockPanel>
-						<PasswordBox x:Name="TokenPasswordBox" LostFocus="AtTokenTextBoxLostFocus" Margin="4 0"/>
-					</StackPanel>
-				</StackPanel>
+			<TabItem Header="Common" DataContext="{Binding CommonPanel}">
+				<panelCommon:CommonPanelView/>
 			</TabItem>
 			<TabItem Header="Configuration" DataContext="{Binding ConfigurationPanel}">
 				<panelConfiguration:ConfigurationPanelView/>

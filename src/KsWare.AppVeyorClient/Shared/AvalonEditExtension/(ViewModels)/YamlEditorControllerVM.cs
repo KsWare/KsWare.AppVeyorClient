@@ -9,12 +9,29 @@ namespace KsWare.AppVeyorClient.Shared.AvalonEditExtension {
 
 		public YamlEditorControllerVM() {
 			RegisterChildren(()=>this);
+
+			Fields[nameof(DisableSyntaxHighlighting)].ValueChangedEvent.add = (s, e) => {
+				if (Data == null) return;
+
+				if (false == (bool) e.NewValue) {
+					var reader = XmlReader.Create("Data\\AppVeyor-yaml.xshd");
+					Data.SyntaxHighlighting = HighlightingLoader.Load(reader, HighlightingManager.Instance);
+				}
+				else {
+					Data.SyntaxHighlighting = null;
+				}
+			};
 		}
+
+		public bool DisableSyntaxHighlighting { get => Fields.GetValue<bool>(); set => Fields.SetValue(value); }
 
 		protected override void OnViewConnected() {
 			base.OnViewConnected();
-			var reader = XmlReader.Create("Data\\AppVeyor-yaml.xshd");
-			Data.SyntaxHighlighting = HighlightingLoader.Load(reader, HighlightingManager.Instance);
+
+			if (DisableSyntaxHighlighting == false) {
+				var reader = XmlReader.Create("Data\\AppVeyor-yaml.xshd");
+				Data.SyntaxHighlighting = HighlightingLoader.Load(reader, HighlightingManager.Instance);
+			}
 		}
 
 		public void ExpandCodeBlock() {

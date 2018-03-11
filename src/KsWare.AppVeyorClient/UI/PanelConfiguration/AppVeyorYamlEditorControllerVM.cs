@@ -12,6 +12,8 @@ using ICSharpCode.AvalonEdit.Editing;
 using ICSharpCode.AvalonEdit.Folding;
 using KsWare.AppVeyorClient.Shared.AvalonEditExtension;
 using KsWare.AppVeyorClient.Shared;
+using KsWare.AppVeyorClient.UI.App;
+using KsWare.AppVeyorClient.UI.ViewModels;
 
 namespace KsWare.AppVeyorClient.UI.PanelConfiguration {
 
@@ -28,6 +30,8 @@ namespace KsWare.AppVeyorClient.UI.PanelConfiguration {
 			_appVeyorEnvironmentVariables=PrepareAppVeyorEnvironmentVariables();
 		}
 
+		private SettingsVM Settings => AppVM.Current.Settings;
+
 		private List<MyCompletionData> PrepareAppVeyorEnvironmentVariables() {
 			var lines = File.ReadAllLines("Data\\AppVeyorEnvironmentVariables.txt");
 			var list = new List<MyCompletionData>();
@@ -40,7 +44,11 @@ namespace KsWare.AppVeyorClient.UI.PanelConfiguration {
 		}
 
 		protected override void OnViewConnected() {
+			DisableSyntaxHighlighting = !Settings.EnableYamlSyntaxHighlighting;
 			base.OnViewConnected();
+
+			Settings.Fields[nameof(SettingsVM.EnableYamlSyntaxHighlighting)].ValueChangedEvent.add =
+				(s, e) => DisableSyntaxHighlighting = !(bool) e.NewValue;
 
 			Data.TextArea.TextEntering += textEditor_TextArea_TextEntering;
 			Data.TextArea.TextEntered  += textEditor_TextArea_TextEntered;
@@ -60,6 +68,8 @@ namespace KsWare.AppVeyorClient.UI.PanelConfiguration {
 		}
 
 		private void UpdateFoldings(string reason) {
+			if(Settings.EnableYamlFolding==false) return;
+
 			Debug.WriteLine($"UpdateFoldings: {reason}");
 			_foldingStrategy.UpdateFoldings(_foldingManager, Data.Document);
 		}

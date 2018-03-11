@@ -1,0 +1,53 @@
+﻿<UserControl
+	x:Class="KsWare.AppVeyorClient.UI.PanelCommon.CommonPanelView"
+	xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
+	xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+	xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
+	xmlns:d="http://schemas.microsoft.com/expression/blend/2008"
+	xmlns:local="clr-namespace:KsWare.AppVeyorClient.UI.PanelCommon"
+	xmlns:wpfPropertyGrid="clr-namespace:KsWare.AppVeyorClient.Shared.WpfPropertyGrid"
+	xmlns:sys="clr-namespace:System;assembly=mscorlib"
+	mc:Ignorable="d"
+	d:DesignHeight="140" d:DesignWidth="300"
+	d:DataContext="{d:DesignInstance Type={x:Type local:CommonPanelVM}}">
+	<FrameworkElement.Resources>
+		<ObjectDataProvider x:Key="SortTypes" MethodName="GetValues" ObjectType="{x:Type sys:Enum}">
+			<ObjectDataProvider.MethodParameters>
+				<x:Type TypeName="wpfPropertyGrid:PropertySort" />
+			</ObjectDataProvider.MethodParameters>
+		</ObjectDataProvider>
+	</FrameworkElement.Resources>
+	<DockPanel>
+		<StackPanel DockPanel.Dock="Top">
+			<StackPanel x:Name="TokenPanel">
+				<DockPanel Margin="0 0 4 0">
+					<Button DockPanel.Dock="Right" Style="{DynamicResource HelpButton}" Command="{Binding HelpUrlAction}"
+					        CommandParameter="https://ci.appveyor.com/api-token" />
+					<Label Content="AppVeyor API Token: " />
+				</DockPanel>
+				<PasswordBox x:Name="TokenPasswordBox" LostFocus="AtTokenTextBoxLostFocus" Margin="4 0" />
+			</StackPanel>
+		</StackPanel>
+
+		<DockPanel>
+			<Label Content="Settings:" DockPanel.Dock="Top"/>
+			<StackPanel Orientation="Horizontal" DockPanel.Dock="Bottom">
+				<CheckBox Name="ShowDescrip" Margin="3" Content="Help Visible" VerticalAlignment="Center" />
+				<CheckBox Name="ShowToolbar" Margin="3" IsChecked="True" Content="Toolbar Visible" VerticalAlignment="Center" />
+				<ComboBox Name="ComboSort" Margin="3" Width="95" FontSize="10"
+				          SelectedIndex="0" ItemsSource="{Binding Source={StaticResource SortTypes}}" />
+			</StackPanel>
+			<wpfPropertyGrid:PropertyGrid
+				SelectedObject="{Binding Settings.Data, Mode=OneWay}"
+				x:Name="PropertyGrid"
+				HelpVisible="{Binding ElementName=ShowDescrip, Path=IsChecked}"
+				ToolbarVisible="{Binding ElementName=ShowToolbar, Path=IsChecked}"
+				PropertySort="{Binding ElementName=ComboSort, Path=SelectedItem}" ShowGridLines="True" />
+
+		</DockPanel>
+
+
+	</DockPanel>
+
+
+</UserControl>

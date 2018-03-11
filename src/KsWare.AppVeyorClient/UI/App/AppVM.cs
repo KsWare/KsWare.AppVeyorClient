@@ -5,25 +5,45 @@ using System.Security;
 using System.Security.Cryptography;
 using System.Text;
 using System.Windows;
+using System.Windows.Threading;
 using JetBrains.Annotations;
 using KsWare.AppVeyorClient.Api;
 using KsWare.AppVeyorClient.Shared;
+using KsWare.AppVeyorClient.UI.ViewModels;
 using KsWare.Presentation.ViewModelFramework;
 
 namespace KsWare.AppVeyorClient.UI.App {
 
 	public class AppVM:ApplicationVM {
 
+		public new static AppVM Current => (AppVM) ApplicationVM.Current;
+
 		public AppVM() {
 			RegisterChildren(()=>this);
 			StartupUri = typeof(MainWindowVM);
 		}
 
+		protected override void OnStartup(StartupEventArgs e) {
+			base.OnStartup(e);
+			Application.Current.Dispatcher.Invoke(DispatcherPriority.ApplicationIdle, new Action(OnStartIdle));
+		}
+
+		private void OnStartIdle() {
+			Settings.Load();
+		}
+
 		internal static Client Client { get; } = new Client("");
+
 		public static FileStore FileStore { get; private set; }
 
+		public SettingsVM Settings { get; [UsedImplicitly] private set; }
+
 		internal static void StoreToken([NotNull]SecureString secureToken) {
+			if(Current.Settings.SaveToken==false) return;
 			if (secureToken == null) throw new ArgumentNullException(nameof(secureToken));
+
+			var path = Path.Combine(Path.GetDirectoryName(SettingsVM.FilePath), "{97E1F04E-A097-477B-A29A-92889BE79C39}");
+			Directory.CreateDirectory(Path.GetDirectoryName(SettingsVM.FilePath));
 
 			byte[] plaintext = Encoding.UTF8.GetBytes(
 				System.Runtime.InteropServices.Marshal.PtrToStringAuto(
@@ -49,7 +69,7 @@ namespace KsWare.AppVeyorClient.UI.App {
 			//			IsolatedStorageFile isoStore =
 			//				IsolatedStorageFile.GetStore(IsolatedStorageScope.User | IsolatedStorageScope.Machine, null, null);
 			//			using (var isoStream = new IsolatedStorageFileStream("Token", FileMode.Create, isoStore)) {
-			using (var isoStream = File.Create("Token")) {
+			using (var isoStream = File.Create(path)) {
 
 				using (var writer = new BinaryWriter(isoStream)) {
 					writer.Write(entropy);
@@ -62,15 +82,17 @@ namespace KsWare.AppVeyorClient.UI.App {
 		}
 
 		internal static void LoadToken() {
+			var path = Path.Combine(Path.GetDirectoryName(SettingsVM.FilePath), "{97E1F04E-A097-477B-A29A-92889BE79C39}");
+			Directory.CreateDirectory(Path.GetDirectoryName(SettingsVM.FilePath));
 
 //			var isoStore = IsolatedStorageFile.GetStore(IsolatedStorageScope.User|IsolatedStorageScope.Machine, null, null);
 //			if (!isoStore.FileExists("Token")) return;
-			if (!File.Exists("Token")) return;
+			if (!File.Exists(path)) return;
 
 			byte[] entropy;
 			byte[] ciphertext;
 			//			using (var isoStream = new IsolatedStorageFileStream("Token", FileMode.Open, isoStore)
-			using (var isoStream = File.OpenRead("Token")
+			using (var isoStream = File.OpenRead(path)
 			) {
 
 				using (var reader = new BinaryReader(isoStream)) {
@@ -93,7 +115,9 @@ namespace KsWare.AppVeyorClient.UI.App {
 		}
 
 		internal static void InitFileStore() {
-			FileStore=FileStore.Instance=new FileStore(Path.Combine(Directory.GetCurrentDirectory(),"Cache"));
+			var path = Path.Combine(Path.GetDirectoryName(SettingsVM.FilePath), "Cache");
+			Directory.CreateDirectory(path);
+			FileStore=FileStore.Instance=new FileStore(path);
 		}
 	}
 }
