@@ -2,6 +2,9 @@
 
 A windows client for [AppVeyor](https://www.appveyor.com/).
 
+[![Build status](https://ci.appveyor.com/api/projects/status/kcifeuh0htha6adv?svg=true)](https://ci.appveyor.com/project/KsWare/ksware-appveyorclient)
+[![Build status](https://ci.appveyor.com/api/projects/status/kcifeuh0htha6adv/branch/master?svg=true)](https://ci.appveyor.com/project/KsWare/ksware-appveyorclient/branch/master)
+
 [Homepage](https://ksware.github.io/KsWare.AppVeyorClient/) 
 [Wiki](https://github.com/KsWare/KsWare.AppVeyorClient/wiki)
 
