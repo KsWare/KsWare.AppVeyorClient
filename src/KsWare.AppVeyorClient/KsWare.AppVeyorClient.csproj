@@ -124,6 +124,8 @@
     <Compile Include="Api\ProjectClient.cs" />
     <Compile Include="Shared\AvalonEditExtension\%28ViewModels%29\TextEditorControllerBehavior.cs" />
     <Compile Include="Shared\AvalonEditExtension\%28ViewModels%29\TextEditorBehavior.cs" />
+    <Compile Include="Shared\AvalonEditExtension\ColorizeSearchRegex.cs" />
+    <Compile Include="Shared\AvalonEditExtension\ColorizeSearchText.cs" />
     <Compile Include="Shared\AvalonEditExtension\TextEditorExtensions.cs" />
     <Compile Include="Shared\FileStore.cs" />
     <Compile Include="Shared\IListExtensions.cs" />

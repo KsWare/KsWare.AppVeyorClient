@@ -9,6 +9,8 @@ namespace KsWare.AppVeyorClient.UI.PanelSearch {
 	
 	public class SearchPanelVM : ObjectVM {
 
+		private ColorizeSearchText _colorizer;
+
 		public SearchPanelVM() {
 			RegisterChildren(()=>this);
 			Fields[nameof(SearchText)].ValueChangedEvent.add=OnSearchTextChanged;
@@ -37,6 +39,17 @@ namespace KsWare.AppVeyorClient.UI.PanelSearch {
 		private List<int> SearchResults { get; set; } = new List<int>();
 
 		private void OnSearchTextChanged(object sender, ValueChangedEventArgs valueChangedEventArgs) {
+			if (_colorizer==null) {
+				_colorizer = new ColorizeSearchText{CaseSensitive = false};
+				Editor.Data.TextArea.TextView.LineTransformers.Add(_colorizer);
+			}
+			else {
+				// TODO refresh TextView
+				Editor.Data.TextArea.TextView.LineTransformers.Remove(_colorizer);
+				Editor.Data.TextArea.TextView.LineTransformers.Add(_colorizer);
+			}
+			_colorizer.SearchText = SearchText;
+			
 			SearchResults.Clear();
 			var length = SearchText.Length;
 			var textLength = Editor.Text.Length;
@@ -46,7 +59,7 @@ namespace KsWare.AppVeyorClient.UI.PanelSearch {
 			else {
 				var i = 0;
 				while (true) {
-					i = Editor.Text.IndexOf(SearchText,i, StringComparison.InvariantCultureIgnoreCase);
+					i = Editor.Text.IndexOf(SearchText,i, StringComparison.OrdinalIgnoreCase);
 					if(i<0) break;
 					SearchResults.Add(i);
 					i += SearchText.Length;
