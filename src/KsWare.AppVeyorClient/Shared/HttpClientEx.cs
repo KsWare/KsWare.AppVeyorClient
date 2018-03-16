@@ -68,16 +68,19 @@ namespace KsWare.AppVeyorClient.Shared {
 				// return JsonConvert.DeserializeObject<T>(content);
 
 				var o = JsonConvert.DeserializeObject<T>(content, JsonSerializerSettings);
-				var ot = JsonConvert.SerializeObject(o,Formatting.Indented, JsonSerializerSettings);
-				var j = JsonConvert.DeserializeObject(content, JsonSerializerSettings);
-				var jt = JsonConvert.SerializeObject(j, Formatting.Indented, JsonSerializerSettings);
-				if (ot != jt) {
-					Debug.WriteLine($"JSON: incomplete deserialized! {typeof(T).FullName}");
-					var p1=Path.Combine(Path.GetTempPath(), "mine - {C29066B1-293D-4CAA-AE55-5EF68764F184}.json");
-					var p2=Path.Combine(Path.GetTempPath(), "origin - {00E1C157-7B19-41C6-87AB-DAA57EFC3D9D}.json");
-					File.WriteAllText(p1,ot);
-					File.WriteAllText(p2,jt);
-					Process.Start(@"C:\Program Files (x86)\WinMerge\WinMergeU.exe", $"\"{p1}\" \"{p2}\"");
+				if (ValidateJsonResult) {
+					var ot = JsonConvert.SerializeObject(o,Formatting.Indented, JsonSerializerSettings);
+					var j = JsonConvert.DeserializeObject(content, JsonSerializerSettings);
+					var jt = JsonConvert.SerializeObject(j, Formatting.Indented, JsonSerializerSettings);
+					if (ot != jt) {
+						Debug.WriteLine($"JSON: incomplete deserialized! {typeof(T).FullName}");
+						var p1=Path.Combine(Path.GetTempPath(), "mine - {C29066B1-293D-4CAA-AE55-5EF68764F184}.json");
+						var p2=Path.Combine(Path.GetTempPath(), "origin - {00E1C157-7B19-41C6-87AB-DAA57EFC3D9D}.json");
+						File.WriteAllText(p1,ot);
+						File.WriteAllText(p2,jt);
+						var winMerge = Path.Combine(Environment.GetFolderPath(Environment.SpecialFolder.CommonProgramFilesX86), @"WinMerge\WinMergeU.exe");
+						if(File.Exists(winMerge)) Process.Start(winMerge, $"\"{p1}\" \"{p2}\"");
+					}
 				}
 				return o;
 			}
@@ -86,6 +89,12 @@ namespace KsWare.AppVeyorClient.Shared {
 				throw;
 			}
 		}
+
+		/// <summary>
+		/// Gets or sets a value indicating whether returned json result shall validated.
+		/// </summary>
+		/// <value><c>true</c> if json result shall validated; otherwise, <c>false</c>.</value>
+		public bool ValidateJsonResult { get; set; }
 
 		public string GetJsonText(string api) => TaskExtensions.RunSync(async () => await GetJsonTextAsync(api));
 
