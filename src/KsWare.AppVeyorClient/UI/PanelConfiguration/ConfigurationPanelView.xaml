@@ -99,8 +99,35 @@
 					SyntaxHighlighting="YAML"
 					FontFamily="Consolas"
 					FontSize="12pt"
-					avalonEditExtension:TextEditorControllerBehavior.Controller="{Binding YamlEditorController}"
-					/>
+					avalonEditExtension:TextEditorControllerBehavior.Controller="{Binding YamlEditorController}">
+					<avalonEdit:TextEditor.ContextMenu>
+						<ContextMenu 
+							DataContext="{Binding YamlEditorController.ContextMenu}"
+							ItemsSource="{Binding Items}"
+							>
+							<ContextMenu.ItemContainerStyle>
+								<Style TargetType="MenuItem" d:DataContext="{d:DesignInstance Type=ksvf:MenuItemVM}">
+									<Setter Property="ItemsSource" Value="{Binding Items}"/>
+									<Setter Property="Header" Value="{Binding Caption}" />
+									<Setter Property="Command" Value="{Binding CommandAction}" />
+									<Setter Property="IsChecked" Value="{Binding IsChecked}" />
+									<Setter Property="IsCheckable" Value="{Binding IsCheckable}" />
+									<Style.Triggers>
+										<Trigger Property="Header" Value="-">
+											<Setter Property="Template">
+												<Setter.Value>
+													<ControlTemplate>
+														<Separator/>
+													</ControlTemplate>
+												</Setter.Value>
+											</Setter>
+										</Trigger>
+									</Style.Triggers>
+								</Style>
+							</ContextMenu.ItemContainerStyle>
+						</ContextMenu>
+					</avalonEdit:TextEditor.ContextMenu>
+				</avalonEdit:TextEditor>
 			</DockPanel>
 
 			<GridSplitter Grid.Row="0" Height="6" VerticalAlignment="Bottom" HorizontalAlignment="Stretch" Background="DarkGray"></GridSplitter>

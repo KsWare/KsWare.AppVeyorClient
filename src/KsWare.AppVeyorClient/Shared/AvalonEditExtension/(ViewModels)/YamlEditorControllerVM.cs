@@ -1,7 +1,12 @@
-﻿using System.Text.RegularExpressions;
+﻿using System;
+using System.Text.RegularExpressions;
 using System.Xml;
 using ICSharpCode.AvalonEdit.Highlighting;
 using ICSharpCode.AvalonEdit.Highlighting.Xshd;
+using KsWare.AppVeyorClient.Shared.PresentationFramework;
+using KsWare.Presentation;
+using KsWare.Presentation.ViewModelFramework;
+using KsWare.Presentation.ViewModelFramework.Providers;
 
 namespace KsWare.AppVeyorClient.Shared.AvalonEditExtension {
 
@@ -10,7 +15,19 @@ namespace KsWare.AppVeyorClient.Shared.AvalonEditExtension {
 		public YamlEditorControllerVM() {
 			RegisterChildren(()=>this);
 
+			MenuItemVM shi;
+			ContextMenu.Items.Add(new MenuItemVM {Caption = "-"});
+			ContextMenu.Items.Add(new MenuItemVM {
+				Caption = "Options",
+				Items = {
+					(shi=new MenuItemVM {Caption = "Syntax Highlighting", IsCheckable        = true, IsChecked = true, CommandAction = { MːExecutedCallback = AtSyntaxHighlightingMenuItemOnIsCheckedChanged}}),
+					new MenuItemVM {Caption = "Folding", IsCheckable                    = true},
+					new MenuItemVM {Caption = "Search Result Highlighting", IsCheckable = true},
+				}
+			});
+
 			Fields[nameof(DisableSyntaxHighlighting)].ValueChangedEvent.add = (s, e) => {
+				shi.IsChecked = !(bool) e.NewValue;
 				if (Data == null) return;
 
 				if (false == (bool) e.NewValue) {
@@ -21,6 +38,12 @@ namespace KsWare.AppVeyorClient.Shared.AvalonEditExtension {
 					Data.SyntaxHighlighting = null;
 				}
 			};
+		}
+
+		private void AtSyntaxHighlightingMenuItemOnIsCheckedChanged(object sender, ExecutedEventArgs e) {
+			var avm = (ActionVM)((IActionProvider) sender).Parent.Parent; // ActionVM
+			var vm=(MenuItemVM)avm.Parent;
+			DisableSyntaxHighlighting = !vm.IsChecked;
 		}
 
 		public bool DisableSyntaxHighlighting { get => Fields.GetValue<bool>(); set => Fields.SetValue(value); }

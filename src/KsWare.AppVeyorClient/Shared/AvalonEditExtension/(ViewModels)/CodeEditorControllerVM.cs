@@ -1,6 +1,9 @@
 ﻿using System.Diagnostics;
 using System.Text.RegularExpressions;
+using System.Windows.Controls;
 using System.Windows.Input;
+using JetBrains.Annotations;
+using KsWare.Presentation.ViewModelFramework;
 
 namespace KsWare.AppVeyorClient.Shared.AvalonEditExtension {
 
@@ -44,6 +47,7 @@ namespace KsWare.AppVeyorClient.Shared.AvalonEditExtension {
 
 			// internal search panel
 			// SearchPanel.Install(Data);
+			
 		}
 
 //		private void DataOnSelectionChanged(object s, RoutedEventArgs e) {

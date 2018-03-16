@@ -8,6 +8,7 @@ using System.Security;
 using System.Text;
 using System.Threading.Tasks;
 using Common.Logging;
+using JetBrains.Annotations;
 using Newtonsoft.Json;
 using Newtonsoft.Json.Serialization;
 
@@ -53,7 +54,6 @@ namespace KsWare.AppVeyorClient.Shared {
 			System.Runtime.InteropServices.Marshal.PtrToStringAuto(
 				System.Runtime.InteropServices.Marshal.SecureStringToBSTR(_secureToken));
 
-
 //		private string GetUrl(string api) {
 //			if(string.IsNullOrWhiteSpace(Protocoll)) throw new InvalidOperationException("Protocol not specified.");
 //			if(string.IsNullOrWhiteSpace(Server)) throw new InvalidOperationException("Server not specified.");
@@ -94,6 +94,7 @@ namespace KsWare.AppVeyorClient.Shared {
 		/// Gets or sets a value indicating whether returned json result shall validated.
 		/// </summary>
 		/// <value><c>true</c> if json result shall validated; otherwise, <c>false</c>.</value>
+		[PublicAPI]
 		public bool ValidateJsonResult { get; set; }
 
 		public string GetJsonText(string api) => TaskExtensions.RunSync(async () => await GetJsonTextAsync(api));

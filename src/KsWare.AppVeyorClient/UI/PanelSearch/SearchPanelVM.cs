@@ -1,5 +1,6 @@
 ﻿using System;
 using System.Collections.Generic;
+using System.Windows.Threading;
 using JetBrains.Annotations;
 using KsWare.AppVeyorClient.Shared.AvalonEditExtension;
 using KsWare.Presentation;
@@ -43,27 +44,21 @@ namespace KsWare.AppVeyorClient.UI.PanelSearch {
 				_colorizer = new ColorizeSearchText{CaseSensitive = false};
 				Editor.Data.TextArea.TextView.LineTransformers.Add(_colorizer);
 			}
-			else {
-				// TODO refresh TextView
-				Editor.Data.TextArea.TextView.LineTransformers.Remove(_colorizer);
-				Editor.Data.TextArea.TextView.LineTransformers.Add(_colorizer);
-			}
+
 			_colorizer.SearchText = SearchText;
+			Editor.Data.TextArea.TextView.Redraw(DispatcherPriority.Background);
 			
 			SearchResults.Clear();
 			var length = SearchText.Length;
 			var textLength = Editor.Text.Length;
-			if (length < 3) {
-
-			}
-			else {
+			if (length >= 1) {
 				var i = 0;
 				while (true) {
-					i = Editor.Text.IndexOf(SearchText,i, StringComparison.OrdinalIgnoreCase);
-					if(i<0) break;
+					i = Editor.Text.IndexOf(SearchText, i, StringComparison.OrdinalIgnoreCase);
+					if (i < 0) break;
 					SearchResults.Add(i);
 					i += SearchText.Length;
-					if(i>= textLength) break;
+					if (i >= textLength) break;
 				}
 			}
 			CurrentResultIndex = 0;

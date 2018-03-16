@@ -135,6 +135,7 @@
     <Compile Include="Shared\PresentationFramework\%28TextBox%29\TextBoxControllerBehavior.cs" />
     <Compile Include="Shared\PresentationFramework\%28TextBox%29\TextBoxControllerVM.cs" />
     <Content Include="Shared\WpfPropertyGrid\WpfPropertyGrid.txt" />
+    <Compile Include="Shared\PresentationFramework\ContextMenuVM.cs" />
     <Compile Include="Shared\PresentationFramework\SharedResourceDictionary.cs" />
     <Compile Include="Shared\WpfPropertyGrid\PropertyGrid.cs" />
     <Compile Include="Shared\TaskExtensions.cs" />

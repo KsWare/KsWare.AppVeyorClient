@@ -1,7 +1,11 @@
 ﻿using System;
 using System.Windows;
+using System.Windows.Controls;
+using System.Windows.Threading;
 using ICSharpCode.AvalonEdit;
 using ICSharpCode.AvalonEdit.Document;
+using JetBrains.Annotations;
+using KsWare.AppVeyorClient.Shared.PresentationFramework;
 using KsWare.Presentation.Core.Providers;
 using KsWare.Presentation.ViewModelFramework;
 
@@ -12,9 +16,16 @@ namespace KsWare.AppVeyorClient.Shared.AvalonEditExtension {
 		TextEditorData _data=new TextEditorData();
 
 		public TextEditorControllerVM() {
-			RegisterChildren(()=>this);
+			RegisterChildren(() => this);
 
-			IsEnabledChanged+=AtIsEnabledChanged;
+			IsEnabledChanged += AtIsEnabledChanged;
+
+			ContextMenu.Items.Add(new MenuItemVM {Caption = "Cut", CommandAction   = {MːDoAction = () => Data.Cut()}});
+			ContextMenu.Items.Add(new MenuItemVM {Caption = "Copy", CommandAction  = {MːDoAction = () => Data.Copy()}});
+			ContextMenu.Items.Add(new MenuItemVM {Caption = "Paste", CommandAction = {MːDoAction = () => Data.Paste()}});
+//			ContextMenu.Items.Add(new MenuItemVM {Caption = "Delete", CommandAction = {MːDoAction = () => Data.Delete()}});
+//			ContextMenu.Items.Add(new MenuItemVM {Caption = "Undo", CommandAction = {MːDoAction = () => Data.Undo()}});
+//			ContextMenu.Items.Add(new MenuItemVM {Caption = "Redo", CommandAction = {MːDoAction = () => Data.Redo()}});
 		}
 
 		private void AtIsEnabledChanged(object sender, RoutedPropertyChangedEventArgs<bool> e) { Data.IsEnabled = e.NewValue; }
@@ -52,7 +63,19 @@ namespace KsWare.AppVeyorClient.Shared.AvalonEditExtension {
 		protected virtual void OnViewConnected() {
 			Data.Text = _data.Text;
 			Data.IsEnabled = _data.IsEnabled;
+
+			if (Data.ContextMenu != null) {
+				Data.ContextMenu.DataContext = ContextMenu;
+			}
+
+//			Data.ContextMenu = new ContextMenu {
+//				DataContext = ContextMenu, 
+//				ItemsSource = ContextMenu.Items,
+//				ItemTemplate = 
+//			};
 		}
+
+		public ContextMenuVM ContextMenu { get; [UsedImplicitly] private set; }
 
 		public DocumentPosition SelectionStartPosition => Data.GetSelectionStartPosition();
 
