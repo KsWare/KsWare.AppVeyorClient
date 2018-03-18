@@ -20,7 +20,7 @@ namespace KsWare.AppVeyorClient.UI.ViewModels {
 
 		private static readonly string[] SerializablePropertyNames;
 
-		private static JsonSerializerSettings SerializerSettings;
+		private static readonly JsonSerializerSettings SerializerSettings;
 
 		static SettingsVM() {
 			SerializablePropertyNames = typeof(SettingsVM).GetProperties(BindingFlags.Instance | BindingFlags.Public | BindingFlags.DeclaredOnly)
@@ -37,10 +37,8 @@ namespace KsWare.AppVeyorClient.UI.ViewModels {
 
 		private static bool IsSerializable(PropertyInfo p) { return p.GetCustomAttribute<JsonIgnoreAttribute>() == null; }
 
-
 		private bool _anyValueChanged;
 		private bool _isLoading;
-		
 
 		public SettingsVM() {
 			RegisterChildren(()=>this);
@@ -50,6 +48,7 @@ namespace KsWare.AppVeyorClient.UI.ViewModels {
 			EnableYamlSyntaxHighlighting = true;
 
 			PropertyChangedEvent.add = (s, e) => {
+				if(e.Property.Name!="Data") RaiseDataChanged(); // WORKARROUND reload property grid
 				if (SerializablePropertyNames.Contains(e.PropertyName)) {
 					if(_isLoading) return;
 					_anyValueChanged = true;
@@ -58,6 +57,7 @@ namespace KsWare.AppVeyorClient.UI.ViewModels {
 			};
 		}
 
+		// WORKARROUND reload property grid
 		[Browsable(false), JsonIgnore, IgnoreDataMember, Hierarchy(HierarchyType.Ignore)]
 		public SettingsVM Data { get => Fields.GetValue<SettingsVM>(); set => Fields.SetValue(value); }	
 
@@ -84,13 +84,20 @@ namespace KsWare.AppVeyorClient.UI.ViewModels {
 		}
 
 		public void Load() {
-			Data = null; 
 			if(!File.Exists(FilePath)) return;
 			var json = File.ReadAllText(FilePath);
 			_isLoading = true;
 			JsonConvert.PopulateObject(json,this);
 			_isLoading = false;
-			Data = this;
+			_anyValueChanged = false;
+
+			RaiseDataChanged();
+		}
+
+		// WORKARROUND reload property grid
+		private void RaiseDataChanged() {
+			Data = null;
+			Data = this; 
 		}
 
 		#region Hide ObjectVM properties in Property Editor and in JSON serializer

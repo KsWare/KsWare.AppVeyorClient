@@ -11,6 +11,7 @@
     xmlns:avalonEditExtension="clr-namespace:KsWare.AppVeyorClient.Shared.AvalonEditExtension"
     xmlns:panelConfiguration="clr-namespace:KsWare.AppVeyorClient.UI.PanelConfiguration"
     xmlns:viewModels="clr-namespace:KsWare.AppVeyorClient.UI.ViewModels"
+    xmlns:ksv="http://ksware.de/Presentation/ViewFramework"
     mc:Ignorable="d" 
     d:DesignHeight="300" d:DesignWidth="300"
 	d:DataContext="{d:DesignInstance Type={x:Type panelConfiguration:ConfigurationPanelVM}}"
@@ -18,7 +19,7 @@
 <FrameworkElement.Resources>
 	<ResourceDictionary>
 		<ResourceDictionary.MergedDictionaries>
-			<ksvf:SharedResourceDictionary Source="pack://application:,,,/KsWare.AppVeyorClient;component/UI/Resources/Generic.xaml" />
+			<ksv:SharedResourceDictionary Source="pack://application:,,,/KsWare.AppVeyorClient;component/UI/Resources/Generic.xaml" />
 		</ResourceDictionary.MergedDictionaries>
 	</ResourceDictionary>
 </FrameworkElement.Resources>

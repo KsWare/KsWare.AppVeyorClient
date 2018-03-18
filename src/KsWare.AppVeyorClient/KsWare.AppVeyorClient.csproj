@@ -12,6 +12,24 @@
     <FileAlignment>512</FileAlignment>
     <ProjectTypeGuids>{60dc8134-eba5-43b8-bcc9-bb4bc16c2548};{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}</ProjectTypeGuids>
     <WarningLevel>4</WarningLevel>
+    <IsWebBootstrapper>false</IsWebBootstrapper>
+    <PublishUrl>publish\</PublishUrl>
+    <Install>true</Install>
+    <InstallFrom>Disk</InstallFrom>
+    <UpdateEnabled>true</UpdateEnabled>
+    <UpdateMode>Background</UpdateMode>
+    <UpdateInterval>1</UpdateInterval>
+    <UpdateIntervalUnits>Days</UpdateIntervalUnits>
+    <UpdatePeriodically>false</UpdatePeriodically>
+    <UpdateRequired>false</UpdateRequired>
+    <MapFileExtensions>true</MapFileExtensions>
+    <ProductName>AppVeyorClient</ProductName>
+    <PublisherName>KsWare</PublisherName>
+    <ApplicationRevision>0</ApplicationRevision>
+    <ApplicationVersion>0.2.5.0</ApplicationVersion>
+    <UseApplicationTrust>false</UseApplicationTrust>
+    <CreateDesktopShortcut>true</CreateDesktopShortcut>
+    <BootstrapperEnabled>true</BootstrapperEnabled>
   </PropertyGroup>
   <PropertyGroup Condition=" '$(Configuration)|$(Platform)' == 'Debug|AnyCPU' ">
     <PlatformTarget>AnyCPU</PlatformTarget>
@@ -51,20 +69,29 @@
     <Reference Include="JetBrains.Annotations, Version=11.1.0.0, Culture=neutral, PublicKeyToken=1010a0d8d6380325, processorArchitecture=MSIL">
       <HintPath>..\packages\JetBrains.Annotations.11.1.0\lib\net20\JetBrains.Annotations.dll</HintPath>
     </Reference>
-    <Reference Include="KsWare.Presentation.BusinessFramework, Version=1.0.0.0, Culture=neutral, PublicKeyToken=398cf6eb36307095, processorArchitecture=MSIL">
-      <HintPath>..\packages\KsWare.F35FEB78.2017.07.18.1\lib\net45\KsWare.Presentation.BusinessFramework.dll</HintPath>
+    <Reference Include="KsWare.Presentation, Version=0.18.11.0, Culture=neutral, PublicKeyToken=398cf6eb36307095, processorArchitecture=MSIL">
+      <HintPath>..\packages\KsWare.Presentation.0.18.11\lib\net45\KsWare.Presentation.dll</HintPath>
     </Reference>
-    <Reference Include="KsWare.Presentation.Core, Version=1.0.0.0, Culture=neutral, PublicKeyToken=398cf6eb36307095, processorArchitecture=MSIL">
-      <HintPath>..\packages\KsWare.F35FEB78.2017.07.18.1\lib\net45\KsWare.Presentation.Core.dll</HintPath>
+    <Reference Include="KsWare.Presentation.BusinessFramework, Version=0.18.11.0, Culture=neutral, PublicKeyToken=398cf6eb36307095, processorArchitecture=MSIL">
+      <HintPath>..\packages\KsWare.Presentation.0.18.11\lib\net45\KsWare.Presentation.BusinessFramework.dll</HintPath>
     </Reference>
-    <Reference Include="KsWare.Presentation.Labs, Version=1.0.0.0, Culture=neutral, PublicKeyToken=398cf6eb36307095, processorArchitecture=MSIL">
-      <HintPath>..\packages\KsWare.F35FEB78.2017.07.18.1\lib\net45\KsWare.Presentation.Labs.dll</HintPath>
+    <Reference Include="KsWare.Presentation.Core, Version=0.18.11.0, Culture=neutral, PublicKeyToken=398cf6eb36307095, processorArchitecture=MSIL">
+      <HintPath>..\packages\KsWare.Presentation.0.18.11\lib\net45\KsWare.Presentation.Core.dll</HintPath>
     </Reference>
-    <Reference Include="KsWare.Presentation.ViewFramework, Version=1.0.0.0, Culture=neutral, PublicKeyToken=398cf6eb36307095, processorArchitecture=MSIL">
-      <HintPath>..\packages\KsWare.F35FEB78.2017.07.18.1\lib\net45\KsWare.Presentation.ViewFramework.dll</HintPath>
+    <Reference Include="KsWare.Presentation.Labs, Version=0.18.11.0, Culture=neutral, PublicKeyToken=398cf6eb36307095, processorArchitecture=MSIL">
+      <HintPath>..\packages\KsWare.Presentation.0.18.11\lib\net45\KsWare.Presentation.Labs.dll</HintPath>
     </Reference>
-    <Reference Include="KsWare.Presentation.ViewModelFramework, Version=1.0.0.0, Culture=neutral, PublicKeyToken=398cf6eb36307095, processorArchitecture=MSIL">
-      <HintPath>..\packages\KsWare.F35FEB78.2017.07.18.1\lib\net45\KsWare.Presentation.ViewModelFramework.dll</HintPath>
+    <Reference Include="KsWare.Presentation.Themes, Version=0.18.11.0, Culture=neutral, processorArchitecture=MSIL">
+      <HintPath>..\packages\KsWare.Presentation.0.18.11\lib\net45\KsWare.Presentation.Themes.dll</HintPath>
+    </Reference>
+    <Reference Include="KsWare.Presentation.Themes.Aero2Fix, Version=0.18.11.0, Culture=neutral, processorArchitecture=MSIL">
+      <HintPath>..\packages\KsWare.Presentation.0.18.11\lib\net45\KsWare.Presentation.Themes.Aero2Fix.dll</HintPath>
+    </Reference>
+    <Reference Include="KsWare.Presentation.ViewFramework, Version=0.18.11.0, Culture=neutral, PublicKeyToken=398cf6eb36307095, processorArchitecture=MSIL">
+      <HintPath>..\packages\KsWare.Presentation.0.18.11\lib\net45\KsWare.Presentation.ViewFramework.dll</HintPath>
+    </Reference>
+    <Reference Include="KsWare.Presentation.ViewModelFramework, Version=0.18.11.0, Culture=neutral, PublicKeyToken=398cf6eb36307095, processorArchitecture=MSIL">
+      <HintPath>..\packages\KsWare.Presentation.0.18.11\lib\net45\KsWare.Presentation.ViewModelFramework.dll</HintPath>
     </Reference>
     <Reference Include="Microsoft.Expression.Interactions, Version=4.0.0.0, Culture=neutral, PublicKeyToken=31bf3856ad364e35, processorArchitecture=MSIL">
       <HintPath>..\packages\System.Windows.Interactivity.WPF.2.0.20525\lib\net40\Microsoft.Expression.Interactions.dll</HintPath>
@@ -136,7 +163,6 @@
     <Compile Include="Shared\PresentationFramework\%28TextBox%29\TextBoxControllerVM.cs" />
     <Content Include="Shared\WpfPropertyGrid\WpfPropertyGrid.txt" />
     <Compile Include="Shared\PresentationFramework\ContextMenuVM.cs" />
-    <Compile Include="Shared\PresentationFramework\SharedResourceDictionary.cs" />
     <Compile Include="Shared\WpfPropertyGrid\PropertyGrid.cs" />
     <Compile Include="Shared\TaskExtensions.cs" />
     <Compile Include="Shared\WpfPropertyGrid\PropertySort.cs" />
@@ -277,6 +303,13 @@
     <Content Include="Data\AppVeyorEnvironmentVariables.txt">
       <CopyToOutputDirectory>Always</CopyToOutputDirectory>
     </Content>
+  </ItemGroup>
+  <ItemGroup>
+    <BootstrapperPackage Include="Microsoft.Net.Framework.3.5.SP1">
+      <Visible>False</Visible>
+      <ProductName>.NET Framework 3.5 SP1</ProductName>
+      <Install>false</Install>
+    </BootstrapperPackage>
   </ItemGroup>
   <Import Project="$(MSBuildToolsPath)\Microsoft.CSharp.targets" />
 </Project>

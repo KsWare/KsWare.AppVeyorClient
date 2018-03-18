@@ -1,5 +1,7 @@
-﻿using System;
+﻿using System.Diagnostics;
+using System.Globalization;
 using System.Text.RegularExpressions;
+using System.Windows.Data;
 using System.Xml;
 using ICSharpCode.AvalonEdit.Highlighting;
 using ICSharpCode.AvalonEdit.Highlighting.Xshd;
@@ -7,6 +9,7 @@ using KsWare.AppVeyorClient.Shared.PresentationFramework;
 using KsWare.Presentation;
 using KsWare.Presentation.ViewModelFramework;
 using KsWare.Presentation.ViewModelFramework.Providers;
+using BindingMode = System.Windows.Data.BindingMode;
 
 namespace KsWare.AppVeyorClient.Shared.AvalonEditExtension {
 
@@ -15,38 +18,51 @@ namespace KsWare.AppVeyorClient.Shared.AvalonEditExtension {
 		public YamlEditorControllerVM() {
 			RegisterChildren(()=>this);
 
-			MenuItemVM shi;
+			MenuItemVM shi,foi,srhi;
 			ContextMenu.Items.Add(new MenuItemVM {Caption = "-"});
 			ContextMenu.Items.Add(new MenuItemVM {
 				Caption = "Options",
 				Items = {
-					(shi=new MenuItemVM {Caption = "Syntax Highlighting", IsCheckable        = true, IsChecked = true, CommandAction = { MːExecutedCallback = AtSyntaxHighlightingMenuItemOnIsCheckedChanged}}),
-					new MenuItemVM {Caption = "Folding", IsCheckable                    = true},
-					new MenuItemVM {Caption = "Search Result Highlighting", IsCheckable = true},
+					(shi  = new MenuItemVM {Caption = "Syntax Highlighting", IsCheckable        = true}),
+					(foi  = new MenuItemVM {Caption = "Folding", IsCheckable                    = true}),
+					(srhi = new MenuItemVM {Caption = "Search Result Highlighting", IsCheckable = true}),
 				}
 			});
 
-			Fields[nameof(DisableSyntaxHighlighting)].ValueChangedEvent.add = (s, e) => {
-				shi.IsChecked = !(bool) e.NewValue;
-				if (Data == null) return;
+			shi.Fields[nameof(MenuItemVM.IsChecked)].SetBinding(new FieldBinding(Fields[nameof(DisableSyntaxHighlighting)],BindingMode.TwoWay,InvertBoolConverter.Default));
+			foi.Fields[nameof(MenuItemVM.IsChecked)].SetBinding(new FieldBinding(Fields[nameof(DisableFolding)],BindingMode.TwoWay,InvertBoolConverter.Default));
+			srhi.Fields[nameof(MenuItemVM.IsChecked)].SetBinding(new FieldBinding(Fields[nameof(DisableSearchResultHighlighting)],BindingMode.TwoWay,InvertBoolConverter.Default));
 
-				if (false == (bool) e.NewValue) {
-					var reader = XmlReader.Create("Data\\AppVeyor-yaml.xshd");
-					Data.SyntaxHighlighting = HighlightingLoader.Load(reader, HighlightingManager.Instance);
-				}
-				else {
-					Data.SyntaxHighlighting = null;
-				}
-			};
+			Fields[nameof(DisableSyntaxHighlighting)].ValueChangedEvent.add = (s, e) => {OnDisableSyntaxHighlightingChanged((bool) e.NewValue);};
+			Fields[nameof(DisableFolding)].ValueChangedEvent.add = (s, e) => {OnDisableFoldingChanged((bool) e.NewValue);};
+			Fields[nameof(DisableSearchResultHighlighting)].ValueChangedEvent.add = (s, e) => {OnDisableSearchResultHighlightingChanged((bool) e.NewValue);};
+
+			//DEBUG
+			Fields[nameof(DisableSyntaxHighlighting)].ValueChangedEvent.add = (s, e) => Debug.WriteLine($"DisableSyntaxHighlighting: {e.NewValue}");
+			shi.Fields[nameof(MenuItemVM.IsChecked)].ValueChangedEvent.add = (s, e) => Debug.WriteLine($"MenuItemVM.IsChecked: {e.NewValue}");
 		}
 
-		private void AtSyntaxHighlightingMenuItemOnIsCheckedChanged(object sender, ExecutedEventArgs e) {
-			var avm = (ActionVM)((IActionProvider) sender).Parent.Parent; // ActionVM
-			var vm=(MenuItemVM)avm.Parent;
-			DisableSyntaxHighlighting = !vm.IsChecked;
+		protected virtual void OnDisableSearchResultHighlightingChanged(bool value) {
+
 		}
+
+		protected virtual void OnDisableFoldingChanged(bool value) {
+
+		}
+
+		protected virtual void OnDisableSyntaxHighlightingChanged(bool value) {
+			
+		}
+
+		#region options
 
 		public bool DisableSyntaxHighlighting { get => Fields.GetValue<bool>(); set => Fields.SetValue(value); }
+
+		public bool DisableFolding { get => Fields.GetValue<bool>(); set => Fields.SetValue(value); }
+
+		public bool DisableSearchResultHighlighting { get => Fields.GetValue<bool>(); set => Fields.SetValue(value); }
+
+		#endregion
 
 		protected override void OnViewConnected() {
 			base.OnViewConnected();
@@ -97,4 +113,5 @@ namespace KsWare.AppVeyorClient.Shared.AvalonEditExtension {
 			Data.Select(l0.Offset,l1.Offset+l1.Length - l0.Offset);
 		}
 	}
+
 }

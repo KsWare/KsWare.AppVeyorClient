@@ -6,14 +6,20 @@ using System.Linq;
 using System.Text.RegularExpressions;
 using System.Windows;
 using System.Windows.Input;
+using System.Xml;
 using ICSharpCode.AvalonEdit.CodeCompletion;
 using ICSharpCode.AvalonEdit.Document;
 using ICSharpCode.AvalonEdit.Editing;
 using ICSharpCode.AvalonEdit.Folding;
+using ICSharpCode.AvalonEdit.Highlighting;
+using ICSharpCode.AvalonEdit.Highlighting.Xshd;
 using KsWare.AppVeyorClient.Shared.AvalonEditExtension;
 using KsWare.AppVeyorClient.Shared;
+using KsWare.AppVeyorClient.Shared.PresentationFramework;
 using KsWare.AppVeyorClient.UI.App;
 using KsWare.AppVeyorClient.UI.ViewModels;
+using KsWare.Presentation;
+using BindingMode = System.Windows.Data.BindingMode;
 
 namespace KsWare.AppVeyorClient.UI.PanelConfiguration {
 
@@ -44,11 +50,11 @@ namespace KsWare.AppVeyorClient.UI.PanelConfiguration {
 		}
 
 		protected override void OnViewConnected() {
-			DisableSyntaxHighlighting = !Settings.EnableYamlSyntaxHighlighting;
-			base.OnViewConnected();
+			Fields[nameof(DisableSyntaxHighlighting)].SetBinding(new FieldBinding(Settings.Fields[nameof(SettingsVM.EnableYamlSyntaxHighlighting)], BindingMode.TwoWay, InvertBoolConverter.Default));
+//			Fields[nameof(DisableSearchResultHighlighting)].SetBinding(new FieldBinding(Settings.Fields[nameof(SettingsVM.EnableYamlSearchResultHighlighting)] , BindingMode.TwoWay, InvertBoolConverter.Default));
+			Fields[nameof(DisableFolding)].SetBinding(new FieldBinding(Settings.Fields[nameof(SettingsVM.EnableYamlFolding)], BindingMode.TwoWay, InvertBoolConverter.Default));
 
-			Settings.Fields[nameof(SettingsVM.EnableYamlSyntaxHighlighting)].ValueChangedEvent.add =
-				(s, e) => DisableSyntaxHighlighting = !(bool) e.NewValue;
+			base.OnViewConnected();  
 
 			Data.TextArea.TextEntering += textEditor_TextArea_TextEntering;
 			Data.TextArea.TextEntered  += textEditor_TextArea_TextEntered;
@@ -65,6 +71,25 @@ namespace KsWare.AppVeyorClient.UI.PanelConfiguration {
 
 			_foldingManager  = FoldingManager.Install(Data.TextArea);
 			_foldingStrategy = new YamlFoldingStrategy();
+		}
+
+		protected override void OnDisableFoldingChanged(bool value) {
+			if (Data == null) return;
+		}
+
+		protected override void OnDisableSearchResultHighlightingChanged(bool value) {
+			if (Data == null) return;
+		}
+
+		protected override void OnDisableSyntaxHighlightingChanged(bool value) {
+			if(Data==null)return;
+			if (false == value) {
+				var reader = XmlReader.Create("Data\\AppVeyor-yaml.xshd");
+				Data.SyntaxHighlighting = HighlightingLoader.Load(reader, HighlightingManager.Instance);
+			}
+			else {
+				Data.SyntaxHighlighting = null;
+			}
 		}
 
 		private void UpdateFoldings(string reason) {
