@@ -8,7 +8,7 @@
     xmlns:system="clr-namespace:System;assembly=mscorlib"
     xmlns:i="http://schemas.microsoft.com/expression/2010/interactivity"
     xmlns:ksvf="clr-namespace:KsWare.AppVeyorClient.Shared.PresentationFramework"
-    xmlns:avalonEditExtension="clr-namespace:KsWare.AppVeyorClient.Shared.AvalonEditExtension"
+    xmlns:aee="clr-namespace:KsWare.AppVeyorClient.Shared.AvalonEditExtension"
     xmlns:panelConfiguration="clr-namespace:KsWare.AppVeyorClient.UI.PanelConfiguration"
     xmlns:viewModels="clr-namespace:KsWare.AppVeyorClient.UI.ViewModels"
     xmlns:ksv="http://ksware.de/Presentation/ViewFramework"
@@ -24,7 +24,7 @@
 	</ResourceDictionary>
 </FrameworkElement.Resources>
 	<DockPanel>
-		<WrapPanel DockPanel.Dock="Top">
+		<WrapPanel DockPanel.Dock="Top" IsEnabled="{Binding YamlEditorController.IsEnabled}">
 			<FrameworkElement.Resources>
 				<Style TargetType="Button">
 					<Setter Property="MinWidth" Value="40"/>
@@ -36,7 +36,7 @@
 			<Button Content="Save" Command="{Binding SaveAction}"/>
 			<Button Content="Send" Command="{Binding PostAction}" />
 			<Canvas Width="12"/>
-			<Button Content="Edit PS" Command="{Binding EditPsAction}" ToolTip="Edits selected PowerShell block" Padding="6 0"/>
+			<Button Content="Edit Code" Command="{Binding EditCodeAction}" ToolTip="Edits selected code block" Padding="6 0"/>
 		</WrapPanel>
 		<StatusBar DockPanel.Dock="Bottom">
 			<StatusBarItem>
@@ -45,10 +45,10 @@
 		</StatusBar>
 		<Grid>
 			<Grid.RowDefinitions>
-				<RowDefinition/>
-				<RowDefinition/>
+				<RowDefinition Height="{Binding YamlEditorHeight}"/>
+				<RowDefinition Height="{Binding CodeEditorHeight}"/>
 			</Grid.RowDefinitions>
-			<DockPanel>
+			<DockPanel IsEnabled="{Binding YamlEditorController.IsEnabled}">
 				<DockPanel.InputBindings>
 <!--					<KeyBinding Command="{Binding SearchPanel.NextResultAction}" Key="F3" />-->
 <!--					<KeyBinding Command="{Binding SearchPanel.PreviousResultAction}" Key="F3" Modifiers="Shift" />-->
@@ -63,7 +63,7 @@
 <!--					</i:EventTrigger>-->
 <!--				</i:Interaction.Triggers>-->
 
-				<StackPanel DockPanel.Dock="Top">
+				<StackPanel DockPanel.Dock="Top" Visibility="{ksv:VisibilityBinding YamlEditorController.IsEnabled, TrueVisibleElseCollapsed}">
 					<DockPanel LastChildFill="False" Margin="0">
 						<ComboBox 
 							Style="{StaticResource ComboBoxFlatStyle}" 
@@ -95,19 +95,19 @@
 
 				<avalonEdit:TextEditor
 					xmlns:avalonEdit="http://icsharpcode.net/sharpdevelop/avalonedit"
-					Name="textEditor"
 					Margin="0 0 0 6"
 					SyntaxHighlighting="YAML"
 					FontFamily="Consolas"
 					FontSize="12pt"
-					avalonEditExtension:TextEditorControllerBehavior.Controller="{Binding YamlEditorController}">
+					aee:TextEditorControllerBehavior.Controller="{Binding YamlEditorController}">
 					<avalonEdit:TextEditor.ContextMenu>
 						<ContextMenu 
 							DataContext="{Binding YamlEditorController.ContextMenu}"
 							ItemsSource="{Binding Items}"
 							>
 							<ContextMenu.ItemContainerStyle>
-								<Style TargetType="MenuItem" d:DataContext="{d:DesignInstance Type=ksvf:MenuItemVM}">
+								<!-- d:DataContext="{d:DesignInstance Type=ksvf:MenuItemVM}" -->
+								<Style TargetType="MenuItem" >
 									<Setter Property="ItemsSource" Value="{Binding Items}"/>
 									<Setter Property="Header" Value="{Binding Caption}" />
 									<Setter Property="Command" Value="{Binding CommandAction}" />
@@ -131,16 +131,16 @@
 				</avalonEdit:TextEditor>
 			</DockPanel>
 
-			<GridSplitter Grid.Row="0" Height="6" VerticalAlignment="Bottom" HorizontalAlignment="Stretch" Background="DarkGray"></GridSplitter>
-			<DockPanel Grid.Row="1">
-				<DockPanel DockPanel.Dock="Top" LastChildFill="False">
-					<Button Content="Apply" Command="{Binding ApplyEditAction}"/>
-					<Button Content="Cancel" Command="{Binding CancelEditAction}" />
-					<ComboBox SelectedItem="{Binding BlockFormat}">
+			<GridSplitter Grid.Row="0" Height="6" VerticalAlignment="Bottom" HorizontalAlignment="Stretch" Background="DarkGray" IsEnabled="False"/>
+			<DockPanel Grid.Row="1" IsEnabled="{Binding CodeEditorController.IsEnabled}">
+				<DockPanel DockPanel.Dock="Bottom" LastChildFill="False" HorizontalAlignment="Right">
+					<ComboBox SelectedItem="{Binding BlockFormat}" Margin="2" Width="80">
 						<system:String>(unchanged)</system:String>
 						<system:String>Block</system:String>
 						<system:String>Split</system:String>
 					</ComboBox>
+					<Button Content="Apply" Command="{Binding ApplyEditAction}" Margin="2" Padding="6 2"/>
+					<Button Content="Cancel" Command="{Binding CancelEditAction}" Margin="2" Padding="6 2" />
 				</DockPanel>
 				<avalonEdit:TextEditor
 					xmlns:avalonEdit="http://icsharpcode.net/sharpdevelop/avalonedit"
@@ -148,7 +148,7 @@
 					SyntaxHighlighting="PowerShell"
 					FontFamily="Consolas"
 					FontSize="12pt"
-					avalonEditExtension:TextEditorControllerBehavior.Controller="{Binding CodeTextBoxController}"
+					aee:TextEditorControllerBehavior.Controller="{Binding CodeEditorController}"
 					/>
 <!--				<TextBox FontFamily="Consolas" FontSize="14"-->
 <!--				         HorizontalScrollBarVisibility="Visible"-->

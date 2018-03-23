@@ -27,7 +27,7 @@ namespace KsWare.AppVeyorClient.Helpers {
 			var sp = new string(' ', indent);
 			switch (format) {
 				case BlockFormat.Literal: {
-					sb.AppendLine($"{sp}{suffix} |");
+					sb.AppendLine($"{sp}{suffix}|");
 					foreach (var line in lines) {
 						sb.AppendLine($"{sp}    {line}");
 					}

@@ -6,18 +6,27 @@
 	xmlns:d="http://schemas.microsoft.com/expression/blend/2008"
 	xmlns:local="clr-namespace:KsWare.AppVeyorClient.UI"
 	xmlns:panelProjectSelector="clr-namespace:KsWare.AppVeyorClient.UI.PanelProjectSelector"
+	xmlns:ksv="http://ksware.de/Presentation/ViewFramework"
 	mc:Ignorable="d"
 	d:DesignWidth="300"
 	d:DataContext="{d:DesignInstance Type=panelProjectSelector:ProjectSelectorVM}"
 	>
+	<FrameworkElement.Resources>
+
+	</FrameworkElement.Resources>
 	<DockPanel LastChildFill="False">
 		<TextBlock Text="Project " VerticalAlignment="Center" />
 		<ComboBox 
-			Style="{DynamicResource ComboBoxFlatStyle}"
 			ItemsSource="{Binding Projects.CollectionView}" 
 			SelectedItem="{Binding SelectedProject}" 
 			DisplayMemberPath="DisplayName"
 			IsSynchronizedWithCurrentItem="True"
-			Width="164" />
+			Width="164">
+		</ComboBox>
+		<TextBlock 
+			Text="p" FontFamily="Wingdings 3" VerticalAlignment="Center" Foreground="Red" 
+			Visibility="{ksv:VisibilityBinding ErrorProvider.HasError, TrueVisibleElseCollapsed}"
+			ToolTip="{Binding ErrorProvider.ErrorMessage}"
+			/>
 	</DockPanel>
 </UserControl>

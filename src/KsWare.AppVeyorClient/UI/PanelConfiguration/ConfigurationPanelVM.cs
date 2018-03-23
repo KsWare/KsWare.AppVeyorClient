@@ -1,6 +1,9 @@
-﻿using System.IO;
+﻿using System;
+using System.Collections.Generic;
+using System.IO;
 using System.Text.RegularExpressions;
 using System.Windows;
+using System.Windows.Threading;
 using JetBrains.Annotations;
 using KsWare.AppVeyorClient.Api;
 using KsWare.AppVeyorClient.Helpers;
@@ -27,88 +30,24 @@ namespace KsWare.AppVeyorClient.UI.PanelConfiguration {
 
 			FillNavigation();
 			Fields[nameof(SelectedNavigationItem)].ValueChangedEvent.add = AtNavigationKeyChanged;
+			CloseCodeEditor();
 		}
 
 		public ListVM<NavigationItemVM> NavigationItems { get; [UsedImplicitly] private set; }
 
 		private void FillNavigation() {
-			Nav("-- General --");
-			Nav("version:             ");
-			Nav("pull_requests:       ");
-			Nav("branches:			  ");
-			Nav("skip_non_tags:		  ");
-			Nav("skip_branch_with_pr: ");
-			Nav("max_jobs:			  ");
-			Nav("clone_depth:		  ");
-			Nav("clone_script:		  ");
-			Nav("assembly_info:		  ");
-			Nav("dotnet_csproj:		  ");
-//			Nav("build:				  ");
-//			Nav("on_success:		  ");
-//			Nav("on_failure:		  ");
-//			Nav("on_finish:			  ");
+			var lines = File.ReadAllLines("Data\\Navigation.txt");
+			foreach (var line in lines) Add(line);
 
-			Nav("-- Environment --");
-			Nav("image:               ");
-			Nav("clone_folder:		  ");
-			Nav("init:				  ");
-			Nav("environment:		  ");
-			Nav("services:			  ");
-			Nav("hosts:				  ");
-			Nav("install:			  ");
-			Nav("cache:				  ");
-
-
-			Nav("-- Build --");
-			Nav("configuration:       ");
-			Nav("platform:			  ");
-			Nav("before_build:		  ");
-			Nav("build:				  ");
-			Nav("before_package:	  ");
-			Nav("after_build:		  ");
-
-			Nav("-- Tests --");
-			Nav("before_test:         ");
-			Nav("test:				  ");
-			Nav("after_test:		  ");
-
-			Nav("-- Artifacts --");
-			Nav("artifacts:");
-
-			Nav("-- Deploy --");
-			Nav("before_deploy:                         ");
-			Nav("deploy:								");
-			Nav("- provider: WebDeploy					");
-			Nav("- provider: FTP						");
-			Nav("- provider: NuGet						");
-			Nav("- provider: Octopus					");
-			Nav("- provider: AzureWebJob				");
-			Nav("- provider: AzureAppServiceZipDeploy	");
-			Nav("after_deploy:");
-
-			Nav("-- Nuget --");
-			Nav("nuget:");
-
-			Nav("-- Notifications --");
-			Nav("notifications:                 ");
-			Nav("- provider: Email				");
-			Nav("- provider: Webhook			");
-			Nav("- provider: HipChat			");
-			Nav("- provider: Slack				");
-			Nav("- provider: Campfire			");
-			Nav("- provider: GitHubPullRequest	");
-			Nav("- provider: VSOTeamRoom		");
-		}
-
-		private void Nav(string key) {
-			key = key.Trim(); 
-			// (?mnx-is)^on_finish:(\x20|\r\n|\n)
-			var pattern = @"(?mnx-is)^" + key + @"(\x20|\r\n|\n)";
-			NavigationItems.Add(new NavigationItemVM {
-				DisplayName = key,
-				RegexPattern = pattern,
-				Regex = new Regex(pattern,RegexOptions.Compiled)
-			});
+			void Add(string key) {
+				key = key.Trim(); 
+				var pattern = @"(?mnx-is)^" + Regex.Escape(key) + @"(\x20|\r\n|\n)";
+				NavigationItems.Add(new NavigationItemVM {
+					DisplayName = key.StartsWith("-- ") ? key.Substring(3) : "  "+key,
+					RegexPattern = key.StartsWith("-- ") ? null : pattern,
+					Regex = new Regex(pattern,RegexOptions.Compiled)
+				});
+			}
 		}
 
 		private Client Client => AppVM.Client;
@@ -119,23 +58,27 @@ namespace KsWare.AppVeyorClient.UI.PanelConfiguration {
 		public  ActionVM PostAction { get; [UsedImplicitly] private set; }
 
 		public AppVeyorYamlEditorControllerVM YamlEditorController { get; [UsedImplicitly] private set; }
-		public TextEditorControllerVM CodeTextBoxController { get; [UsedImplicitly] private set; }
+		public TextEditorControllerVM CodeEditorController { get; [UsedImplicitly] private set; }
 
 		/// <summary>
-		/// Gets the <see cref="ActionVM"/> to EditPs
+		/// Gets the <see cref="ActionVM"/> to EditCode
 		/// </summary>
-		/// <seealso cref="DoEditPs"/>
-		public ActionVM EditPsAction { get; [UsedImplicitly] private set; }
+		/// <seealso cref="DoEditCode"/>
+		public ActionVM EditCodeAction { get; [UsedImplicitly] private set; }
 
 		/// <summary>
-		/// Method for <see cref="EditPsAction"/>
+		/// Method for <see cref="EditCodeAction"/>
 		/// </summary>
 		[UsedImplicitly]
-		private void DoEditPs() {
+		private void DoEditCode() {
 			YamlEditorController.ExpandCodeBlock();
-			YamlEditorController.SetEnabled("Editor is open", false);
+			YamlEditorController.SetEnabled("YAML Editor is open", false);
+			YamlEditorHeight=new GridLength(50);
+			CodeEditorHeight=new GridLength(100,GridUnitType.Star);
 			_selectedBlock = YamlHelper.ExtractBlock(YamlEditorController.SelectedText);
-			CodeTextBoxController.Text = _selectedBlock.Content;
+			CodeEditorController.Text = _selectedBlock.Content;
+			CodeEditorController.SetEnabled("Code Editor is open", true);
+			Dispatcher.BeginInvoke(DispatcherPriority.Background, () => YamlEditorController.Data.ScrollToLine(YamlEditorController.Data.TextArea.Caret.Line));
 		}
 
 		/// <summary>
@@ -152,18 +95,27 @@ namespace KsWare.AppVeyorClient.UI.PanelConfiguration {
 			string s;
 			switch (BlockFormat) {
 				case "Block":
-					s = YamlHelper.FormatBlock(CodeTextBoxController.Text, PanelConfiguration.BlockFormat.Literal, _selectedBlock.Indent,
+					s = YamlHelper.FormatBlock(CodeEditorController.Text, PanelConfiguration.BlockFormat.Literal, _selectedBlock.Indent,
 						_selectedBlock.Suffix);
 					break;
 				case "Split":
-					s = YamlHelper.FormatBlock(CodeTextBoxController.Text, PanelConfiguration.BlockFormat.None, _selectedBlock.Indent,
+					s = YamlHelper.FormatBlock(CodeEditorController.Text, PanelConfiguration.BlockFormat.None, _selectedBlock.Indent,
 						_selectedBlock.Suffix);
 					break;
 				default:return;
 			}
 
 			YamlEditorController.SelectedText = s;
-			YamlEditorController.SetEnabled("Editor is open", true);
+			CodeEditorController.Text = "";
+			CloseCodeEditor();
+		}
+
+		private void CloseCodeEditor() {
+			YamlEditorController.SetEnabled("YAML Editor is open", true);
+			YamlEditorHeight = new GridLength(100,GridUnitType.Star);
+
+			CodeEditorController.SetEnabled("Code Editor is open", false);
+			CodeEditorHeight = new GridLength(0, GridUnitType.Star);
 		}
 
 		private void AtNavigationKeyChanged(object sender, ValueChangedEventArgs e) {
@@ -194,12 +146,16 @@ namespace KsWare.AppVeyorClient.UI.PanelConfiguration {
 		[Hierarchy(HierarchyType.Reference)]
 		public NavigationItemVM SelectedNavigationItem { get => Fields.GetValue<NavigationItemVM>(); set => Fields.SetValue(value); }
 
+		public GridLength YamlEditorHeight { get => Fields.GetValue<GridLength>(); set => Fields.SetValue(value); }
+		public GridLength CodeEditorHeight { get => Fields.GetValue<GridLength>(); set => Fields.SetValue(value); }
+
 		/// <summary>
 		/// Method for <see cref="CancelEditAction"/>
 		/// </summary>
 		[UsedImplicitly]
 		private void DoCancelEdit() {
-			YamlEditorController.SetEnabled("Editor is open", true);
+			CodeEditorController.Text = "";
+			CloseCodeEditor();
 		}
 
 		/// <summary>
@@ -207,6 +163,10 @@ namespace KsWare.AppVeyorClient.UI.PanelConfiguration {
 		/// </summary>
 		[UsedImplicitly]
 		private void DoGet() {
+			if (ProjectSelector.SelectedProject == null) {
+				StatusBarText = "WARNING: No project selected!";
+				return;
+			}
 			StatusBarText = "Get project settings.";
 			Client.Project.GetProjectSettingsYaml(ProjectSelector.SelectedProject.Data.AccountName, ProjectSelector.SelectedProject.Data.Slug)
 				.ContinueWithUIDispatcher(task => {
@@ -252,6 +212,10 @@ namespace KsWare.AppVeyorClient.UI.PanelConfiguration {
 		/// </summary>
 		[UsedImplicitly]
 		private void DoPost() {
+			if (ProjectSelector.SelectedProject == null) {
+				StatusBarText = "WARNING: No project selected!";
+				return;
+			}
 			StatusBarText = "Send project settings...";
 			Client.Project.UpdateProjectSettingsYamlAsync(
 				ProjectSelector.SelectedProject.Data.AccountName,
