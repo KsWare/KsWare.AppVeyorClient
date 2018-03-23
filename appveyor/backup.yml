@@ -1,0 +1,206 @@
+version: 0.2.{build}
+branches:
+  only:
+  - master
+image: Visual Studio 2017
+configuration: Release
+platform: Any CPU
+init:
+- ps: echo "--- Init script ---"
+- ps: >
+    $meta= Get-Date -Format "yyyyMMddHHmmss"
+
+    $env:version_meta="$meta"
+
+    Update-AppveyorBuild -Version "$ENV:APPVEYOR_BUILD_VERSION+$meta"
+- ps: "# Parse commit message\nif ($env:APPVEYOR_REPO_COMMIT_MESSAGE -match '\\[release\\]') { \n    $env:deploy_github_releases = \"true\" \n} else { \n    $env:deploy_github_releases = \"false\" \n}\n$env:deploy_github_releases = \"true\"\necho \"deploy_github_releases: $env:deploy_github_releases\"\n"
+- ps: >
+    $apiUrl = 'https://ci.appveyor.com/api'
+
+    $headers = @{
+      "Authorization" = "Bearer $env:appveyor_api_token"
+      "Content-type" = "application/json"
+      "Accept" = "application/json"
+    }
+assembly_info:
+  patch: true
+  file: '**\AssemblyInfo.*'
+  assembly_version: $(buildVersion).$(patchNumber)
+  assembly_file_version: $(buildVersion).$(patchNumber)
+  assembly_informational_version: $(buildVersion).$(patchNumber)+$(version_meta)
+environment:
+  github_access_token_appveyor:
+    secure: 9Z+iJbAt3SVWp4/F34xGQ1iDUf1XIdshovPwK3wMQf8B8wI+o2XyFsg8NmJlsYkl
+  github_user_email_appveyor: appveyor@ksware.de
+  github_user_name_appveyor: Appveyor-KsWare
+  VersionFile: ChangeLog.md
+  CommitVersionFile: src\.appveyor.version
+  appveyor_api_token:
+    secure: oQfwMIrZtGifKKK0yBmVOnRzZsq+DO8kyGreySRXUUI=
+  UserPassword:
+    secure: dRxqluGMsAtcAGjoI+80zA==
+install:
+- ps: echo "--- Install script ---"
+- echo "APPVEYOR_REPO_BRANCH = %APPVEYOR_REPO_BRANCH%"
+- ps: >
+    # prepare Git credentials
+
+    git config --global credential.helper store
+
+    Add-Content "$env:USERPROFILE\\.git-credentials" "https://$($env:github_access_token_appveyor):x-oauth-basic@github.com`n"
+
+    git config --global user.email "$env:github_user_email_appveyor"
+
+    git config --global user.name "$env:github_user_name_appveyor"
+- git checkout %APPVEYOR_REPO_BRANCH%
+- ps: >
+    $response = Invoke-RestMethod -Method Get -Uri "$apiUrl/projects/$env:APPVEYOR_ACCOUNT_NAME/$env:APPVEYOR_PROJECT_SLUG/settings" -Headers $headers
+
+    $settings = $response.settings
+- ps: >
+    #Extract version format
+
+    $versionFormat = $settings.versionFormat
+
+    echo "versionFormat: $versionFormat"
+
+    if(-not ($versionFormat -match "^(\d+\.\d+)(\..*)$")) {
+        $env:APPVEYOR_SKIP_FINALIZE_ON_EXIT="true"
+        Write-Error -Message "`nERROR: Unsupported version format!" -ErrorAction Stop
+        Exit-AppveyorBuild
+    }
+
+    $currentVersion = $Matches[1]
+
+    $currentVersionSegments = $currentVersion.Split(".")
+
+    echo "Current version: ""$currentVersion.*"" / $($currentVersionSegments.Count+1) parts"
+- ps: >
+    # Get new version
+
+    $versionPattern = "^(\s*\#\s*)(?<version>\d+\.\d+(\.\d+)?)"
+
+    $versiontxt=Get-Content -path "$env:VersionFile" -TotalCount 1
+
+    if(-not ($versiontxt -match $versionPattern)) {
+        $env:APPVEYOR_SKIP_FINALIZE_ON_EXIT="true"
+        Write-Error -Message "`nERROR: Unsupported version format!" -ErrorAction Stop
+        Exit-AppveyorBuild
+    }
+
+    $versiontxt = $Matches["version"]
+
+    $newVersionSegments = $versiontxt.Split(".")
+
+    echo "New version: ""$versiontxt.*"" / $($newVersionSegments.Count+1) parts"
+
+    if($newVersionSegments.Count+1 -ne 3) {
+        $env:APPVEYOR_SKIP_FINALIZE_ON_EXIT="true"
+        Write-Error -Message "`nERROR: Unsupported version format!" -ErrorAction Stop
+        Exit-AppveyorBuild
+    }
+
+    $buildVersion = $versiontxt
+
+    $env:buildVersion = $buildVersion
+- ps: |
+    # Compare last version with new version
+    $reset_build = "false"  
+    $patchNumber = $Env:APPVEYOR_BUILD_NUMBER
+    if ($currentVersionSegments[0] -ne $newVersionSegments[0]) {
+        $reset_build="true"
+        $patchNumber=0
+    } elseif ($currentVersionSegments[1] -ne $newVersionSegments[1]) {
+        $reset_build="true"
+        $patchNumber=0
+    }
+    $env:patchNumber = $patchNumber
+    echo "Reset patch number: $reset_build"
+- ps: |
+    # Extract ChangeLog
+    $changeLog=Get-Content -path "$env:VersionFile" | select -Skip 1
+    echo "ChangeLog:`n$changeLog"
+- ps: |
+    # Conditional update settings
+    if($reset_build -eq "true") {
+        $b=$versionFormat -match "^(\d+\.\d+)\.(.*)$"
+        $settings.versionFormat = "$buildVersion.$($Matches[2])"
+        echo "versionFormat: $($settings.versionFormat)"
+        $body = ConvertTo-Json -Depth 10 -InputObject $settings
+        $response = Invoke-RestMethod -Method Put -Uri "$apiUrl/projects" -Headers $headers -Body $body
+    }
+- ps: |
+    # Conditional Send BuildNumber = 1
+    if($reset_build -eq "true") {
+        $build = @{
+          nextBuildNumber = 1
+        }
+        $json = $build | ConvertTo-Json    
+        echo "Invoke 'Reset Build Nummer'"
+        Invoke-RestMethod -Method Put "$apiUrl/projects/$env:APPVEYOR_ACCOUNT_NAME/$env:APPVEYOR_PROJECT_SLUG/settings/build-number" -Body $json -Headers $headers
+    }
+- ps: |
+    # set current build version
+    Update-AppveyorBuild -Version "$buildVersion.$patchNumber+$meta"
+cache: src\packages
+before_build:
+- echo "--- Before build script ---"
+- nuget restore src\KsWare.AppVeyorClient.sln
+build:
+  project: src\KsWare.AppVeyorClient.sln
+  verbosity: minimal
+before_package:
+- ps: echo "--- Before packaging script ---"
+after_build:
+- ps: echo "--- After build script ---"
+before_test:
+- ps: echo "--- Before tests script ---"
+after_test:
+- ps: echo "--- After tests script ---"
+artifacts:
+- path: src\KsWare.AppVeyorClient\bin\Release\app.publish
+  name: deploy
+  type: zip
+before_deploy:
+- ps: echo "--- Before deployment script ---"
+- ps: $env:ApplicationVersion="$buildVersion.$patchNumber.0";
+- ps: $env:UpdateUrl='http://www.ksware.de/software/AppVeyorClient/';
+- ps: $env:PublishUrl='http://www.ksware.de/software/AppVeyorClient/';
+- ps: $env:CertFile="src\KsWare.AppVeyorClient\KsWare.AppVeyorClient_TemporaryKey.pfx"
+- ps: "$mypwd = ConvertTo-SecureString -String \"$env:UserPassword\" -Force –AsPlainText"
+- ps: echo "ApplicationVersion=$env:ApplicationVersion"
+- ps: "Import-PfxCertificate –FilePath \"$env:APPVEYOR_BUILD_FOLDER\\$env:CertFile\" cert:\\currentuser\\my -Password $mypwd"
+- ps: $env:Project="$env:APPVEYOR_BUILD_FOLDER\src\KsWare.AppVeyorClient.sln"
+- ps: $env:Configuration="Release"
+- ps: $env:Verbosity="minimal"
+- cmd: >
+    "C:\Program Files (x86)\Microsoft Visual Studio\2017\Community\MSBuild\15.0\bin\msbuild.exe" "%Project%" /verbosity:%Verbosity% /logger:"C:\Program Files\AppVeyor\BuildAgent\Appveyor.MSBuildLogger.dll" /target:publish /p:ApplicationVersion=%ApplicationVersion%
+- ps: echo "collect artifacts"
+- ps: $deploymentName="ReleaseBuild"
+- ps: $root = Resolve-Path .\src\KsWare.AppVeyorClient\bin\Release\app.publish;
+- ps: "[IO.Directory]::GetFiles($root.Path, '*.*', 'AllDirectories') | % { \n    Push-AppveyorArtifact $_ -FileName $_.Substring($root.Path.Length + 1) -DeploymentName $deploymentName\n}\n"
+deploy:
+- provider: GitHub
+  auth_token:
+    secure: 9Z+iJbAt3SVWp4/F34xGQ1iDUf1XIdshovPwK3wMQf8B8wI+o2XyFsg8NmJlsYkl
+  artifact: deploy
+  prerelease: true
+  on:
+    branch: master
+    deploy_github_releases: never
+- provider: FTP
+  protocol: ftps
+  host: ksware.kasserver.com
+  username: f00e87d6
+  password:
+    secure: H4G1l+DCeRlngSYliYDSz53n7MmvzoTH6fTEMVg/0rY=
+  folder: /AppVeyorClient/
+  artifact: ReleaseBuild
+  beta: true
+  debug: false
+  on:
+    branch: master
+after_deploy:
+- ps: echo "--- After deployment script ---"
+on_success:
+- ps: "echo \"--- On build success script ---\"\nOut-File \"$ENV:APPVEYOR_BUILD_FOLDER\\\\$env:CommitVersionFile\"\nAdd-Content \"$ENV:APPVEYOR_BUILD_FOLDER\\\\$env:CommitVersionFile\" \"$ENV:APPVEYOR_BUILD_VERSION\"\ngit add .\ngit commit -v -a -m \"[skip ci] increment version $ENV:APPVEYOR_BUILD_VERSION\"\ngit push --porcelain\0"
