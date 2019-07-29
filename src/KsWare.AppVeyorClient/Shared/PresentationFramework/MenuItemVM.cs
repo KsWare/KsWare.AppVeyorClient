@@ -17,14 +17,17 @@ namespace KsWare.AppVeyorClient.Shared.PresentationFramework {
 
 		public string Caption { get => Fields.GetValue<string>(); set => Fields.SetValue(value); }
 
+		/// <inheritdoc cref="MenuItem.Command"/>
 		/// <summary>
 		/// Gets the <see cref="ActionVM"/> to command
 		/// </summary>
 		/// <seealso cref="DoCommand"/>
 		public ActionVM CommandAction { get; [UsedImplicitly] private set; }
 
+		/// <inheritdoc cref="MenuItem.IsChecked"/>
 		public bool IsChecked { get => Fields.GetValue<bool>(); set => Fields.SetValue(value); }
 
+		/// <inheritdoc cref="MenuItem.IsCheckable"/>
 		public bool IsCheckable { get => Fields.GetValue<bool>(); set => Fields.SetValue(value); }
 
 		/// <summary>
@@ -37,7 +40,5 @@ namespace KsWare.AppVeyorClient.Shared.PresentationFramework {
 
 		// MenuItem.Items
 		public ListVM<MenuItemVM> Items { get; [UsedImplicitly] private set; }
-
 	}
-
 }

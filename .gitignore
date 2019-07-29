@@ -262,3 +262,4 @@ __pycache__/
 /desktop.ini
 /src/KsWare.AppVeyorClient/Api/Contracts/Common/ProjectSettings2.json
 /src/KsWare.AppVeyorClient/Api/Contracts/Common/UpdateProject2.json
+/KsWare.AppVeyorClient.sln.lnk
