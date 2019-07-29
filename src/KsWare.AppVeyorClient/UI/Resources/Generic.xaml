@@ -1,10 +1,8 @@
 ﻿<ResourceDictionary
 	xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
-	xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
-	xmlns:ksvf="clr-namespace:KsWare.AppVeyorClient.Shared.PresentationFramework"
-	xmlns:ksv="http://ksware.de/Presentation/ViewFramework">
+	xmlns:kslab="http://ksware.de/Presentation/Labs">
 	<ResourceDictionary.MergedDictionaries>
-		<ksv:SharedResourceDictionary Source="pack://application:,,,/KsWare.AppVeyorClient;component/UI/Resources/FlatComboBox.xaml" />
-		<ksv:SharedResourceDictionary Source="pack://application:,,,/KsWare.AppVeyorClient;component/UI/Resources/HelpButton.xaml" />
+		<kslab:SharedResourceDictionary Source="pack://application:,,,/KsWare.AppVeyorClient;component/UI/Resources/FlatComboBox.xaml" />
+		<kslab:SharedResourceDictionary Source="pack://application:,,,/KsWare.AppVeyorClient;component/UI/Resources/HelpButton.xaml" />
 	</ResourceDictionary.MergedDictionaries>
 </ResourceDictionary>

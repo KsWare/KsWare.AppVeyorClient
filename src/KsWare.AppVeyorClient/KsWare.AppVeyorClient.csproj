@@ -8,11 +8,12 @@
     <OutputType>WinExe</OutputType>
     <RootNamespace>KsWare.AppVeyorClient</RootNamespace>
     <AssemblyName>KsWare.AppVeyorClient</AssemblyName>
-    <TargetFrameworkVersion>v4.5</TargetFrameworkVersion>
+    <TargetFrameworkVersion>v4.7.2</TargetFrameworkVersion>
     <FileAlignment>512</FileAlignment>
     <ProjectTypeGuids>{60dc8134-eba5-43b8-bcc9-bb4bc16c2548};{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}</ProjectTypeGuids>
     <WarningLevel>4</WarningLevel>
     <IsWebBootstrapper>true</IsWebBootstrapper>
+    <TargetFrameworkProfile />
     <PublishUrl>publish\</PublishUrl>
     <Install>true</Install>
     <InstallFrom>Web</InstallFrom>
@@ -59,7 +60,7 @@
     <ApplicationIcon>UI\Resources\appveyor_blue.ico</ApplicationIcon>
   </PropertyGroup>
   <PropertyGroup>
-    <ManifestCertificateThumbprint>C539DB150E55B276843CCEF61B4D8E54F516E6CD</ManifestCertificateThumbprint>
+    <ManifestCertificateThumbprint>6B29FA507D57B6A5147208C98432832D752F9CF9</ManifestCertificateThumbprint>
   </PropertyGroup>
   <PropertyGroup>
     <ManifestKeyFile>KsWare.AppVeyorClient_TemporaryKey.pfx</ManifestKeyFile>
@@ -71,8 +72,8 @@
     <SignManifests>true</SignManifests>
   </PropertyGroup>
   <ItemGroup>
-    <Reference Include="AutoMapper, Version=6.2.2.0, Culture=neutral, PublicKeyToken=be96cd2c38ef1005, processorArchitecture=MSIL">
-      <HintPath>..\packages\AutoMapper.6.2.2\lib\net45\AutoMapper.dll</HintPath>
+    <Reference Include="AutoMapper, Version=8.1.1.0, Culture=neutral, PublicKeyToken=be96cd2c38ef1005, processorArchitecture=MSIL">
+      <HintPath>..\packages\AutoMapper.8.1.1\lib\net461\AutoMapper.dll</HintPath>
     </Reference>
     <Reference Include="Common.Logging, Version=3.4.1.0, Culture=neutral, PublicKeyToken=af08829b84f0328e, processorArchitecture=MSIL">
       <HintPath>..\packages\Common.Logging.3.4.1\lib\net40\Common.Logging.dll</HintPath>
@@ -83,39 +84,39 @@
     <Reference Include="ICSharpCode.AvalonEdit, Version=5.0.3.0, Culture=neutral, PublicKeyToken=9cc39be672370310, processorArchitecture=MSIL">
       <HintPath>..\packages\AvalonEdit.5.0.4\lib\Net40\ICSharpCode.AvalonEdit.dll</HintPath>
     </Reference>
-    <Reference Include="JetBrains.Annotations, Version=11.1.0.0, Culture=neutral, PublicKeyToken=1010a0d8d6380325, processorArchitecture=MSIL">
-      <HintPath>..\packages\JetBrains.Annotations.11.1.0\lib\net20\JetBrains.Annotations.dll</HintPath>
+    <Reference Include="JetBrains.Annotations, Version=2019.1.3.0, Culture=neutral, PublicKeyToken=1010a0d8d6380325, processorArchitecture=MSIL">
+      <HintPath>..\packages\JetBrains.Annotations.2019.1.3\lib\net20\JetBrains.Annotations.dll</HintPath>
     </Reference>
-    <Reference Include="KsWare.Presentation, Version=0.18.11.0, Culture=neutral, PublicKeyToken=398cf6eb36307095, processorArchitecture=MSIL">
-      <HintPath>..\packages\KsWare.Presentation.0.18.11\lib\net45\KsWare.Presentation.dll</HintPath>
+    <Reference Include="KsWare.Presentation, Version=0.18.26.0, Culture=neutral, PublicKeyToken=398cf6eb36307095, processorArchitecture=MSIL">
+      <HintPath>..\packages\KsWare.Presentation.0.18.26\lib\net45\KsWare.Presentation.dll</HintPath>
     </Reference>
-    <Reference Include="KsWare.Presentation.BusinessFramework, Version=0.18.11.0, Culture=neutral, PublicKeyToken=398cf6eb36307095, processorArchitecture=MSIL">
-      <HintPath>..\packages\KsWare.Presentation.0.18.11\lib\net45\KsWare.Presentation.BusinessFramework.dll</HintPath>
+    <Reference Include="KsWare.Presentation.BusinessFramework, Version=0.18.26.0, Culture=neutral, PublicKeyToken=398cf6eb36307095, processorArchitecture=MSIL">
+      <HintPath>..\packages\KsWare.Presentation.0.18.26\lib\net45\KsWare.Presentation.BusinessFramework.dll</HintPath>
     </Reference>
-    <Reference Include="KsWare.Presentation.Core, Version=0.18.11.0, Culture=neutral, PublicKeyToken=398cf6eb36307095, processorArchitecture=MSIL">
-      <HintPath>..\packages\KsWare.Presentation.0.18.11\lib\net45\KsWare.Presentation.Core.dll</HintPath>
+    <Reference Include="KsWare.Presentation.Core, Version=0.18.26.0, Culture=neutral, PublicKeyToken=398cf6eb36307095, processorArchitecture=MSIL">
+      <HintPath>..\packages\KsWare.Presentation.0.18.26\lib\net45\KsWare.Presentation.Core.dll</HintPath>
     </Reference>
-    <Reference Include="KsWare.Presentation.Labs, Version=0.18.11.0, Culture=neutral, PublicKeyToken=398cf6eb36307095, processorArchitecture=MSIL">
-      <HintPath>..\packages\KsWare.Presentation.0.18.11\lib\net45\KsWare.Presentation.Labs.dll</HintPath>
+    <Reference Include="KsWare.Presentation.Labs, Version=0.18.26.0, Culture=neutral, PublicKeyToken=398cf6eb36307095, processorArchitecture=MSIL">
+      <HintPath>..\packages\KsWare.Presentation.0.18.26\lib\net45\KsWare.Presentation.Labs.dll</HintPath>
     </Reference>
-    <Reference Include="KsWare.Presentation.Themes, Version=0.18.11.0, Culture=neutral, processorArchitecture=MSIL">
-      <HintPath>..\packages\KsWare.Presentation.0.18.11\lib\net45\KsWare.Presentation.Themes.dll</HintPath>
+    <Reference Include="KsWare.Presentation.Themes, Version=0.18.26.0, Culture=neutral, processorArchitecture=MSIL">
+      <HintPath>..\packages\KsWare.Presentation.0.18.26\lib\net45\KsWare.Presentation.Themes.dll</HintPath>
     </Reference>
-    <Reference Include="KsWare.Presentation.Themes.Aero2Fix, Version=0.18.11.0, Culture=neutral, processorArchitecture=MSIL">
-      <HintPath>..\packages\KsWare.Presentation.0.18.11\lib\net45\KsWare.Presentation.Themes.Aero2Fix.dll</HintPath>
+    <Reference Include="KsWare.Presentation.Themes.Aero2Fix, Version=0.18.26.0, Culture=neutral, processorArchitecture=MSIL">
+      <HintPath>..\packages\KsWare.Presentation.0.18.26\lib\net45\KsWare.Presentation.Themes.Aero2Fix.dll</HintPath>
     </Reference>
-    <Reference Include="KsWare.Presentation.ViewFramework, Version=0.18.11.0, Culture=neutral, PublicKeyToken=398cf6eb36307095, processorArchitecture=MSIL">
-      <HintPath>..\packages\KsWare.Presentation.0.18.11\lib\net45\KsWare.Presentation.ViewFramework.dll</HintPath>
+    <Reference Include="KsWare.Presentation.ViewFramework, Version=0.18.26.0, Culture=neutral, PublicKeyToken=398cf6eb36307095, processorArchitecture=MSIL">
+      <HintPath>..\packages\KsWare.Presentation.0.18.26\lib\net45\KsWare.Presentation.ViewFramework.dll</HintPath>
     </Reference>
-    <Reference Include="KsWare.Presentation.ViewModelFramework, Version=0.18.11.0, Culture=neutral, PublicKeyToken=398cf6eb36307095, processorArchitecture=MSIL">
-      <HintPath>..\packages\KsWare.Presentation.0.18.11\lib\net45\KsWare.Presentation.ViewModelFramework.dll</HintPath>
+    <Reference Include="KsWare.Presentation.ViewModelFramework, Version=0.18.26.0, Culture=neutral, PublicKeyToken=398cf6eb36307095, processorArchitecture=MSIL">
+      <HintPath>..\packages\KsWare.Presentation.0.18.26\lib\net45\KsWare.Presentation.ViewModelFramework.dll</HintPath>
     </Reference>
     <Reference Include="Microsoft.Expression.Interactions, Version=4.0.0.0, Culture=neutral, PublicKeyToken=31bf3856ad364e35, processorArchitecture=MSIL">
       <HintPath>..\packages\System.Windows.Interactivity.WPF.2.0.20525\lib\net40\Microsoft.Expression.Interactions.dll</HintPath>
       <Private>True</Private>
     </Reference>
-    <Reference Include="Newtonsoft.Json, Version=11.0.0.0, Culture=neutral, PublicKeyToken=30ad4fe6b2a6aeed, processorArchitecture=MSIL">
-      <HintPath>..\packages\Newtonsoft.Json.11.0.1\lib\net45\Newtonsoft.Json.dll</HintPath>
+    <Reference Include="Newtonsoft.Json, Version=12.0.0.0, Culture=neutral, PublicKeyToken=30ad4fe6b2a6aeed, processorArchitecture=MSIL">
+      <HintPath>..\packages\Newtonsoft.Json.12.0.2\lib\net45\Newtonsoft.Json.dll</HintPath>
     </Reference>
     <Reference Include="System" />
     <Reference Include="System.Activities" />
@@ -124,8 +125,8 @@
     <Reference Include="System.Data" />
     <Reference Include="System.Drawing" />
     <Reference Include="System.Drawing.Design" />
-    <Reference Include="System.Net.Http.Formatting, Version=5.2.4.0, Culture=neutral, PublicKeyToken=31bf3856ad364e35, processorArchitecture=MSIL">
-      <HintPath>..\packages\Microsoft.AspNet.WebApi.Client.5.2.4\lib\net45\System.Net.Http.Formatting.dll</HintPath>
+    <Reference Include="System.Net.Http.Formatting, Version=5.2.7.0, Culture=neutral, PublicKeyToken=31bf3856ad364e35, processorArchitecture=MSIL">
+      <HintPath>..\packages\Microsoft.AspNet.WebApi.Client.5.2.7\lib\net45\System.Net.Http.Formatting.dll</HintPath>
     </Reference>
     <Reference Include="System.Runtime.Serialization" />
     <Reference Include="System.Security" />
@@ -182,7 +183,6 @@
       <CopyToOutputDirectory>Always</CopyToOutputDirectory>
     </Content>
     <Content Include="Shared\WpfPropertyGrid\WpfPropertyGrid.txt" />
-    <Compile Include="Shared\PresentationFramework\MenuItemVM.cs" />
     <Compile Include="Shared\WpfPropertyGrid\PropertyGrid.cs" />
     <Compile Include="Shared\TaskExtensions.cs" />
     <Compile Include="Shared\WpfPropertyGrid\PropertySort.cs" />

@@ -8,15 +8,14 @@
 	xmlns:avalonedit="http://icsharpcode.net/sharpdevelop/avalonedit"
 	xmlns:avalonEditExtension="clr-namespace:KsWare.AppVeyorClient.Shared.AvalonEditExtension"
 	xmlns:panelApiTester="clr-namespace:KsWare.AppVeyorClient.UI.PanelApiTester"
-	xmlns:ksvf="clr-namespace:KsWare.AppVeyorClient.Shared.PresentationFramework"
-	xmlns:ksv="http://ksware.de/Presentation/ViewFramework"
+	xmlns:kslab="http://ksware.de/Presentation/Labs"
 	mc:Ignorable="d"
 	d:DesignHeight="300" d:DesignWidth="300"
 	d:DataContext="{d:DesignInstance Type={x:Type panelApiTester:ApiTesterPanelVM}}">
 	<FrameworkElement.Resources>
 		<ResourceDictionary>
 			<ResourceDictionary.MergedDictionaries>
-				<ksv:SharedResourceDictionary Source="pack://application:,,,/KsWare.AppVeyorClient;component/UI/Resources/Generic.xaml" />
+				<kslab:SharedResourceDictionary Source="pack://application:,,,/KsWare.AppVeyorClient;component/UI/Resources/Generic.xaml" />
 			</ResourceDictionary.MergedDictionaries>
 		</ResourceDictionary>
 	</FrameworkElement.Resources>
