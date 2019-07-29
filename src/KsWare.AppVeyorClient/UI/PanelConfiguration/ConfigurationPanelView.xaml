@@ -29,10 +29,10 @@
 					<Setter Property="Margin" Value="2"/>
 				</Style>
 			</FrameworkElement.Resources>
-			<Button Content="Get" Command="{Binding GetAction}" />
-			<Button Content="Load" Command="{Binding LoadAction}"/>
-			<Button Content="Save" Command="{Binding SaveAction}"/>
-			<Button Content="Send" Command="{Binding PostAction}" />
+			<Button Content="Get" Command="{Binding GetAction}" ToolTip="Gets the configuration from appveyor.com."/>
+			<Button Content="Load" Command="{Binding LoadAction}" ToolTip="Loads the configuration from file."/>
+			<Button Content="Save" Command="{Binding SaveAction}" ToolTip="Saves the configuration to file."/>
+			<Button Content="Send" Command="{Binding PostAction}" ToolTip="Send the configuration to appveyor.com"/>
 			<Canvas Width="12"/>
 			<Button Content="Edit Code" Command="{Binding EditCodeAction}" ToolTip="Edits selected code block" Padding="6 0"/>
 		</WrapPanel>
@@ -67,7 +67,9 @@
 							Style="{StaticResource ComboBoxFlatStyle}" 
 							ItemsSource="{Binding NavigationItems}"
 							SelectedItem="{Binding SelectedNavigationItem}"
-							Width="150">
+							Width="150"
+							ToolTip="Navigation. Select an item to navigate to (if exists)"
+							>
 							<ComboBox.ItemTemplate>
 								<DataTemplate DataType="{x:Type viewModels:NavigationItemVM}">
 									<TextBlock x:Name="TextBlock" Text="{Binding DisplayName}"/>
@@ -80,12 +82,25 @@
 							</ComboBox.ItemTemplate>
 						</ComboBox>
 						<StackPanel Orientation="Horizontal" DockPanel.Dock="Right" DataContext="{Binding SearchPanel}">
-							<TextBox x:Name="SearchTextBox" Text="{Binding SearchText, UpdateSourceTrigger=PropertyChanged}" Width="150"/>
+							<TextBox 
+								x:Name="SearchTextBox" 
+								Text="{Binding SearchText, UpdateSourceTrigger=PropertyChanged}" 
+								Width="150"
+								ToolTip="Search: Type a word to highlight all occurrences."
+								/>
 							<TextBlock Text="{Binding CurrentResultIndex}" Foreground="LightGray" Margin="4 0 0 0"/>
 							<TextBlock Text="/" Foreground="LightGray"  />
 							<TextBlock Text="{Binding ResultCount}" Foreground="LightGray" />
-							<Button Content="" Command="{Binding NextResultAction}" FontFamily="Wingdings 3" Width="18" Margin="4 0 0 0"/>
-							<Button Content="" Command="{Binding PreviousResultAction}" FontFamily="Wingdings 3" Width="18"/>
+							<Button 
+								Content="" 
+								Command="{Binding NextResultAction}" FontFamily="Wingdings 3" Width="18" Margin="4 0 0 0"
+								ToolTip="Navigate to next occurrence."
+								/>
+							<Button 
+								Content="" 
+								Command="{Binding PreviousResultAction}" FontFamily="Wingdings 3" Width="18"
+								ToolTip="Navigate to previous occurrence."
+								/>
 						</StackPanel>
 					</DockPanel>
 					<Line Height="1" Stroke="DarkGray" StrokeThickness="1" Y1="0.5" Y2="0.5" X2="{Binding ActualWidth, RelativeSource={RelativeSource Self}}"  />

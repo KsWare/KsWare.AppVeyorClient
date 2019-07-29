@@ -15,13 +15,19 @@
 
 	</FrameworkElement.Resources>
 	<DockPanel LastChildFill="False">
-		<TextBlock Text="Project " VerticalAlignment="Center" />
+		<TextBlock 
+			Text="Project " 
+			VerticalAlignment="Center" 
+			ToolTip="Select a project to work with. All operations that require a project use this selected project."
+			/>
 		<ComboBox 
 			ItemsSource="{Binding Projects.CollectionView}" 
 			SelectedItem="{Binding SelectedProject}" 
 			DisplayMemberPath="DisplayName"
 			IsSynchronizedWithCurrentItem="True"
-			Width="164">
+			Width="164"
+			ToolTip="List of all projects&#10;Needs a while to load after start."
+		>
 		</ComboBox>
 		<TextBlock 
 			Text="p" FontFamily="Wingdings 3" VerticalAlignment="Center" Foreground="Red" 
