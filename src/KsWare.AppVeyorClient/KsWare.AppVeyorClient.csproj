@@ -167,6 +167,10 @@
     <Compile Include="Api\Contracts\Common\ScriptData.cs" />
     <Compile Include="Api\Contracts\Common\SecurityDescriptorData.cs" />
     <Compile Include="Api\ProjectClient.cs" />
+    <Compile Include="Helpers\ScalarType.cs" />
+    <Compile Include="Helpers\YamlBlock.cs" />
+    <Compile Include="Helpers\YamlRegEx.cs" />
+    <Compile Include="Helpers\YamlRegExMatch.cs" />
     <Compile Include="Shared\AvalonEditExtension\%28ViewModels%29\TextEditorControllerBehavior.cs" />
     <Compile Include="Shared\AvalonEditExtension\%28ViewModels%29\TextEditorBehavior.cs" />
     <Compile Include="Shared\AvalonEditExtension\ColorizeSearchRegex.cs" />

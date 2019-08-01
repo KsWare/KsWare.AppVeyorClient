@@ -1,11 +1,7 @@
 ﻿using System;
 using System.Windows;
-using System.Windows.Controls;
-using System.Windows.Threading;
 using ICSharpCode.AvalonEdit;
-using ICSharpCode.AvalonEdit.Document;
 using JetBrains.Annotations;
-using KsWare.AppVeyorClient.Shared.PresentationFramework;
 using KsWare.Presentation.Core.Providers;
 using KsWare.Presentation.ViewModelFramework;
 
@@ -47,6 +43,19 @@ namespace KsWare.AppVeyorClient.Shared.AvalonEditExtension {
 				else Data.Text = value;
 				OnTextChanged(Data.Document);
 			}
+		}
+
+		public void BringSelectionIntoView()
+		{
+			var startLine = Data.TextArea.Selection.StartPosition.Line;
+//			var selectedLineCount = Data.TextArea.Selection.EndPosition.Line - Data.TextArea.Selection.StartPosition.Line + 1 ;
+//			var visibleLineCount = Data.TextArea.TextView.VisualLinesValid ? Data.TextArea.TextView.VisualLines.Count : 0;
+//			if (visibleLineCount - selectedLineCount > 3)
+//			{
+//				startLine -= 3;
+//				if (startLine < 0) startLine = 0;
+//			}
+			Data.ScrollTo(startLine, 0);
 		}
 
 		protected virtual void OnTextChanged(object changedRegion) {

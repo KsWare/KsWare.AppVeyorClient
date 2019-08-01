@@ -34,7 +34,7 @@
 			<Button Content="Save" Command="{Binding SaveAction}" ToolTip="Saves the configuration to file."/>
 			<Button Content="Send" Command="{Binding PostAction}" ToolTip="Send the configuration to appveyor.com"/>
 			<Canvas Width="12"/>
-			<Button Content="Edit Code" Command="{Binding EditCodeAction}" ToolTip="Edits selected code block" Padding="6 0"/>
+			<Button Content="Edit Script" Command="{Binding EditScriptAction}" ToolTip="Edit selected script block" Padding="6 0"/>
 		</WrapPanel>
 		<StatusBar DockPanel.Dock="Bottom">
 			<StatusBarItem>

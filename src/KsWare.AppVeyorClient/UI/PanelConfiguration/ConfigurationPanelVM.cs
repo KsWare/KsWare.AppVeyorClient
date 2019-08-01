@@ -63,19 +63,22 @@ namespace KsWare.AppVeyorClient.UI.PanelConfiguration {
 		/// <summary>
 		/// Gets the <see cref="ActionVM"/> to EditCode
 		/// </summary>
-		/// <seealso cref="DoEditCode"/>
-		public ActionVM EditCodeAction { get; [UsedImplicitly] private set; }
+		/// <seealso cref="DoEditScript"/>
+		public ActionVM EditScriptAction { get; [UsedImplicitly] private set; }
 
 		/// <summary>
-		/// Method for <see cref="EditCodeAction"/>
+		/// Method for <see cref="EditScriptAction"/>
 		/// </summary>
 		[UsedImplicitly]
-		private void DoEditCode() {
+		private void DoEditScript() {
 			YamlEditorController.ExpandCodeBlock();
+			_selectedBlock = YamlHelper.ExtractBlock(YamlEditorController.SelectedText);
+			if(_selectedBlock==null) return;
+
+			BlockFormat = "(unchanged)";
 			YamlEditorController.SetEnabled("YAML Editor is open", false);
 			YamlEditorHeight=new GridLength(50);
 			CodeEditorHeight=new GridLength(100,GridUnitType.Star);
-			_selectedBlock = YamlHelper.ExtractBlock(YamlEditorController.SelectedText);
 			CodeEditorController.Text = _selectedBlock.Content;
 			CodeEditorController.SetEnabled("Code Editor is open", true);
 			Dispatcher.BeginInvoke(DispatcherPriority.Background, () => YamlEditorController.Data.ScrollToLine(YamlEditorController.Data.TextArea.Caret.Line));
@@ -94,20 +97,26 @@ namespace KsWare.AppVeyorClient.UI.PanelConfiguration {
 		private void DoApplyEdit() {
 			string s;
 			switch (BlockFormat) {
+				case "(unchanged)":
+					s = YamlHelper.FormatBlock(CodeEditorController.Text,
+						_selectedBlock.Suffix, _selectedBlock.Indent, ScalarType.None);
+					break;
 				case "Block":
-					s = YamlHelper.FormatBlock(CodeEditorController.Text, PanelConfiguration.BlockFormat.Literal, _selectedBlock.Indent,
-						_selectedBlock.Suffix);
+					s = YamlHelper.FormatBlock(CodeEditorController.Text,
+						_selectedBlock.Suffix, _selectedBlock.Indent, ScalarType.BlockFoldedStrip);
 					break;
 				case "Split":
-					s = YamlHelper.FormatBlock(CodeEditorController.Text, PanelConfiguration.BlockFormat.None, _selectedBlock.Indent,
-						_selectedBlock.Suffix);
+					s = YamlHelper.FormatBlock(CodeEditorController.Text,
+						_selectedBlock.Suffix, _selectedBlock.Indent, ScalarType.Plain);
 					break;
-				default:return;
+				default:
+					return;
 			}
 
 			YamlEditorController.SelectedText = s;
 			CodeEditorController.Text = "";
 			CloseCodeEditor();
+			ApplicationDispatcher.Instance.BeginInvoke(DispatcherPriority.Render, YamlEditorController.BringSelectionIntoView);
 		}
 
 		private void CloseCodeEditor() {
@@ -156,6 +165,7 @@ namespace KsWare.AppVeyorClient.UI.PanelConfiguration {
 		private void DoCancelEdit() {
 			CodeEditorController.Text = "";
 			CloseCodeEditor();
+			ApplicationDispatcher.Instance.BeginInvoke(DispatcherPriority.Render, YamlEditorController.BringSelectionIntoView);
 		}
 
 		/// <summary>
@@ -239,6 +249,7 @@ namespace KsWare.AppVeyorClient.UI.PanelConfiguration {
 		None,
 		Folded,		// >	removes single newlines within the string (but adds one at the end, and converts double newlines to singles):
 		Literal,	// |	turns every newline within the string into a literal newline, and adds one at the end
+		Original
 	}
 
 	public enum ChompingIndicator {

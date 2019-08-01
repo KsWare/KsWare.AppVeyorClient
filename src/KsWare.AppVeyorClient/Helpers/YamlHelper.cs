@@ -1,17 +1,16 @@
 ﻿using System;
 using System.Collections.Generic;
-using System.Linq;
 using System.Text;
 using System.Text.RegularExpressions;
-using System.Threading.Tasks;
-using KsWare.AppVeyorClient.UI;
-using KsWare.AppVeyorClient.UI.PanelConfiguration;
 
 namespace KsWare.AppVeyorClient.Helpers {
 
 	public static class YamlHelper {
+		// ATTENTION: This is NOT a complete YAML parser/generator!
+		// Only parts used in appveyor.yaml are recognized/generated.
+		// - comments are not supported
 
-		static readonly Dictionary<int,Encoding> HexEncoding=new Dictionary<int, Encoding>() {
+		private static readonly Dictionary<int,Encoding> HexEncoding=new Dictionary<int, Encoding>() {
 			{2, Encoding.GetEncoding("iso-8859-1")},
 			{4, Encoding.Unicode},
 			{8, Encoding.UTF32}
@@ -21,45 +20,148 @@ namespace KsWare.AppVeyorClient.Helpers {
 
 		public static int GetIndent(string s) => ExtractBlock(s).Indent;
 
-		public static string FormatBlock(string s, BlockFormat format,  int indent, string suffix) {
-			var lines = s.Split(new[] {"\r\n", "\n"}, StringSplitOptions.None);
+		public static string FormatBlock(string content, string suffix, int indent, ScalarType scalarType) {
+			var lines = content.Split(new[] {"\r\n", "\n"}, StringSplitOptions.None);
 			var sb=new StringBuilder();
 			var sp = new string(' ', indent);
-			switch (format) {
-				case BlockFormat.Literal: {
-					sb.AppendLine($"{sp}{suffix}|");
-					foreach (var line in lines) {
-						sb.AppendLine($"{sp}    {line}");
-					}
+			var sp2 = new string(' ', indent + 4);
+			var name = Regex.Match(suffix, @"^(?<name>-(\s+[a-z]+:)?\s)\s*", RegexOptions.Compiled | RegexOptions.IgnoreCase).Groups["name"].Value;
+
+			if (scalarType == ScalarType.None) scalarType = DetectScalarType(suffix);
+			//TODO implement chomping
+			switch (scalarType) {
+				case ScalarType.BlockLiteral:
+					sb.AppendLine($"{sp}{name}|");
+					foreach (var line in lines) sb.AppendLine($"{sp2}{line}");
 					break;
-				}
-				case BlockFormat.Folded: {
-					sb.AppendLine($"{sp}{suffix} >-");
-					foreach (var line in lines) {
-						sb.AppendLine($"{sp}    {line}\r\n");
-					}
+				case ScalarType.BlockLiteralKeep:
+					sb.AppendLine($"{sp}{name}|+");
+					foreach (var line in lines) sb.AppendLine($"{sp2}{line}");
 					break;
-				}
-				default: {
-					foreach (var line in lines) {
-						sb.AppendLine($"{sp}{suffix}{line}");
-					}
+				case ScalarType.BlockLiteralStrip: 
+					sb.AppendLine($"{sp}{name}|-");
+					foreach (var line in lines) sb.AppendLine($"{sp2}{line}");
 					break;
-				}
+				
+				case ScalarType.BlockFolded:
+					sb.AppendLine($"{sp}{name}>");
+					foreach (var line in lines)sb.AppendLine(string.IsNullOrWhiteSpace(line) ? "" : $"{sp2}{line}");
+					break;
+				case ScalarType.BlockFoldedKeep:
+					sb.AppendLine($"{sp}{name}>+");
+					foreach (var line in lines)sb.AppendLine(string.IsNullOrWhiteSpace(line) ? "" : $"{sp2}{line}");
+					break;
+				case ScalarType.BlockFoldedStrip:
+					sb.AppendLine($"{sp}{name}>-");
+					foreach (var line in lines)sb.AppendLine(string.IsNullOrWhiteSpace(line) ? "" : $"{sp2}{line}");
+					break;
+				
+				case ScalarType.FlowDoubleQuoted:
+					sb.AppendLine($"{sp}{name}\"" + EscapeDoubleQuotedString(content) + "\"");
+					break;
+				case ScalarType.FlowSingleQuoted:
+					sb.AppendLine($"{sp}{name}'" + EscapeSingleQuotedString(content) + "'");
+					break;
+				case ScalarType.Plain:
+					foreach (var line in lines) sb.AppendLine($"{sp}{name}{line}");
+					break;
+				default: 
+					throw new NotImplementedException();
 			}
 			return sb.ToString().TrimEnd();
 		}
 
-		public static YamlBlock ExtractBlock(string s) {
-			// - ps: "...\"..."
-			var m = Regex.Match(s, @"^(?<indent>\s*)(?<suffix>-\s*(ps|cmd|pwsh)\s*:\s)\s*""(?<content>.*?)""\s*$",
-				RegexOptions.Compiled | RegexOptions.IgnoreCase);
-			var b=new YamlBlock() {
-				Indent = m.Groups["indent"].Value.Length,
-				Suffix = m.Groups["suffix"].Value,
-				Content = UnescapeDoubleQuotedString(m.Groups["content"].Value),
-			};
-			return b;
+		private static ScalarType DetectScalarType(YamlRegExMatch match)
+		{
+			if(!match.Success) return ScalarType.None;
+			switch (match.Multiline + match.Chomping)
+			{
+				case "|" : return ScalarType.BlockLiteral/*Clip*/;
+				case "|+": return ScalarType.BlockLiteralKeep;
+				case "|-": return ScalarType.BlockLiteralStrip;
+				case ">" : return ScalarType.BlockFolded/*Clip*/;
+				case ">+": return ScalarType.BlockFoldedKeep;
+				case ">-": return ScalarType.BlockFoldedStrip;
+				default:
+					switch (match.Quotes)
+					{
+						case "\"": return ScalarType.FlowDoubleQuoted;
+						case "'": return ScalarType.FlowSingleQuoted;
+						case "": return ScalarType.Plain;
+					}
+					return ScalarType.None;
+			}
+		}
+
+		public static ScalarType DetectScalarType(string line) 
+			=> DetectScalarType(YamlRegEx.Match(line));
+
+
+		public static YamlBlock ExtractBlock(string s)
+		{
+			var match = YamlRegEx.MatchFull(s);
+			var scalarType = DetectScalarType(match);
+			switch (scalarType)
+			{
+				case ScalarType.FlowDoubleQuoted:
+					return new YamlBlock(match.IndentLength, match.Suffix, UnescapeDoubleQuotedString(match.Content));
+				case ScalarType.FlowSingleQuoted:
+					return new YamlBlock(match.IndentLength, match.Suffix, UnescapeSingleQuotedString(match.Content));
+				case ScalarType.BlockFolded:
+				case ScalarType.BlockFoldedKeep:
+				case ScalarType.BlockFoldedStrip:
+				case ScalarType.BlockLiteral:
+				case ScalarType.BlockLiteralKeep:
+				case ScalarType.BlockLiteralStrip:
+					return new YamlBlock(match.IndentLength, match.Suffix, UnescapeBlock(match.Content, scalarType));
+				case ScalarType.Plain:
+					return new YamlBlock(match.IndentLength, match.Suffix, match.Content);
+				default:
+					return null;
+			}
+		}
+		
+		public static string UnescapeBlock(string content, ScalarType scalarType)
+		{
+			if (content.StartsWith("\r\n")) content = content.Substring(2);
+			else if (content.StartsWith("\n")) content = content.Substring(1);
+			var indent = Regex.Match(content, @"^\s+").Value;
+			var indentPattern = "^" + indent.Replace(" ", @"\x20").Replace("\t", @"\x09");
+			switch (scalarType)
+			{
+				case ScalarType.BlockFolded:
+				case ScalarType.BlockFoldedStrip:
+				case ScalarType.BlockFoldedKeep:
+				case ScalarType.BlockLiteral:
+				case ScalarType.BlockLiteralStrip:
+				case ScalarType.BlockLiteralKeep:
+					return Regex.Replace(content, indentPattern, "", RegexOptions.Multiline | RegexOptions.Compiled);
+				default: throw new NotSupportedException();
+			}
+		}
+
+		public static string EscapeSingleQuotedString(string s)
+		{
+			var s1=s.Replace("'", "''");
+			return s1;
+		}
+
+		public static string EscapeDoubleQuotedString(string s)
+		{
+			// https://yaml.org/spec/current.html#id2517668
+			var s1 = s
+				.Replace("\\", "\\\\")
+				.Replace("\r", "\\r")
+				.Replace("\n", "\\n")
+				.Replace("\"", "\\\""
+				);
+			return s1;
+		}
+
+		public static string UnescapeSingleQuotedString(string s)
+		{
+			var s1 = s.Replace("''", "'");
+			return s1;
 		}
 
 		public static string UnescapeDoubleQuotedString(string s) {
@@ -97,11 +199,4 @@ namespace KsWare.AppVeyorClient.Helpers {
 			
 		}
 	}
-
-	public class YamlBlock {
-		public int Indent { get; set; }
-		public string Suffix { get; set; }
-		public string Content { get; set; }
-	}
-
 }

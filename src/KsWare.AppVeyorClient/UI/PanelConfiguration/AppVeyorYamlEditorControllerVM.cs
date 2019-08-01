@@ -15,7 +15,6 @@ using ICSharpCode.AvalonEdit.Highlighting;
 using ICSharpCode.AvalonEdit.Highlighting.Xshd;
 using KsWare.AppVeyorClient.Shared.AvalonEditExtension;
 using KsWare.AppVeyorClient.Shared;
-using KsWare.AppVeyorClient.Shared.PresentationFramework;
 using KsWare.AppVeyorClient.UI.App;
 using KsWare.AppVeyorClient.UI.ViewModels;
 using KsWare.Presentation;

@@ -1,14 +1,11 @@
 ﻿using System.Diagnostics;
-using System.Globalization;
 using System.Text.RegularExpressions;
-using System.Windows.Data;
 using System.Xml;
 using ICSharpCode.AvalonEdit.Highlighting;
 using ICSharpCode.AvalonEdit.Highlighting.Xshd;
-using KsWare.AppVeyorClient.Shared.PresentationFramework;
+using KsWare.AppVeyorClient.Helpers;
 using KsWare.Presentation;
 using KsWare.Presentation.ViewModelFramework;
-using KsWare.Presentation.ViewModelFramework.Providers;
 using BindingMode = System.Windows.Data.BindingMode;
 
 namespace KsWare.AppVeyorClient.Shared.AvalonEditExtension {
@@ -77,7 +74,7 @@ namespace KsWare.AppVeyorClient.Shared.AvalonEditExtension {
 			
 			var l0=Data.Document.GetLineByOffset(Data.SelectionStart);
 			var t0 = "";
-			var l1 = l0.Offset + l0.TotalLength >= Data.SelectionStart + Data.SelectionLength
+			var l1 = Data.SelectionStart + Data.SelectionLength > l0.Offset + l0.TotalLength
 				? Data.Document.GetLineByOffset(Data.SelectionStart + Data.SelectionLength)
 				: l0;
 			var multiLine = "";
@@ -85,10 +82,9 @@ namespace KsWare.AppVeyorClient.Shared.AvalonEditExtension {
 			// find block-start "- ps: "
 			while (true) {
 				t0 = Data.GetLineText(l0);
-				var m = Regex.Match(t0, @"^-\x20ps:\x20+(?<multiline>[>|][+-]?)?"); // TODO 
+				var m = YamlRegEx.Match(t0);
 				if (m.Success) {
-					multiLine = m.Groups["multiline"].Value;
-					if (!string.IsNullOrWhiteSpace(multiLine)) l0 = l0.NextLine;
+					multiLine = m.Multiline;
 					break;
 				}
 				if(l0.LineNumber==1) break;
@@ -103,6 +99,7 @@ namespace KsWare.AppVeyorClient.Shared.AvalonEditExtension {
 						l1 = l1.PreviousLine;
 						break;
 					}
+					if (l1.NextLine == null) break;
 					l1 = l1.NextLine;
 				}
 			}
