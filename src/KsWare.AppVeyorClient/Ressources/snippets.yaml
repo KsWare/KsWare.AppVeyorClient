@@ -1,5 +1,5 @@
 ﻿- ps: |
-    # init:
+    # section: init
     # Parse commit message, set env variable conditional
     if ($env:APPVEYOR_REPO_COMMIT_MESSAGE -match '\[release\]') { 
         $env:deploy_github_releases = "true" 
@@ -7,3 +7,9 @@
         $env:deploy_github_releases = "false" 
     }
     echo "deploy_github_releases: $env:deploy_github_releases"
+- ps: |
+    # section: init
+    # Enhance build version with timestamp
+    $meta= Get-Date -Format "yyyyMMddHHmmss"
+    $env:version_meta="$meta"
+    Update-AppveyorBuild -Version "$ENV:APPVEYOR_BUILD_VERSION+$meta

@@ -25,20 +25,20 @@
 			<panelProjectSelector:ProjectSelector DataContext="{Binding ProjectSelector}" Margin="0 0 0 6" />
 		</DockPanel>
 		<TabControl>
-			<TabItem Header="Common" DataContext="{Binding CommonPanel}">
-				<panelCommon:CommonPanelView/>
-			</TabItem>
 			<TabItem Header="Configuration" DataContext="{Binding ConfigurationPanel}">
 				<panelConfiguration:ConfigurationPanelView/>
 			</TabItem>
 			<TabItem Header="Project Environment Variables" DataContext="{Binding ProjectEnvironmentVariablesPanel}">
 				<panelProjectEnvironmentVariables:ProjectEnvironmentVariablesView/>
 			</TabItem>
-			<TabItem Header="Avalon Editor">
+			<TabItem Header="Avalon Editor" Visibility="Collapsed">
 				<panelAvalonEditor:AvalonEditorPanel/>
 			</TabItem>
-			<TabItem Header="API Tester" DataContext="{Binding ApiTesterPanel}">
+			<TabItem Header="API Tester" DataContext="{Binding ApiTesterPanel}" Visibility="Collapsed">
 				<panelApiTester:ApiTesterPanel />
+			</TabItem>
+			<TabItem Header="Settings" DataContext="{Binding CommonPanel}">
+				<panelCommon:CommonPanelView/>
 			</TabItem>
 		</TabControl>
 	</DockPanel>
