@@ -1,0 +1,173 @@
+﻿version: 0.1.{build}
+
+pull_requests:							# Pull Requests do not increment build number
+  do_not_increment_build_number: true
+
+image: Visual Studio 2019
+
+configuration: Release
+
+platform: Any CPU
+
+branches:							# Branches to build
+  only:								# Only branches specified below [only|except]
+  - includeBranchA
+  except:							# All except branches specified below [only|except]
+  - exludeBranchA
+
+skip_tags: true
+
+skip_non_tags: true
+
+skip_commits:
+  message: /(\[skip\s*ci\])|(Release\s*Notes)/
+
+clone_folder: c:\buildroot						# Clone directory
+
+clone_script:
+- REM [CLONE] Multiline content. DO NOT EDIT on appveyor.com!
+
+image: Visual Studio 2019
+
+init:
+- REM [INIT] Multiline content. DO NOT EDIT on appveyor.com!
+
+environment:									# Environment variables
+  envA: value1
+
+environment:									# Environment variables (group matrix)
+  globEnvA: value0
+  matrix:
+  - group1EnvA: value1
+    group1EnvB: value2
+  - group2EnvA: value3
+    group2EnvB: value4
+
+services:
+- mssql2012sp1		# SQL Server 2012 SP1 Express
+- mssql2012sp1rs	# SQL Server 2012 SP1 Express with Reporting Services
+- mssql2008r2sp2	# SQL Server 2008 R2 SP2 Express
+- mssql2008r2sp2rs	# SQL Server 2008 R2 SP2 Express with Reporting Services
+- mssql2014			# SQL Server 2014 Express 
+- mssql2014rs		# SQL Server 2014 Express with Reporting Services
+- mssql2016			# SQL Server 2016 Developer
+- mssql2017			# SQL Server 2017 Developer
+- mysql				# MySQL
+- postgresql		# PostgreSQL
+- mongodb			# MongoDB
+- iis				# Internet Information Services (IIS)
+- msmq				# Microsoft Message Queuing Services
+	
+assembly_info:									# AssemblyInfo patching
+  patch: true
+  file: '**\AssemblyInfo.*'
+                   # {verion}, {build} and $(any_environment) variables are supported
+  assembly_version: '{version}'					# AssemblyVersion attribute
+  assembly_file_version: '{version}'			# AssemblyFileVersion attribute
+  assembly_informational_version: '{version}'	# AssemblyInformationalVersion attribute 
+
+dotnet_csproj:									# .NET Core .csproj patching ()
+  patch: true
+  file: '**\*.csproj'
+          # {verion}, {build} and $(any_environment) variables are supported
+  version: '{version}'							# Version attribute
+  package_version: '{version}'					# PackageVersion attribute
+  assembly_version: '{version}'					# AssemblyVersion attribute
+  file_version: '{version}'						# FileVersion attribute
+  informational_version: '{version}'			# InformationalVersion attribute
+
+cache: src\packages
+
+nuget:
+  # Automatically configure NuGet sources during a build:
+  account_feed: false				# Project feed
+  project_feed: false				# # Account feed
+  # Artifacts publishing: 
+  disable_publish_on_pr: false		# Do not publish NuGet package artifacts to account/project feeds on Pull Requests
+  disable_publish_octopus: false	# Do not publish Octopus Deploy .nupkg artifacts to account/project feeds
+
+deploy:
+- provider: Environment
+  name: Nuget.org
+  on:
+    branch: /(master)|(develop)/
+    deploy_nuget: true
+
+before_build:
+- REM [BEFORE BUILD] Multiline content. DO NOT EDIT on appveyor.com!
+- nuget restore src\PhotoManager.sln
+
+build:
+  project: src\PROJECT.sln
+  verbosity: minimal
+
+build: {}
+
+before_test:
+- REM [AFTER TEST] Multiline content. DO NOT EDIT on appveyor.com!
+
+test:							#  Auto (optional)
+
+test:
+  assemblies:					# Test assemblies
+    except:						# All except assemblies below [except|only]
+    - excludedAssemblyA
+	- excludedAssemblyB
+	only:						# Only assemblies below [except|only]
+	- includeAssemblyA
+	- includeAssemblyB
+  categories:					# Test categories
+    except:						# All except categories below [except|only]
+    - excludedAssemblyA
+	- excludedAssemblyB
+    only:						# Only categories below [except|only]
+    - includeCategoryA
+	- includeCategoryB
+
+test:							# Parallel testing groups
+    except:						# All except assemblies below [except|only]
+    - excludedAssemblyA
+	- excludedAssemblyB
+	only:						# Only assemblies below [except|only]
+	- includeAssemblyA
+	- includeAssemblyB
+  categories:					# Parallel testing groups with categories
+  - - a1
+    - b1
+  - - a2
+    - b2
+
+test: off						#  Tests deactivated.
+
+after_test:
+- REM [AFTER TEST] Multiline content. DO NOT EDIT on appveyor.com!
+
+test_script:					# Test script [test:|test_script:]
+- REM [TEST] Multiline content. DO NOT EDIT on appveyor.com!
+
+before_package:
+- REM [BEFORE PACKAGING] Multiline content. DO NOT EDIT on appveyor.com!
+
+after_build:
+- REM [AFTER BUILD] Multiline content. DO NOT EDIT on appveyor.com!
+
+before_deploy:
+- REM [BEFORE DEPLOY] Multiline content. DO NOT EDIT on appveyor.com!
+
+after_deploy:
+- REM [AFTER DEPLOY] Multiline content. DO NOT EDIT on appveyor.com!
+
+on_success:
+- REM [ON SUCCESS] Multiline content. DO NOT EDIT on appveyor.com!
+
+on_failure:
+- REM [ON FAILURE] Multiline content. DO NOT EDIT on appveyor.com!
+
+on_finish:
+- REM [ON FINISH] Multiline content. DO NOT EDIT on appveyor.com!
+
+# Script Language:
+- ps:		# PS
+- pwsh:		# PC Core
+- cmd:		# Cmd
+- sh:		# Sh

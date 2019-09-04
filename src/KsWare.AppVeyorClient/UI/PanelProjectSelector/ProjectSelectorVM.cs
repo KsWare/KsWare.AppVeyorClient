@@ -43,6 +43,14 @@ namespace KsWare.AppVeyorClient.UI.PanelProjectSelector {
 
 		[Hierarchy(HierarchyType.Reference)]
 		public ProjectVM SelectedProject { get => Fields.GetValue<ProjectVM>(); set => Fields.SetValue(value); }
+		public bool IsDropDownOpen { get => Fields.GetValue<bool>(); set => Fields.SetValue(value); }
+
+		public ActionVM SelectProject { get; private set; }
+
+		private void DoSelectProject()
+		{
+			IsDropDownOpen = true;
+		}
 	}
 
 }

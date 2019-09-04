@@ -186,6 +186,9 @@
     <Content Include="Data\Navigation.txt">
       <CopyToOutputDirectory>Always</CopyToOutputDirectory>
     </Content>
+    <Content Include="Data\Templates.txt">
+      <CopyToOutputDirectory>Always</CopyToOutputDirectory>
+    </Content>
     <Content Include="Shared\WpfPropertyGrid\WpfPropertyGrid.txt" />
     <Compile Include="Shared\WpfPropertyGrid\PropertyGrid.cs" />
     <Compile Include="Shared\TaskExtensions.cs" />
@@ -208,6 +211,9 @@
     </Compile>
     <Compile Include="UI\PanelCommon\CommonPanelVM.cs" />
     <Compile Include="UI\PanelConfiguration\AppVeyorYamlEditorControllerVM.cs" />
+    <Compile Include="UI\PanelConfiguration\SelectSectionTemplateDialog.xaml.cs">
+      <DependentUpon>SelectSectionTemplateDialog.xaml</DependentUpon>
+    </Compile>
     <Compile Include="UI\PanelConfiguration\YamlFoldingStrategy.cs" />
     <Compile Include="UI\PanelSearch\SearchPanelVM.cs" />
     <Compile Include="Shared\AvalonEditExtension\%28ViewModels%29\TextEditorControllerVM.cs" />
@@ -265,6 +271,10 @@
     <Page Include="UI\PanelConfiguration\ConfigurationPanelView.xaml">
       <Generator>MSBuild:Compile</Generator>
       <SubType>Designer</SubType>
+    </Page>
+    <Page Include="UI\PanelConfiguration\SelectSectionTemplateDialog.xaml">
+      <SubType>Designer</SubType>
+      <Generator>MSBuild:Compile</Generator>
     </Page>
     <Page Include="UI\PanelProjectEnvironmentVariables\ProjectEnvironmentVariablesView.xaml">
       <SubType>Designer</SubType>
