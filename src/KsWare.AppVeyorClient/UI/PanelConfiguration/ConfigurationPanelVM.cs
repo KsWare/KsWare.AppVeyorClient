@@ -1,8 +1,12 @@
 ﻿using System;
 using System.Collections.Generic;
 using System.IO;
+using System.Linq;
+using System.Text;
 using System.Text.RegularExpressions;
+using System.Threading.Tasks;
 using System.Windows;
+using System.Windows.Input;
 using System.Windows.Threading;
 using JetBrains.Annotations;
 using KsWare.AppVeyorClient.Api;
@@ -28,12 +32,16 @@ namespace KsWare.AppVeyorClient.UI.PanelConfiguration {
 
 			SearchPanel.Editor = YamlEditorController;
 
+			FillSectionTemplates();
 			FillNavigation();
 			Fields[nameof(SelectedNavigationItem)].ValueChangedEvent.add = AtNavigationKeyChanged;
+			Fields[nameof(IsNavigationDropDownOpen)].ValueChangedEvent.add = AtIsNavigationDropDownOpenChanged;
 			CloseCodeEditor();
 		}
 
 		public ListVM<NavigationItemVM> NavigationItems { get; [UsedImplicitly] private set; }
+
+		private List<SectionTemplateData>_sectionTemplates = new List<SectionTemplateData>();
 
 		private void FillNavigation() {
 			var lines = File.ReadAllLines("Data\\Navigation.txt");
@@ -44,9 +52,50 @@ namespace KsWare.AppVeyorClient.UI.PanelConfiguration {
 				var pattern = @"(?mnx-is)^" + Regex.Escape(key) + @"(\x20|\r\n|\n)";
 				NavigationItems.Add(new NavigationItemVM {
 					DisplayName = key.StartsWith("-- ") ? key.Substring(3) : "  "+key,
+					IsGroupTitle = key.StartsWith("-- "),
 					RegexPattern = key.StartsWith("-- ") ? null : pattern,
-					Regex = new Regex(pattern,RegexOptions.Compiled)
+					Regex = new Regex(pattern,RegexOptions.Compiled),
+					HasTemplate = _sectionTemplates.Any(t=>t.Key==key)
 				});
+			}
+		}
+
+		private void FillSectionTemplates()
+		{
+			_sectionTemplates.Clear();
+
+			var lines = File.ReadAllLines("Data\\Templates.txt");
+
+			var templateString = new StringBuilder();
+			var template = new SectionTemplateData();
+			_sectionTemplates.Add(template);
+			foreach (var line in lines)
+			{
+				if (string.IsNullOrWhiteSpace(line))
+				{
+					template.Content = templateString.ToString();
+
+					templateString = new StringBuilder();
+					template = new SectionTemplateData();
+					_sectionTemplates.Add(template);
+					continue;
+				}
+
+				templateString.AppendLine(line);
+				if (template.Key == null)
+				{
+					var match = Regex.Match(line, @"^(?<key>[a-z_0-9]+:)", RegexOptions.Compiled | RegexOptions.IgnoreCase);
+					if (match.Success) { template.Key = match.Groups["key"].Value; }
+				}
+			}
+
+			template.Content = templateString.ToString();
+
+			// clear empty keys
+			for (int i = 0; i < _sectionTemplates.Count; i++)
+			{
+				if(string.IsNullOrWhiteSpace(_sectionTemplates[i].Key))
+					_sectionTemplates.RemoveAt(i);
 			}
 		}
 
@@ -56,6 +105,49 @@ namespace KsWare.AppVeyorClient.UI.PanelConfiguration {
 		public  ActionVM LoadAction { get; [UsedImplicitly] private set; }
 		public  ActionVM SaveAction { get; [UsedImplicitly] private set; }
 		public  ActionVM PostAction { get; [UsedImplicitly] private set; }
+		public  ActionVM InsertTemplate { get; [UsedImplicitly] private set; }
+
+		private void DoInsertTemplate()
+		{
+			if(SelectedNavigationItem==null) return;
+			var templates = _sectionTemplates.Where(t => t.Key == SelectedNavigationItem.DisplayName.Trim()).ToArray();
+
+			SectionTemplateData selectedTemplate = null;
+			if (Keyboard.Modifiers == ModifierKeys.Control && templates.Length > 0)
+			{
+				selectedTemplate = templates.First();
+			}
+			else
+			{
+				var dlg = new SelectSectionTemplateDialog
+				{
+					Templates = templates,
+					SelectedTemplate = templates.FirstOrDefault()
+				};
+				if (dlg.ShowDialog()!=true) return;
+				selectedTemplate = dlg.SelectedTemplate;
+			}
+
+			if(selectedTemplate==null) return;
+
+			var navItemIndex = NavigationItems.IndexOf(SelectedNavigationItem);
+			for (int i = navItemIndex; i < NavigationItems.Count; i++)
+			{
+				var match = NavigationItems[i].Regex.Match(YamlEditorController.Data.Text);
+				SelectedNavigationItem.ExistsInDocument = match.Success;
+				if (!match.Success) continue;
+
+				YamlEditorController.Data.Select(match.Index, 0);
+				YamlEditorController.Data.ScrollTo(YamlEditorController.Data.TextArea.Caret.Line, 0);
+				YamlEditorController.SelectedText = selectedTemplate.Content + "\r\n";
+				SelectedNavigationItem.ExistsInDocument = true;
+				return;
+			}
+			YamlEditorController.Data.Select(YamlEditorController.Data.Document.TextLength, 0);
+			YamlEditorController.SelectedText = selectedTemplate.Content;
+			SelectedNavigationItem.ExistsInDocument = true;
+			//TODO optimize line breaks
+		}
 
 		public AppVeyorYamlEditorControllerVM YamlEditorController { get; [UsedImplicitly] private set; }
 		public TextEditorControllerVM CodeEditorController { get; [UsedImplicitly] private set; }
@@ -132,9 +224,36 @@ namespace KsWare.AppVeyorClient.UI.PanelConfiguration {
 
 			var match = SelectedNavigationItem.Regex.Match(YamlEditorController.Data.Text);
 			SelectedNavigationItem.ExistsInDocument = match.Success;
-			if (!match.Success) return;
+			if (!match.Success)
+			{
+				if (Keyboard.Modifiers == ModifierKeys.Control)
+				{
+					DoInsertTemplate();
+					return;
+				}
+				return;
+			}
 			YamlEditorController.Data.Select(match.Index+match.Length,0);
 			YamlEditorController.Data.ScrollTo(YamlEditorController.Data.TextArea.Caret.Line,0);
+		}
+
+		private void AtIsNavigationDropDownOpenChanged(object sender, ValueChangedEventArgs e)
+		{
+			if ((bool) e.NewValue == true) Task.Run(RefreshNavigationItemsAsync);
+		}
+
+		private async Task RefreshNavigationItemsAsync()
+		{
+			string text = null;
+			ApplicationDispatcher.Instance.Invoke(() => text = YamlEditorController.Data.Text);
+			foreach (var navItem in NavigationItems)
+			{
+				await Task.Run(() =>
+				{
+					var match = navItem.Regex.Match(text);
+					ApplicationDispatcher.Instance.Invoke(() => navItem.ExistsInDocument = match.Success);
+				}).ConfigureAwait(false);
+			}
 		}
 
 		/// <summary>
@@ -154,6 +273,7 @@ namespace KsWare.AppVeyorClient.UI.PanelConfiguration {
 
 		[Hierarchy(HierarchyType.Reference)]
 		public NavigationItemVM SelectedNavigationItem { get => Fields.GetValue<NavigationItemVM>(); set => Fields.SetValue(value); }
+		public bool IsNavigationDropDownOpen { get => Fields.GetValue<bool>(); set => Fields.SetValue(value); }
 
 		public GridLength YamlEditorHeight { get => Fields.GetValue<GridLength>(); set => Fields.SetValue(value); }
 		public GridLength CodeEditorHeight { get => Fields.GetValue<GridLength>(); set => Fields.SetValue(value); }
@@ -241,6 +361,12 @@ namespace KsWare.AppVeyorClient.UI.PanelConfiguration {
 				}
 			});
 		}
+	}
+
+	public class SectionTemplateData
+	{
+		public string Key { get; set; }
+		public string Content { get; set; }
 	}
 
 	// http://stackoverflow.com/questions/3790454/in-yaml-how-do-i-break-a-string-over-multiple-lines/21699210#21699210

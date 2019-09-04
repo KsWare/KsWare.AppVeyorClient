@@ -61,7 +61,7 @@
 <!--					</i:EventTrigger>-->
 <!--				</i:Interaction.Triggers>-->
 
-				<StackPanel DockPanel.Dock="Top" Visibility="{ksv:VisibilityBinding YamlEditorController.IsEnabled, TrueVisibleElseCollapsed}">
+				<StackPanel DockPanel.Dock="Top" Designtime.Visibility="Visible" Visibility="{ksv:VisibilityBinding YamlEditorController.IsEnabled, TrueVisibleElseCollapsed}">
 					<DockPanel LastChildFill="False" Margin="0">
 						<ComboBox 
 							Style="{StaticResource ComboBoxFlatStyle}" 
@@ -69,18 +69,33 @@
 							SelectedItem="{Binding SelectedNavigationItem}"
 							Width="150"
 							ToolTip="Navigation. Select an item to navigate to (if exists)"
+							IsDropDownOpen="{Binding IsNavigationDropDownOpen}"
 							>
+							<ComboBox.ItemContainerStyle>
+								<Style TargetType="ComboBoxItem">
+									<Setter Property="HorizontalContentAlignment" Value="Stretch"/>
+								</Style>
+							</ComboBox.ItemContainerStyle>
 							<ComboBox.ItemTemplate>
 								<DataTemplate DataType="{x:Type viewModels:NavigationItemVM}">
-									<TextBlock x:Name="TextBlock" Text="{Binding DisplayName}"/>
+									<DockPanel>
+										<TextBlock Text="T" DockPanel.Dock="Right" Visibility="{ksv:VisibilityBinding HasTemplate, TrueVisibleElseCollapsed}"/>
+										<TextBlock x:Name="TextBlock" Text="{Binding DisplayName}" MinWidth="120"/>
+									</DockPanel>
+									
 									<DataTemplate.Triggers>
 										<DataTrigger Binding="{Binding ExistsInDocument}" Value="false">
 											<Setter TargetName="TextBlock"  Property="Foreground" Value="LightGray"/>
+										</DataTrigger>
+										<DataTrigger Binding="{Binding IsGroupTitle}" Value="true">
+											<Setter TargetName="TextBlock"  Property="Foreground" Value="#8E8EFF"/>
+											<Setter TargetName="TextBlock"  Property="FontWeight" Value="Bold"/>
 										</DataTrigger>
 									</DataTemplate.Triggers>
 								</DataTemplate>
 							</ComboBox.ItemTemplate>
 						</ComboBox>
+						<Button Content="+" Width="24" Command="{Binding InsertTemplate}" ToolTip="Insert section"/>
 						<StackPanel Orientation="Horizontal" DockPanel.Dock="Right" DataContext="{Binding SearchPanel}">
 							<TextBox 
 								x:Name="SearchTextBox" 

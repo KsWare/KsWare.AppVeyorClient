@@ -16,6 +16,10 @@ namespace KsWare.AppVeyorClient.UI.ViewModels {
 		public string RegexPattern { get => Fields.GetValue<string>(); set => Fields.SetValue(value); }
 
 		public Regex Regex { get => Fields.GetValue<Regex>(); set => Fields.SetValue(value); }
+
+		public bool HasTemplate { get => Fields.GetValue<bool>(); set => Fields.SetValue(value); }
+
+		public bool IsGroupTitle { get => Fields.GetValue<bool>(); set => Fields.SetValue(value); }
 	}
 
 }

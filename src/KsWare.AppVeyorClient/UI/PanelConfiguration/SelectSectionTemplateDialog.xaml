@@ -1,0 +1,38 @@
+﻿<Window x:Class="KsWare.AppVeyorClient.UI.PanelConfiguration.SelectSectionTemplateDialog"
+        xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
+        xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+        xmlns:d="http://schemas.microsoft.com/expression/blend/2008"
+        xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
+        xmlns:local="clr-namespace:KsWare.AppVeyorClient.UI.PanelConfiguration"
+        mc:Ignorable="d"
+        d:DataContext="{d:DesignInstance local:SelectSectionTemplateDialogVM, IsDesignTimeCreatable=False}"
+        Title="Select Section Template..." Height="450" Width="600" WindowStartupLocation="CenterOwner" WindowStyle="ToolWindow">
+    <DockPanel>
+		<DockPanel Dock="Bottom">
+			<UniformGrid Rows="1" HorizontalAlignment="Center" >
+				<Button Content="OK" Command="{Binding CloseAction}" Margin="10" MinWidth="80"/>
+				<Button Content="Cancel" Command="{Binding CancelAction}" Margin="10" MinWidth="80"/>
+			</UniformGrid>
+		</DockPanel>
+		<ListView ItemsSource="{Binding Templates}" SelectedItem="{Binding SelectedTemplate}">
+			<ListView.ItemContainerStyle>
+				<Style TargetType="ListViewItem">
+					<Setter Property="HorizontalContentAlignment" Value="Stretch"/>
+				</Style>
+			</ListView.ItemContainerStyle>
+			<ListView.ItemTemplate>
+				<DataTemplate DataType="local:SectionTemplateData">
+					<StackPanel>
+						<TextBlock 
+							FontFamily="Consolas, Courier New"
+							FontSize="12"
+							Text="{Binding Content, Mode=OneWay}"
+							/>
+						<Line X2="1" Stretch="Fill" Margin="0 3" Stroke="LightGray" Opacity="0.5"/>
+					</StackPanel>
+
+				</DataTemplate>
+			</ListView.ItemTemplate>
+		</ListView>
+	</DockPanel>
+</Window>

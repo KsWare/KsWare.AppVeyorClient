@@ -14,25 +14,38 @@
 	<FrameworkElement.Resources>
 
 	</FrameworkElement.Resources>
-	<DockPanel LastChildFill="False">
-		<TextBlock 
-			Text="Project " 
-			VerticalAlignment="Center" 
-			ToolTip="Select a project to work with. All operations that require a project use this selected project."
-			/>
-		<ComboBox 
-			ItemsSource="{Binding Projects.CollectionView}" 
-			SelectedItem="{Binding SelectedProject}" 
-			DisplayMemberPath="DisplayName"
-			IsSynchronizedWithCurrentItem="True"
-			Width="164"
-			ToolTip="List of all projects&#10;Needs a while to load after start."
-		>
-		</ComboBox>
-		<TextBlock 
-			Text="p" FontFamily="Wingdings 3" VerticalAlignment="Center" Foreground="Red" 
-			Visibility="{ksv:VisibilityBinding ErrorProvider.HasError, TrueVisibleElseCollapsed}"
-			ToolTip="{Binding ErrorProvider.ErrorMessage}"
-			/>
-	</DockPanel>
+	<Grid>
+		<DockPanel LastChildFill="False">
+			<TextBlock 
+				Text="Project " 
+				VerticalAlignment="Center" 
+				ToolTip="Select a project to work with. All operations that require a project use this selected project."
+				Width="60"
+				/>
+			<ComboBox 
+				ItemsSource="{Binding Projects.CollectionView}" 
+				SelectedItem="{Binding SelectedProject}" 
+				DisplayMemberPath="DisplayName"
+				IsSynchronizedWithCurrentItem="True"
+				Width="164"
+				ToolTip="List of all projects&#10;Needs a while to load after start."
+				IsDropDownOpen="{Binding IsDropDownOpen}"
+				Visibility="{ksv:VisibilityBinding IsDropDownOpen, TrueVisibleElseHidden}"
+			>
+			</ComboBox>
+			<TextBlock 
+				Text="p" FontFamily="Wingdings 3" VerticalAlignment="Center" Foreground="Red" 
+				Visibility="{ksv:VisibilityBinding ErrorProvider.HasError, TrueVisibleElseCollapsed}"
+				ToolTip="{Binding ErrorProvider.ErrorMessage}"
+				/>
+		</DockPanel>
+
+		<DockPanel LastChildFill="False" Visibility="{ksv:VisibilityBinding IsDropDownOpen, FalseVisibleElseHidden}">
+			<Button Content="Project:" Width="60" Command="{Binding SelectProject}"/>
+			<Label Content="{Binding SelectedProject.DisplayName}" Width="164" Padding="6 3 6 3"
+			       ToolTip="{Binding SelectedProject.DisplayName}"/>
+			<Canvas></Canvas>
+		</DockPanel>
+	</Grid>
+
 </UserControl>
