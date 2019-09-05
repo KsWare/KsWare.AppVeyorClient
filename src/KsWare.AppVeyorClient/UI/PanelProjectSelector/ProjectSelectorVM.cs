@@ -22,6 +22,7 @@ namespace KsWare.AppVeyorClient.UI.PanelProjectSelector {
 
 		private async void Initialize() {
 			try {
+				Debug.WriteLine($"ProjectSelectorVM Initialize");
 				if (!_watchTokenChanged) {
 					_watchTokenChanged = true; 
 					Client.Base.TokenChanged += (s, e) => Initialize();
@@ -46,11 +47,12 @@ namespace KsWare.AppVeyorClient.UI.PanelProjectSelector {
 		public bool IsDropDownOpen { get => Fields.GetValue<bool>(); set => Fields.SetValue(value); }
 
 		public ActionVM SelectProject { get; private set; }
+		public ActionVM RefreshAction { get; private set; }
 
 		private void DoSelectProject()
 		{
 			IsDropDownOpen = true;
 		}
+		private void DoRefresh() => Dispatcher.BeginInvoke(Initialize);
 	}
-
 }
