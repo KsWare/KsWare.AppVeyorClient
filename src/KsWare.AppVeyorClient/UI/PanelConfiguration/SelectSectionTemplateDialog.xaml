@@ -6,7 +6,9 @@
         xmlns:local="clr-namespace:KsWare.AppVeyorClient.UI.PanelConfiguration"
         mc:Ignorable="d"
         d:DataContext="{d:DesignInstance local:SelectSectionTemplateDialogVM, IsDesignTimeCreatable=False}"
-        Title="Select Section Template..." Height="450" Width="600" WindowStartupLocation="CenterOwner" WindowStyle="ToolWindow">
+        Title="Select Section Template..." Height="450" Width="600" WindowStartupLocation="CenterOwner" WindowStyle="ToolWindow"
+        x:Name="Root"
+        >
     <DockPanel>
 		<DockPanel Dock="Bottom">
 			<UniformGrid Rows="1" HorizontalAlignment="Center" >
@@ -23,6 +25,9 @@
 			<ListView.ItemTemplate>
 				<DataTemplate DataType="local:SectionTemplateData">
 					<StackPanel>
+						<FrameworkElement.InputBindings>
+							<MouseBinding Gesture="LeftDoubleClick" Command="{Binding DataContext.CloseAction, ElementName=Root}"/>
+						</FrameworkElement.InputBindings>
 						<TextBlock 
 							FontFamily="Consolas, Courier New"
 							FontSize="12"
