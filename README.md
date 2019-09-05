@@ -9,9 +9,9 @@ A windows client for [AppVeyor](https://www.appveyor.com/).
 [![GitHub issues](https://img.shields.io/github/issues-raw/KsWare/KsWare.AppVeyorClient.svg?style=flat-square)](https://github.com/KsWare/KsWare.AppVeyorClient/issues)
 
 
-[Homepage](https://ksware.github.io/KsWare.AppVeyorClient/) •
-[Wiki](https://github.com/KsWare/KsWare.AppVeyorClient/wiki) •
-[Web-Installer](http://www.ksware.de/software/AppVeyorClient/setup.exe) •
+[Homepage](https://ksware.github.io/KsWare.AppVeyorClient/) â€¢
+[Wiki](https://github.com/KsWare/KsWare.AppVeyorClient/wiki) â€¢
+[Web-Installer](http://www.ksware.de/software/AppVeyorClient/setup.exe) â€¢
 [Application](http://www.ksware.de/software/AppVeyorClient/KsWare.AppVeyorClient.application)
 
 ## Version: 0.2 Beta
@@ -20,7 +20,7 @@ A windows client for [AppVeyor](https://www.appveyor.com/).
 
 ## Used Technologies
 
-- Visual Studio 2017
-- .NET 4.5, C# 7.0, WPF
-- NuGet: [AvalonEdit](https://github.com/icsharpcode/AvalonEdit), [KsWare Presentation Framework](https://github.com/KsWare/KsWare.Presentation), [Common.Logging](https://github.com/net-commons/common-logging), [AutoMapper](https://github.com/AutoMapper/AutoMapper), MSTest.TestFramework, [Newtonsoft.Json](https://github.com/JamesNK/Newtonsoft.Json), System.Windows.Interactivity.WPF
+- Visual Studio 2019
+- .NET 4.7.2, C# 7.2, WPF
+- NuGet: [AvalonEdit](https://github.com/icsharpcode/AvalonEdit), [KsWare Presentation Framework](https://github.com/KsWare/KsWare.Presentation), [Common.Logging](https://github.com/net-commons/common-logging), [AutoMapper](https://github.com/AutoMapper/AutoMapper), Nunit 3.x, [Newtonsoft.Json](https://github.com/JamesNK/Newtonsoft.Json), System.Windows.Interactivity.WPF
 
