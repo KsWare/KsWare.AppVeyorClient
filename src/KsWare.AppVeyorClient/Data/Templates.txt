@@ -5,6 +5,8 @@ pull_requests:							# Pull Requests do not increment build number
 
 image: Visual Studio 2019
 
+image: Visual Studio 2017
+
 configuration: Release
 
 platform: Any CPU
@@ -12,6 +14,8 @@ platform: Any CPU
 branches:							# Branches to build
   only:								# Only branches specified below [only|except]
   - includeBranchA
+
+branches:							# Branches to build
   except:							# All except branches specified below [only|except]
   - exludeBranchA
 
@@ -19,8 +23,50 @@ skip_tags: true
 
 skip_non_tags: true
 
+# Skip commits by message
+skip_commits:										
+  message: /(\[skip\s*ci\])|(Release\s*Notes)/  
+
+# Skip commits by author
+skip_commits:							
+  author: John Smith
+
+# Skip commits by files
 skip_commits:
-  message: /(\[skip\s*ci\])|(Release\s*Notes)/
+  files:
+    - dir/*					# all files within directory, non-recursive
+	- dir/**/*				# all files within directory, recursive
+	- dir/					# all files within directory, recursive
+    - dir/*.md
+    - full/path.txt			#  specific file
+    - another/dir/here/
+    - '**/*.html'			# all .html files within repository, recursive
+
+# more info @ https://www.appveyor.com/docs/how-to/filtering-commits/
+skip_commits:
+
+# Include commits by message
+only_commits:
+  message: /build/
+
+# Include commits by author
+#	allows starting a new AppVeyor build if only some of the files modified in 
+#	push’s head commit match their respective rules (OR logic applied to 
+#	multiple values):
+only_commits:
+  author: /Alice|Mark/
+
+# Include commits by file
+#	allows starting a new AppVeyor build if only some of the files modified in 
+#	push’s head commit match their respective rules (OR logic applied to 
+#	multiple values):
+only_commits:
+  files:
+    - Project-A/
+    - Project-B/
+
+# more info @ https://www.appveyor.com/docs/how-to/filtering-commits/
+only_commits:
 
 clone_folder: c:\buildroot						# Clone directory
 

@@ -6,6 +6,7 @@
   skip_non_tags:
   skip_branch_with_pr:
   skip_commits:
+  only_commits:
   max_jobs:
   clone_depth:
   clone_script:
