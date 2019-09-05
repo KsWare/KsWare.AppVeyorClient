@@ -8,6 +8,8 @@ using System.Threading.Tasks;
 using System.Windows;
 using System.Windows.Input;
 using System.Windows.Threading;
+using ICSharpCode.AvalonEdit;
+using ICSharpCode.AvalonEdit.Document;
 using JetBrains.Annotations;
 using KsWare.AppVeyorClient.Api;
 using KsWare.AppVeyorClient.Helpers;
@@ -73,7 +75,7 @@ namespace KsWare.AppVeyorClient.UI.PanelConfiguration {
 			{
 				if (string.IsNullOrWhiteSpace(line))
 				{
-					template.Content = templateString.ToString();
+					template.Content = templateString.ToString().TrimEnd();
 
 					templateString = new StringBuilder();
 					template = new SectionTemplateData();
@@ -89,7 +91,7 @@ namespace KsWare.AppVeyorClient.UI.PanelConfiguration {
 				}
 			}
 
-			template.Content = templateString.ToString();
+			template.Content = templateString.ToString().TrimEnd();
 
 			// clear empty keys
 			for (int i = 0; i < _sectionTemplates.Count; i++)
@@ -144,7 +146,11 @@ namespace KsWare.AppVeyorClient.UI.PanelConfiguration {
 				return;
 			}
 			YamlEditorController.Data.Select(YamlEditorController.Data.Document.TextLength, 0);
-			YamlEditorController.SelectedText = selectedTemplate.Content;
+			var pos = new DocumentPosition(YamlEditorController.Data, YamlEditorController.Data.Document.TextLength);
+			if(pos.LineCharIndex>0)
+				YamlEditorController.SelectedText = "\r\n" + selectedTemplate.Content;
+			else 
+				YamlEditorController.SelectedText = selectedTemplate.Content + "\r\n";
 			SelectedNavigationItem.ExistsInDocument = true;
 			//TODO optimize line breaks
 		}

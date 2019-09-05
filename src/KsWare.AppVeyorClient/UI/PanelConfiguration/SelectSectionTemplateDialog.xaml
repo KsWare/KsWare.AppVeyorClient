@@ -24,7 +24,7 @@
 			</ListView.ItemContainerStyle>
 			<ListView.ItemTemplate>
 				<DataTemplate DataType="local:SectionTemplateData">
-					<StackPanel>
+					<StackPanel Margin="0 10 0 0">
 						<FrameworkElement.InputBindings>
 							<MouseBinding Gesture="LeftDoubleClick" Command="{Binding DataContext.CloseAction, ElementName=Root}"/>
 						</FrameworkElement.InputBindings>
@@ -33,7 +33,7 @@
 							FontSize="12"
 							Text="{Binding Content, Mode=OneWay}"
 							/>
-						<Line X2="1" Stretch="Fill" Margin="0 3" Stroke="LightGray" Opacity="0.5"/>
+						<Line X2="1" Stretch="Fill" Margin="0 3 0 0" Stroke="LightGray" Opacity="0.5"/>
 					</StackPanel>
 
 				</DataTemplate>
