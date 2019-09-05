@@ -22,7 +22,6 @@ namespace KsWare.AppVeyorClient.UI.PanelProjectSelector {
 
 		private async void Initialize() {
 			try {
-				Debug.WriteLine($"ProjectSelectorVM Initialize");
 				if (!_watchTokenChanged) {
 					_watchTokenChanged = true; 
 					Client.Base.TokenChanged += (s, e) => Initialize();
