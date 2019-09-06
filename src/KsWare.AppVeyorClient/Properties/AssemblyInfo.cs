@@ -22,6 +22,6 @@ using System.Windows;
 											  // app, or any theme specific resource dictionaries)
 )]
 
-[assembly: AssemblyVersion("0.3.7")]
-[assembly: AssemblyFileVersion("0.3.7")]
-[assembly: AssemblyInformationalVersion("0.3.7")]
+[assembly: AssemblyVersion("0.3.11")]
+[assembly: AssemblyFileVersion("0.3.11")]
+[assembly: AssemblyInformationalVersion("0.3.11")]
