@@ -79,7 +79,7 @@ namespace KsWare.AppVeyorClient.Shared.AvalonEditExtension {
 
 		private void TextEditor_IsModifiedChanged(object sender, EventArgs e)
 		{
-			IsModified = Data.IsModified; //TODO KUX
+			IsModified = Data.IsModified;
 		}
 
 		public bool IsModified { get => Fields.GetValue<bool>(); private set => Fields.SetValue(value); }

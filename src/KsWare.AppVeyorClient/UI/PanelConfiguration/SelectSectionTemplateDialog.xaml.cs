@@ -3,7 +3,7 @@ using KsWare.Presentation.ViewModelFramework;
 
 namespace KsWare.AppVeyorClient.UI.PanelConfiguration
 {
-	//TODO KUX remove code behind
+	//KUX remove code behind
 
 	/// <summary>
 	/// Interaction logic for SelectSectionTemplateDialog.xaml
