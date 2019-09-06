@@ -45,6 +45,7 @@ namespace KsWare.AppVeyorClient.UI.PanelProjectEnvironmentVariables {
 					else {
 //						StatusBarText              = "Get done.";
 						var sb = new StringBuilder();
+						// ReSharper disable once AsyncConverter.AsyncWait
 						var envvars = task.Result;
 						foreach (var var in envvars) {
 							sb.AppendLine($"{var}");

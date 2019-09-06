@@ -86,6 +86,11 @@ namespace KsWare.AppVeyorClient.UI.PanelSearch {
 			if (CurrentResultIndex > 1) {
 				CurrentResultIndex--;
 			}
+			else if(CurrentResultIndex==0)
+			{
+				if (SearchResults.Count > 0) CurrentResultIndex = 1;
+				else return;
+			}
 			Editor.Data.Focus();
 			Editor.Data.Select(SearchResults[CurrentResultIndex-1],SearchText.Length);
 			Editor.Data.ScrollToLine(Editor.Data.TextArea.Selection.StartPosition.Line);

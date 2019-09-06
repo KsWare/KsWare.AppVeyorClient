@@ -24,15 +24,30 @@
 	<DockPanel>
 		<WrapPanel DockPanel.Dock="Top" IsEnabled="{Binding YamlEditorController.IsEnabled}">
 			<FrameworkElement.Resources>
-				<Style TargetType="Button">
+				<Style x:Key="ButtonStyle" TargetType="Button">
+					<Setter Property="MinWidth" Value="40"/>
+					<Setter Property="Margin" Value="2"/>
+				</Style>
+				<Style TargetType="Button" BasedOn="{StaticResource ButtonStyle}">
 					<Setter Property="MinWidth" Value="40"/>
 					<Setter Property="Margin" Value="2"/>
 				</Style>
 			</FrameworkElement.Resources>
 			<Button Content="Get" Command="{Binding GetAction}" ToolTip="Gets the configuration from appveyor.com."/>
+			<Button Content="Send" Command="{Binding PostAction}" ToolTip="Send the configuration to appveyor.com">
+				<Button.Style>
+					<Style TargetType="Button" BasedOn="{StaticResource ButtonStyle}">
+						<Style.Triggers>
+							<DataTrigger Binding="{Binding IsModified}" Value="false">
+								<Setter Property="Foreground" Value="#A0A0A0"/>
+							</DataTrigger>
+						</Style.Triggers>
+					</Style>
+				</Button.Style>
+			</Button>
+			<Canvas Width="6"/>
 			<Button Content="Load" Command="{Binding LoadAction}" ToolTip="Loads the configuration from file."/>
 			<Button Content="Save" Command="{Binding SaveAction}" ToolTip="Saves the configuration to file."/>
-			<Button Content="Send" Command="{Binding PostAction}" ToolTip="Send the configuration to appveyor.com"/>
 			<Canvas Width="12"/>
 			<Button Content="Edit Script" Command="{Binding EditScriptAction}" ToolTip="Edit selected script block" Padding="6 0"/>
 		</WrapPanel>

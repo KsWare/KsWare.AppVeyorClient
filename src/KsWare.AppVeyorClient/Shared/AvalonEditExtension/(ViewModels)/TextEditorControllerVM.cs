@@ -1,4 +1,5 @@
 ﻿using System;
+using System.ComponentModel;
 using System.Windows;
 using ICSharpCode.AvalonEdit;
 using JetBrains.Annotations;
@@ -19,9 +20,9 @@ namespace KsWare.AppVeyorClient.Shared.AvalonEditExtension {
 			ContextMenu.Items.Add(new MenuItemVM {Caption = "Cut", CommandAction   = {MːDoAction = () => Data.Cut()}});
 			ContextMenu.Items.Add(new MenuItemVM {Caption = "Copy", CommandAction  = {MːDoAction = () => Data.Copy()}});
 			ContextMenu.Items.Add(new MenuItemVM {Caption = "Paste", CommandAction = {MːDoAction = () => Data.Paste()}});
-//			ContextMenu.Items.Add(new MenuItemVM {Caption = "Delete", CommandAction = {MːDoAction = () => Data.Delete()}});
-//			ContextMenu.Items.Add(new MenuItemVM {Caption = "Undo", CommandAction = {MːDoAction = () => Data.Undo()}});
-//			ContextMenu.Items.Add(new MenuItemVM {Caption = "Redo", CommandAction = {MːDoAction = () => Data.Redo()}});
+			//			ContextMenu.Items.Add(new MenuItemVM {Caption = "Delete", CommandAction = {MːDoAction = () => Data.Delete()}});
+			//			ContextMenu.Items.Add(new MenuItemVM {Caption = "Undo", CommandAction = {MːDoAction = () => Data.Undo()}});
+			//			ContextMenu.Items.Add(new MenuItemVM {Caption = "Redo", CommandAction = {MːDoAction = () => Data.Redo()}});
 		}
 
 		private void AtIsEnabledChanged(object sender, RoutedPropertyChangedEventArgs<bool> e) { Data.IsEnabled = e.NewValue; }
@@ -64,9 +65,28 @@ namespace KsWare.AppVeyorClient.Shared.AvalonEditExtension {
 
 		protected sealed override void OnDataChanged(DataChangedEventArgs e) {
 			base.OnDataChanged(e);
-			if (e.NewData != null) {
+			if (e.PreviousData is TextEditor)
+			{
+				var dpd = DependencyPropertyDescriptor.FromProperty(TextEditor.IsModifiedProperty, typeof(TextEditor));
+				dpd.RemoveValueChanged(e.PreviousData, TextEditor_IsModifiedChanged);
+			}
+			if (e.NewData is TextEditor) {
+				var dpd = DependencyPropertyDescriptor.FromProperty(TextEditor.IsModifiedProperty, typeof(TextEditor));
+				dpd.AddValueChanged(e.NewData, TextEditor_IsModifiedChanged);
 				OnViewConnected();
 			}
+		}
+
+		private void TextEditor_IsModifiedChanged(object sender, EventArgs e)
+		{
+			IsModified = Data.IsModified;
+		}
+
+		public bool IsModified { get => Fields.GetValue<bool>(); private set => Fields.SetValue(value); }
+
+		public void ResetHasChanges()
+		{
+			Data.IsModified = false;
 		}
 
 		protected virtual void OnViewConnected() {
@@ -77,11 +97,11 @@ namespace KsWare.AppVeyorClient.Shared.AvalonEditExtension {
 				Data.ContextMenu.DataContext = ContextMenu;
 			}
 
-//			Data.ContextMenu = new ContextMenu {
-//				DataContext = ContextMenu, 
-//				ItemsSource = ContextMenu.Items,
-//				ItemTemplate = 
-//			};
+			//			Data.ContextMenu = new ContextMenu {
+			//				DataContext = ContextMenu, 
+			//				ItemsSource = ContextMenu.Items,
+			//				ItemTemplate = 
+			//			};
 		}
 
 		public ContextMenuVM ContextMenu { get; [UsedImplicitly] private set; }
