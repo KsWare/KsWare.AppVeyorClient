@@ -329,7 +329,13 @@ namespace KsWare.AppVeyorClient.UI.PanelConfiguration {
 		/// </summary>
 		[UsedImplicitly]
 		private void DoSave() {
-			var dlg = new SaveFileDialog {Title = "Save configuration as...", Filter = "YAML-File|*.yml", FilterIndex = 1};
+			var projectName = ProjectSelector.SelectedProject?.Data.Name ?? "NewProject";
+			var dlg = new SaveFileDialog {
+				Title = "Save configuration as...",
+				Filter = "YAML-File|*.yml",
+				FilterIndex = 1,
+				FileName = $"{projectName}.{DateTime.Now:yyyyMMddHHmmss}.AutoSave.yml"
+			};
 			if (dlg.ShowDialog() != true) return;
 			using (var writer = File.CreateText(dlg.FileName)) {
 				writer.Write(YamlEditorController.Text);

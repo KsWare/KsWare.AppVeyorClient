@@ -15,6 +15,11 @@
 
 	</FrameworkElement.Resources>
 	<Grid>
+		<FrameworkElement.ContextMenu>
+			<ContextMenu>
+				<MenuItem Header="Refresh" Command="{Binding RefreshAction}" ToolTip="Refreshs the project list. Needs a while to load. "/>
+			</ContextMenu>
+		</FrameworkElement.ContextMenu>		
 		<DockPanel LastChildFill="False">
 			<TextBlock 
 				Text="Project " 
@@ -32,6 +37,7 @@
 				IsDropDownOpen="{Binding IsDropDownOpen}"
 				Visibility="{ksv:VisibilityBinding IsDropDownOpen, TrueVisibleElseHidden}"
 			>
+
 			</ComboBox>
 			<TextBlock 
 				Text="p" FontFamily="Wingdings 3" VerticalAlignment="Center" Foreground="Red" 
