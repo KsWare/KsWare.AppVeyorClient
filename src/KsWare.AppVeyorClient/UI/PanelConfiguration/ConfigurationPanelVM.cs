@@ -1,5 +1,7 @@
 ﻿using System;
 using System.Collections.Generic;
+using System.ComponentModel;
+using System.Diagnostics.CodeAnalysis;
 using System.IO;
 using System.Linq;
 using System.Text;
@@ -22,6 +24,7 @@ using KsWare.AppVeyorClient.UI.ViewModels;
 using KsWare.Presentation;
 using KsWare.Presentation.ViewModelFramework;
 using Microsoft.Win32;
+using BindingMode = System.Windows.Data.BindingMode;
 
 namespace KsWare.AppVeyorClient.UI.PanelConfiguration {
 
@@ -39,6 +42,10 @@ namespace KsWare.AppVeyorClient.UI.PanelConfiguration {
 			Fields[nameof(SelectedNavigationItem)].ValueChangedEvent.add = AtNavigationKeyChanged;
 			Fields[nameof(IsNavigationDropDownOpen)].ValueChangedEvent.add = AtIsNavigationDropDownOpenChanged;
 			CloseCodeEditor();
+
+			Fields[nameof(IsModified)].SetBinding(new FieldBinding(YamlEditorController.Fields[nameof(YamlEditorController.IsModified)],BindingMode.OneWay));
+//			YamlEditorController.Fields[nameof(YamlEditorController.IsModified)].ValueChangedEvent.add=
+//				(s, e) => IsModified = YamlEditorController.IsModified;
 		}
 
 		public ListVM<NavigationItemVM> NavigationItems { get; [UsedImplicitly] private set; }
@@ -164,6 +171,8 @@ namespace KsWare.AppVeyorClient.UI.PanelConfiguration {
 		/// <seealso cref="DoEditScript"/>
 		public ActionVM EditScriptAction { get; [UsedImplicitly] private set; }
 
+		
+
 		/// <summary>
 		/// Method for <see cref="EditScriptAction"/>
 		/// </summary>
@@ -269,6 +278,7 @@ namespace KsWare.AppVeyorClient.UI.PanelConfiguration {
 		public ActionVM CancelEditAction { get; [UsedImplicitly] private set; }
 
 		public string BlockFormat { get => Fields.GetValue<string>(); set => Fields.SetValue(value); }
+		public bool IsModified { get => Fields.GetValue<bool>(); private set => Fields.SetValue(value); }
 
 		[Hierarchy(HierarchyType.Reference)]
 		public ProjectSelectorVM ProjectSelector { get => Fields.GetValue<ProjectSelectorVM>(); set => Fields.SetValue(value); }
@@ -313,9 +323,11 @@ namespace KsWare.AppVeyorClient.UI.PanelConfiguration {
 				}
 				else {
 					StatusBarText = "Get done.";
-					YamlEditorController.Text = task.Result;
+						// ReSharper disable once AsyncConverter.AsyncWait // ContinueWithUIDispatcher
+						YamlEditorController.Text = task.Result;
+					YamlEditorController.ResetHasChanges();
 				}
-			});
+				});
 		}
 
 		/// <summary>
@@ -353,25 +365,28 @@ namespace KsWare.AppVeyorClient.UI.PanelConfiguration {
 		/// Method for <see cref="PostAction"/>
 		/// </summary>
 		[UsedImplicitly]
-		private void DoPost() {
+		private void DoPost()
+		{
 			if (ProjectSelector.SelectedProject == null) {
 				StatusBarText = "WARNING: No project selected!";
 				return;
 			}
+
 			StatusBarText = "Send project settings...";
 			Client.Project.UpdateProjectSettingsYamlAsync(
-				ProjectSelector.SelectedProject.Data.AccountName,
-				ProjectSelector.SelectedProject.Data.Slug, 
-				YamlEditorController.Text)
+					ProjectSelector.SelectedProject.Data.AccountName,
+					ProjectSelector.SelectedProject.Data.Slug,
+					YamlEditorController.Text)
 				.ContinueWithUIDispatcher(task => {
-				if (task.Exception != null) {
-					StatusBarText = $"Update failed. {task.Exception.InnerException?.Message}";
-					MessageBox.Show($"Update failed.\n\nDetails:\n{task.Exception.InnerException?.Message}", "Error", MessageBoxButton.OK, MessageBoxImage.Error);
-				}
-				else {
-					StatusBarText="Update done.";
-				}
-			});
+					if (task.Exception != null) {
+						StatusBarText = $"Update failed. {task.Exception.InnerException?.Message}";
+						MessageBox.Show($"Update failed.\n\nDetails:\n{task.Exception.InnerException?.Message}",
+							"Error", MessageBoxButton.OK, MessageBoxImage.Error);
+					} else {
+						StatusBarText = "Update done.";
+						YamlEditorController.ResetHasChanges();
+					}
+				});
 		}
 	}
 

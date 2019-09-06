@@ -12,7 +12,7 @@
     xmlns:panelApiTester="clr-namespace:KsWare.AppVeyorClient.UI.PanelApiTester"
     xmlns:panelCommon="clr-namespace:KsWare.AppVeyorClient.UI.PanelCommon"
     mc:Ignorable="d"
-    Title="Appveyor Client" Height="350" Width="525"
+    Title="Appveyor Client" Height="600" Width="800"
 	d:DataContext="{d:DesignInstance Type={x:Type ui:MainWindowVM}}"
 	>
 	<DockPanel Margin="4 4 4 4">

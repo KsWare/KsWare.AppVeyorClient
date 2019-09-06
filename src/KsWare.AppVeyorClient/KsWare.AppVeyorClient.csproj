@@ -186,6 +186,7 @@
     <Content Include="Data\Navigation.txt">
       <CopyToOutputDirectory>Always</CopyToOutputDirectory>
     </Content>
+    <Resource Include="Data\ScriptBlockTemplates.txt" />
     <Content Include="Data\Templates.txt">
       <CopyToOutputDirectory>Always</CopyToOutputDirectory>
     </Content>

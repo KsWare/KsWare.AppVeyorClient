@@ -1,0 +1,9 @@
+﻿- ps: |
+    # init IsPullOrMergeRequest    
+    if([string]::IsNullOrEmpty($ENV:APPVEYOR_PULL_REQUEST_NUMBER)) {
+        Set-AppveyorBuildVariable 'IsPullOrMergeRequest' 'false'
+    } else {
+        Set-AppveyorBuildVariable 'IsPullOrMergeRequest' 'true'
+    }
+    Write-Host "IsPullRequest: $ENV:IsPullOrMergeRequest"
+
