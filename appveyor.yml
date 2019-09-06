@@ -1,0 +1,10 @@
+version: 0.0.{build}-dev
+image: Visual Studio 2019
+configuration: Release
+platform: Any CPU
+cache: src\packages
+before_build:
+- nuget restore src\KsWare.AppVeyorClient.sln
+build:
+  project: src\KsWare.AppVeyorClient.sln
+  verbosity: minimal
