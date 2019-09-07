@@ -14,8 +14,6 @@ A windows client for [AppVeyor](https://www.appveyor.com/).
 [Web-Installer](http://www.ksware.de/software/AppVeyorClient/setup.exe) •
 [Application](http://www.ksware.de/software/AppVeyorClient/KsWare.AppVeyorClient.application)
 
-## Version: 0.2 Beta
-
 ![Screenshot_842](docs/images/Screenshot_842.png)
 
 ## Used Technologies
