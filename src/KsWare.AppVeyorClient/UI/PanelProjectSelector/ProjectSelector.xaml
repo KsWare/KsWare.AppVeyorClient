@@ -17,7 +17,9 @@
 	<Grid>
 		<FrameworkElement.ContextMenu>
 			<ContextMenu>
-				<MenuItem Header="Refresh" Command="{Binding RefreshAction}" ToolTip="Refreshs the project list. Needs a while to load. "/>
+				<MenuItem Header="Refresh" Command="{Binding RefreshAction}" ToolTip="Refreshs the project list. Needs a while to load."/>
+				<MenuItem Header="Export" Command="{Binding ExportAction}" ToolTip="Exports the project list."/>
+				<MenuItem Header="Import" Command="{Binding ImportAction}" ToolTip="Imports the project list."/>
 			</ContextMenu>
 		</FrameworkElement.ContextMenu>		
 		<DockPanel LastChildFill="False">
