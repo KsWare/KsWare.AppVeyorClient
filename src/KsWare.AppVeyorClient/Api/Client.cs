@@ -13,12 +13,15 @@ namespace KsWare.AppVeyorClient.Api {
 				BaseUri = new Uri("https://ci.appveyor.com/")
 			};
 			BuildWorker =new BuildWorker(_httpClientEx);
-			Project=new ProjectClient(_httpClientEx);
+			Project = new ProjectClient(_httpClientEx);
+			Team = new TeamClient(_httpClientEx);
 		}
 
 		public Client(string token) : this(HttpClientEx.CreateSecureToken(token)) { }
 
 		public ProjectClient Project { get; }
+
+		public TeamClient Team { get; }
 
 		public BuildWorker BuildWorker  { get;}
 

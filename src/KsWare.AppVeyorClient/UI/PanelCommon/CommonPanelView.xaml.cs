@@ -32,5 +32,9 @@ namespace KsWare.AppVeyorClient.UI.PanelCommon {
 			if (pb.SecurePassword.Length == 0) return; // do not store empty password
 			AppVM.StoreToken(pb.SecurePassword);
 		}
+
+		private void AtAccountTextBoxBoxLostFocus(object sender, RoutedEventArgs e) {
+			
+		}
 	}
 }

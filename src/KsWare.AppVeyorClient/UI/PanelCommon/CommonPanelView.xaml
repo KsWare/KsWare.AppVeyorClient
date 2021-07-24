@@ -20,12 +20,20 @@
 	<DockPanel>
 		<StackPanel DockPanel.Dock="Top">
 			<StackPanel x:Name="TokenPanel">
+				<!-- <DockPanel Margin="0 0 4 0"> -->
+				<!-- 	<Button DockPanel.Dock="Right" Style="{DynamicResource HelpButton}" Command="{Binding HelpUrlAction}" -->
+				<!-- 	        CommandParameter="https://ci.appveyor.com/api-keys" /> -->
+				<!-- 	<Label Content="AppVeyor Account:" /> -->
+				<!-- </DockPanel> -->
+				<!-- <TextBox x:Name="AccountTextBoxBox" LostFocus="AtAccountTextBoxBoxLostFocus" Margin="4 0" /> -->
+
 				<DockPanel Margin="0 0 4 0">
 					<Button DockPanel.Dock="Right" Style="{DynamicResource HelpButton}" Command="{Binding HelpUrlAction}"
-					        CommandParameter="https://ci.appveyor.com/api-token" />
+					        CommandParameter="https://ci.appveyor.com/api-keys" />
 					<Label Content="AppVeyor API Token: " />
 				</DockPanel>
-				<PasswordBox x:Name="TokenPasswordBox" LostFocus="AtTokenTextBoxLostFocus" Margin="4 0" />
+				<PasswordBox x:Name="TokenPasswordBox" LostFocus="AtTokenTextBoxLostFocus" Margin="4 0" 
+				             ToolTip="Please input an account-specific API key (v1)"/>
 			</StackPanel>
 		</StackPanel>
 

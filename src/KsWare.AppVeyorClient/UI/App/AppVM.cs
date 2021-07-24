@@ -53,16 +53,13 @@ namespace KsWare.AppVeyorClient.UI.App {
 
 			// Generate additional entropy (will be used as the Initialization vector)
 			byte[] entropy = new byte[20];
-			using (RNGCryptoServiceProvider rng = new RNGCryptoServiceProvider())
+			using (RNGCryptoServiceProvider rng = new RNGCryptoServiceProvider()) 
 				rng.GetBytes(entropy);
-
 
 			byte[] ciphertext = ProtectedData.Protect(plaintext, entropy, DataProtectionScope.CurrentUser);
 
-
 			int chk = 0;
-			foreach (var b in ciphertext)
-				chk += b;
+			foreach (var b in ciphertext) chk += b;
 			Debug.WriteLine(chk);
 
 

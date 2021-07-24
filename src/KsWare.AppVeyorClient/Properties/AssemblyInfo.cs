@@ -7,7 +7,7 @@ using System.Windows;
 [assembly: AssemblyConfiguration("")]
 [assembly: AssemblyCompany("KsWare")]
 [assembly: AssemblyProduct("AppVeyorClient")]
-[assembly: AssemblyCopyright("Copyright © 2019 by KsWare")]
+[assembly: AssemblyCopyright("Copyright © 2002-2021 by KsWare. All rights reserved.")]
 [assembly: AssemblyTrademark("")]
 [assembly: AssemblyCulture("")]
 
@@ -22,6 +22,6 @@ using System.Windows;
 											  // app, or any theme specific resource dictionaries)
 )]
 
-[assembly: AssemblyVersion("0.3.13")]
-[assembly: AssemblyFileVersion("0.3.13")]
-[assembly: AssemblyInformationalVersion("0.3.13")]
+[assembly: AssemblyVersion("0.3.14")]
+[assembly: AssemblyFileVersion("0.3.14")]
+[assembly: AssemblyInformationalVersion("0.3.14")]

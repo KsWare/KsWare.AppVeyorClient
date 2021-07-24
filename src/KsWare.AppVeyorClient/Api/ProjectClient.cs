@@ -2,6 +2,7 @@
 using System.Collections.Generic;
 using System.Linq;
 using System.Threading.Tasks;
+using JetBrains.Annotations;
 using KsWare.AppVeyorClient.Api.Contracts;
 using KsWare.AppVeyorClient.Shared;
 
@@ -11,17 +12,41 @@ namespace KsWare.AppVeyorClient.Api {
 
 		private readonly HttpClientEx _client;
 
-		public ProjectClient(HttpClientEx client) { _client = client; }
+		public ProjectClient([NotNull]HttpClientEx client) {
+			if (client == null) throw new ArgumentNullException("Argument 'client' must not be null!",nameof(client));
+			_client = client;
+			_client.TokenChanged+=ClientOnTokenChanged;
+			ClientOnTokenChanged(null, null);
+		}
+
+		private void ClientOnTokenChanged(object sender, EventArgs e) {
+			if (($"{_client.UnsecureToken}").StartsWith("v2.")) ApiVersion = "v2";
+		}
 
 		public string ProjectName { get; set; } = "Playground";
 
-		// GET /api/projects
-		public async Task<GetProjectsResponse> GetProjects() {
+		public string ApiVersion { get; private set; }
+
+		/// <summary>
+		/// Get the projects.
+		/// </summary>
+		/// <param name="accountName">The account name. Mandatory for API v2</param>
+		/// <returns></returns>
+		public async Task<GetProjectsResponse> GetProjects(string accountName = null) {
+			// GET /api/projects
+			// GET /api/account/<account-name>/projects		// API v2
+
+			string api;
+			switch (ApiVersion) {
+				// case "v2" : api = $"/api/account/{accountName}/projects"; break;
+				default: api = "/api/projects"; break;
+			}
+
 			const string n = nameof(ProjectClient) + "." + nameof(GetProjects);
 			var c = FileStore.Instance.GetEntry<GetProjectsResponse>(n);
 
 			if (!c.IsUsable) {
-				var response = await _client.GetJsonAsync<GetProjectsResponse>("/api/projects");
+				var response = await _client.GetJsonAsync<GetProjectsResponse>(api);
 				c.Data = response;
 				c.CacheTime = TimeSpan.FromMinutes(5);
 			}
@@ -46,10 +71,11 @@ namespace KsWare.AppVeyorClient.Api {
 
 		#region ProjectSettingsYaml
 
-		// Request  GET /api/projects/{accountName}/{projectSlug}/settings/yaml
-		// Response (plain/text)
-		public async Task<string> GetProjectSettingsYaml(string accountName,string projectSlug) {
-			var yaml = await _client.GetTextAsync($"/api/projects/{accountName}/{projectSlug}/settings/yaml");
+		public async Task<string> GetProjectSettingsYaml(string accountName, string projectSlug) {
+			// Request  GET /api/projects/{accountName}/{projectSlug}/settings/yaml
+			// Response (plain/text)
+			var api = $"/api/projects/{accountName}/{projectSlug}/settings/yaml";
+			var yaml = await _client.GetTextAsync(api);
 			return yaml;
 		}
 
@@ -64,10 +90,12 @@ namespace KsWare.AppVeyorClient.Api {
 			await UpdateProjectSettingsYamlAsync(project.AccountName, project.Slug, yaml);
 		}
 
-		// Request: PUT /api/projects/{accountName}/{projectSlug}/settings/yaml
-		// Request body (plain/text):
 		public async Task UpdateProjectSettingsYamlAsync(string accountName, string projectSlug, string yaml) {
-			await _client.PutTextAsync($"/api/projects/{accountName}/{projectSlug}/settings/yaml", yaml);
+			// Request: PUT /api/projects/{accountName}/{projectSlug}/settings/yaml
+			// Request body (plain/text):
+
+			var api=$"/api/projects/{accountName}/{projectSlug}/settings/yaml";
+			await _client.PutTextAsync(api, yaml);
 		}
 
 		#endregion
