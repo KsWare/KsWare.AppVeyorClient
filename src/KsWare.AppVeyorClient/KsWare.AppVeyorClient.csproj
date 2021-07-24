@@ -60,10 +60,10 @@
     <ApplicationIcon>UI\Resources\appveyor_blue.ico</ApplicationIcon>
   </PropertyGroup>
   <PropertyGroup>
-    <ManifestCertificateThumbprint>7792DD2881515755975F71014976E7808A401258</ManifestCertificateThumbprint>
+    <ManifestCertificateThumbprint>69B55CF720EC85C284A555700C008DDC77987439</ManifestCertificateThumbprint>
   </PropertyGroup>
   <PropertyGroup>
-    <ManifestKeyFile>KsWare.AppVeyorClient_1_TemporaryKey.pfx</ManifestKeyFile>
+    <ManifestKeyFile>KsWare.AppVeyorClient_TemporaryKey.pfx</ManifestKeyFile>
   </PropertyGroup>
   <PropertyGroup>
     <GenerateManifests>true</GenerateManifests>
@@ -323,7 +323,6 @@
     <Content Include="Data\AppVeyor-Yaml.xshd">
       <CopyToOutputDirectory>Always</CopyToOutputDirectory>
     </Content>
-    <None Include="KsWare.AppVeyorClient_1_TemporaryKey.pfx" />
     <None Include="KsWare.AppVeyorClient_TemporaryKey.pfx" />
     <None Include="packages.config" />
     <None Include="Properties\Settings.settings">
