@@ -216,6 +216,10 @@ namespace KsWare.AppVeyorClient.UI.PanelConfiguration {
 					s = YamlHelper.FormatBlock(CodeEditorController.Text,
 						_selectedBlock.Suffix, _selectedBlock.Indent, ScalarType.Plain);
 					break;
+				case "Single":
+					s = YamlHelper.FormatBlock(CodeEditorController.Text,
+						_selectedBlock.Suffix, _selectedBlock.Indent, ScalarType.FlowDoubleQuoted);
+					break;
 				default:
 					return;
 			}

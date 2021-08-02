@@ -181,6 +181,7 @@
 						<system:String>(unchanged)</system:String>
 						<system:String>Block</system:String>
 						<system:String>Split</system:String>
+						<system:String>Single</system:String>
 					</ComboBox>
 					<Button Content="Apply" Command="{Binding ApplyEditAction}" Margin="2" Padding="6 2"/>
 					<Button Content="Cancel" Command="{Binding CancelEditAction}" Margin="2" Padding="6 2" />
