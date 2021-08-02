@@ -7,7 +7,7 @@ namespace KsWare.AppVeyorClient.UI.App {
 	public partial class App {
 
 		public App() {
-			CatchUnhandledExceptions = !Debugger.IsAttached;
+			// CatchUnhandledExceptions = !Debugger.IsAttached;
 		}
 	}
 }

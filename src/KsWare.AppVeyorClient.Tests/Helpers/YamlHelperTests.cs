@@ -3,25 +3,22 @@ using Moq;
 using NUnit.Framework;
 using System;
 
-namespace KsWare.AppVeyorClient.Tests.Helpers
-{
-	[TestFixture]
-	public class YamlHelperTests
-	{
-		private MockRepository _mockRepository; 
+namespace KsWare.AppVeyorClient.Tests.Helpers {
 
+	[TestFixture]
+	public class YamlHelperTests {
+
+		private MockRepository _mockRepository;
 
 		[SetUp]
-		public void SetUp()
-		{
+		public void SetUp() {
 			_mockRepository = new MockRepository(MockBehavior.Strict);
 
 
 		}
 
 		[TearDown]
-		public void TearDown()
-		{
+		public void TearDown() {
 			_mockRepository.VerifyAll();
 		}
 

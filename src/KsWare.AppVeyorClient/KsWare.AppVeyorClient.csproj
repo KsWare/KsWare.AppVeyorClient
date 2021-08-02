@@ -1,19 +1,8 @@
-﻿<?xml version="1.0" encoding="utf-8"?>
-<Project ToolsVersion="15.0" xmlns="http://schemas.microsoft.com/developer/msbuild/2003">
-  <Import Project="$(MSBuildExtensionsPath)\$(MSBuildToolsVersion)\Microsoft.Common.props" Condition="Exists('$(MSBuildExtensionsPath)\$(MSBuildToolsVersion)\Microsoft.Common.props')" />
+﻿<Project Sdk="Microsoft.NET.Sdk">
   <PropertyGroup>
-    <Configuration Condition=" '$(Configuration)' == '' ">Debug</Configuration>
-    <Platform Condition=" '$(Platform)' == '' ">AnyCPU</Platform>
-    <ProjectGuid>{E11C87D0-2B64-4D73-8BC6-B3FB747BE726}</ProjectGuid>
+    <TargetFramework>net5.0-windows</TargetFramework>
     <OutputType>WinExe</OutputType>
-    <RootNamespace>KsWare.AppVeyorClient</RootNamespace>
-    <AssemblyName>KsWare.AppVeyorClient</AssemblyName>
-    <TargetFrameworkVersion>v4.7.2</TargetFrameworkVersion>
-    <FileAlignment>512</FileAlignment>
-    <ProjectTypeGuids>{60dc8134-eba5-43b8-bcc9-bb4bc16c2548};{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}</ProjectTypeGuids>
-    <WarningLevel>4</WarningLevel>
     <IsWebBootstrapper>true</IsWebBootstrapper>
-    <TargetFrameworkProfile />
     <PublishUrl>publish\</PublishUrl>
     <Install>true</Install>
     <InstallFrom>Web</InstallFrom>
@@ -36,27 +25,30 @@
     <CreateDesktopShortcut>true</CreateDesktopShortcut>
     <PublishWizardCompleted>true</PublishWizardCompleted>
     <BootstrapperEnabled>true</BootstrapperEnabled>
+    <GenerateAssemblyInfo>true</GenerateAssemblyInfo>
+    <UseWindowsForms>true</UseWindowsForms>
+    <UseWPF>true</UseWPF>
+    <ImportWindowsDesktopTargets>true</ImportWindowsDesktopTargets>
   </PropertyGroup>
-  <PropertyGroup Condition=" '$(Configuration)|$(Platform)' == 'Debug|AnyCPU' ">
-    <PlatformTarget>AnyCPU</PlatformTarget>
-    <DebugSymbols>true</DebugSymbols>
-    <DebugType>full</DebugType>
-    <Optimize>false</Optimize>
-    <OutputPath>bin\Debug\</OutputPath>
-    <DefineConstants>DEBUG;TRACE</DefineConstants>
-    <ErrorReport>prompt</ErrorReport>
-    <WarningLevel>4</WarningLevel>
-  </PropertyGroup>
-  <PropertyGroup Condition=" '$(Configuration)|$(Platform)' == 'Release|AnyCPU' ">
-    <PlatformTarget>AnyCPU</PlatformTarget>
-    <DebugType>pdbonly</DebugType>
-    <Optimize>true</Optimize>
-    <OutputPath>bin\Release\</OutputPath>
-    <DefineConstants>TRACE</DefineConstants>
-    <ErrorReport>prompt</ErrorReport>
-    <WarningLevel>4</WarningLevel>
-  </PropertyGroup>
-  <PropertyGroup>
+	<PropertyGroup>
+		<GeneratePackageOnBuild>false</GeneratePackageOnBuild>
+		<Copyright>Copyright © 2002-2021 by KsWare. All rights reserved.</Copyright>
+		<Product>AppVeyorClient</Product>
+		<Company>KsWare</Company>
+		<Authors>SchreinerK</Authors>
+		<Description>A window client for AppVeyor. (www.appveyor.com)</Description>
+		<AssemblyVersion>0.3.22</AssemblyVersion>
+		<FileVersion>0.3.22</FileVersion>
+		<Version>0.3.22</Version>
+		<PackageLicenseExpression>LGPL-3.0-only</PackageLicenseExpression>
+		<PackageProjectUrl>https://github.com/KsWare/KsWare.AppVeyorClient</PackageProjectUrl>
+		<RepositoryUrl>https://github.com/KsWare/KsWare.AppVeyorClient.git</RepositoryUrl>
+		<RepositoryType>git</RepositoryType>
+		<PackageTags>appverior client</PackageTags>
+		<PackageReleaseNotes>-</PackageReleaseNotes>
+		<PackageIcon>PackageIcon.png</PackageIcon>
+	</PropertyGroup>
+	<PropertyGroup>
     <ApplicationIcon>UI\Resources\appveyor_blue.ico</ApplicationIcon>
   </PropertyGroup>
   <PropertyGroup>
@@ -72,115 +64,44 @@
     <SignManifests>true</SignManifests>
   </PropertyGroup>
   <ItemGroup>
-    <Reference Include="AutoMapper, Version=8.1.1.0, Culture=neutral, PublicKeyToken=be96cd2c38ef1005, processorArchitecture=MSIL">
-      <HintPath>..\packages\AutoMapper.8.1.1\lib\net461\AutoMapper.dll</HintPath>
-    </Reference>
-    <Reference Include="Common.Logging, Version=3.4.1.0, Culture=neutral, PublicKeyToken=af08829b84f0328e, processorArchitecture=MSIL">
-      <HintPath>..\packages\Common.Logging.3.4.1\lib\net40\Common.Logging.dll</HintPath>
-    </Reference>
-    <Reference Include="Common.Logging.Core, Version=3.4.1.0, Culture=neutral, PublicKeyToken=af08829b84f0328e, processorArchitecture=MSIL">
-      <HintPath>..\packages\Common.Logging.Core.3.4.1\lib\net40\Common.Logging.Core.dll</HintPath>
-    </Reference>
-    <Reference Include="ICSharpCode.AvalonEdit, Version=5.0.3.0, Culture=neutral, PublicKeyToken=9cc39be672370310, processorArchitecture=MSIL">
-      <HintPath>..\packages\AvalonEdit.5.0.4\lib\Net40\ICSharpCode.AvalonEdit.dll</HintPath>
-    </Reference>
-    <Reference Include="JetBrains.Annotations, Version=2019.1.3.0, Culture=neutral, PublicKeyToken=1010a0d8d6380325, processorArchitecture=MSIL">
-      <HintPath>..\packages\JetBrains.Annotations.2019.1.3\lib\net20\JetBrains.Annotations.dll</HintPath>
-    </Reference>
-    <Reference Include="KsWare.Presentation, Version=0.18.26.0, Culture=neutral, PublicKeyToken=398cf6eb36307095, processorArchitecture=MSIL">
-      <HintPath>..\packages\KsWare.Presentation.0.18.26\lib\net45\KsWare.Presentation.dll</HintPath>
-    </Reference>
-    <Reference Include="KsWare.Presentation.BusinessFramework, Version=0.18.26.0, Culture=neutral, PublicKeyToken=398cf6eb36307095, processorArchitecture=MSIL">
-      <HintPath>..\packages\KsWare.Presentation.0.18.26\lib\net45\KsWare.Presentation.BusinessFramework.dll</HintPath>
-    </Reference>
-    <Reference Include="KsWare.Presentation.Core, Version=0.18.26.0, Culture=neutral, PublicKeyToken=398cf6eb36307095, processorArchitecture=MSIL">
-      <HintPath>..\packages\KsWare.Presentation.0.18.26\lib\net45\KsWare.Presentation.Core.dll</HintPath>
-    </Reference>
-    <Reference Include="KsWare.Presentation.Labs, Version=0.18.26.0, Culture=neutral, PublicKeyToken=398cf6eb36307095, processorArchitecture=MSIL">
-      <HintPath>..\packages\KsWare.Presentation.0.18.26\lib\net45\KsWare.Presentation.Labs.dll</HintPath>
-    </Reference>
-    <Reference Include="KsWare.Presentation.Themes, Version=0.18.26.0, Culture=neutral, processorArchitecture=MSIL">
-      <HintPath>..\packages\KsWare.Presentation.0.18.26\lib\net45\KsWare.Presentation.Themes.dll</HintPath>
-    </Reference>
-    <Reference Include="KsWare.Presentation.Themes.Aero2Fix, Version=0.18.26.0, Culture=neutral, processorArchitecture=MSIL">
-      <HintPath>..\packages\KsWare.Presentation.0.18.26\lib\net45\KsWare.Presentation.Themes.Aero2Fix.dll</HintPath>
-    </Reference>
-    <Reference Include="KsWare.Presentation.ViewFramework, Version=0.18.26.0, Culture=neutral, PublicKeyToken=398cf6eb36307095, processorArchitecture=MSIL">
-      <HintPath>..\packages\KsWare.Presentation.0.18.26\lib\net45\KsWare.Presentation.ViewFramework.dll</HintPath>
-    </Reference>
-    <Reference Include="KsWare.Presentation.ViewModelFramework, Version=0.18.26.0, Culture=neutral, PublicKeyToken=398cf6eb36307095, processorArchitecture=MSIL">
-      <HintPath>..\packages\KsWare.Presentation.0.18.26\lib\net45\KsWare.Presentation.ViewModelFramework.dll</HintPath>
-    </Reference>
-    <Reference Include="Microsoft.Expression.Interactions, Version=4.0.0.0, Culture=neutral, PublicKeyToken=31bf3856ad364e35, processorArchitecture=MSIL">
-      <HintPath>..\packages\System.Windows.Interactivity.WPF.2.0.20525\lib\net40\Microsoft.Expression.Interactions.dll</HintPath>
-      <Private>True</Private>
-    </Reference>
-    <Reference Include="Newtonsoft.Json, Version=12.0.0.0, Culture=neutral, PublicKeyToken=30ad4fe6b2a6aeed, processorArchitecture=MSIL">
-      <HintPath>..\packages\Newtonsoft.Json.12.0.2\lib\net45\Newtonsoft.Json.dll</HintPath>
-    </Reference>
-    <Reference Include="System" />
-    <Reference Include="System.Activities" />
-    <Reference Include="System.Activities.Core.Presentation" />
-    <Reference Include="System.Activities.Presentation" />
-    <Reference Include="System.Data" />
-    <Reference Include="System.Drawing" />
-    <Reference Include="System.Drawing.Design" />
-    <Reference Include="System.Net.Http.Formatting, Version=5.2.7.0, Culture=neutral, PublicKeyToken=31bf3856ad364e35, processorArchitecture=MSIL">
-      <HintPath>..\packages\Microsoft.AspNet.WebApi.Client.5.2.7\lib\net45\System.Net.Http.Formatting.dll</HintPath>
-    </Reference>
-    <Reference Include="System.Runtime.Serialization" />
-    <Reference Include="System.Security" />
-    <Reference Include="System.Windows.Forms" />
-    <Reference Include="System.Windows.Interactivity, Version=4.0.0.0, Culture=neutral, PublicKeyToken=31bf3856ad364e35, processorArchitecture=MSIL">
-      <HintPath>..\packages\System.Windows.Interactivity.WPF.2.0.20525\lib\net40\System.Windows.Interactivity.dll</HintPath>
-      <Private>True</Private>
-    </Reference>
-    <Reference Include="System.Xml" />
-    <Reference Include="Microsoft.CSharp" />
-    <Reference Include="System.Core" />
-    <Reference Include="System.Xml.Linq" />
-    <Reference Include="System.Data.DataSetExtensions" />
-    <Reference Include="System.Net.Http" />
-    <Reference Include="System.Xaml">
-      <RequiredTargetFramework>4.0</RequiredTargetFramework>
-    </Reference>
-    <Reference Include="WindowsBase" />
-    <Reference Include="PresentationCore" />
-    <Reference Include="PresentationFramework" />
-    <Reference Include="WindowsFormsIntegration" />
+    <Compile Remove="publish\**" />
+    <Compile Remove="Shared\AvalonEditExtension\**" />
+    <Compile Remove="Shared\PresentationFramework\%28TextBox%29\**" />
+    <Compile Remove="Shared\WpfPropertyGrid\**" />
+    <EmbeddedResource Remove="publish\**" />
+    <EmbeddedResource Remove="Shared\AvalonEditExtension\**" />
+    <EmbeddedResource Remove="Shared\PresentationFramework\%28TextBox%29\**" />
+    <EmbeddedResource Remove="Shared\WpfPropertyGrid\**" />
+    <None Remove="publish\**" />
+    <None Remove="Shared\AvalonEditExtension\**" />
+    <None Remove="Shared\PresentationFramework\%28TextBox%29\**" />
+    <None Remove="Shared\WpfPropertyGrid\**" />
+    <Page Remove="publish\**" />
+    <Page Remove="Shared\AvalonEditExtension\**" />
+    <Page Remove="Shared\PresentationFramework\%28TextBox%29\**" />
+    <Page Remove="Shared\WpfPropertyGrid\**" />
+  </ItemGroup>
+  <ItemGroup>
+    <Compile Remove="UI\Common\KeyAction.cs" />
+  </ItemGroup>
+  <ItemGroup>
+    <Page Remove="UI\App\App.xaml" />
   </ItemGroup>
   <ItemGroup>
     <ApplicationDefinition Include="UI\App\App.xaml">
-      <Generator>MSBuild:Compile</Generator>
-      <SubType>Designer</SubType>
+      <Generator>XamlIntelliSenseFileGenerator</Generator>
     </ApplicationDefinition>
-    <Compile Include="Api\TeamClient.cs" />
-    <Compile Include="Api\Contracts\Common\BuildData.cs" />
-    <Compile Include="Api\Contracts\Common\AccessRightData.cs" />
-    <Compile Include="Api\Contracts\Common\AccessRightDefinitionData.cs" />
-    <Compile Include="Api\Contracts\Common\NameValue.cs" />
-    <Compile Include="Api\Contracts\Common\UpdateProjectData.cs" />
-    <Compile Include="Api\Contracts\GetProjectSettingsResponse.cs" />
-    <Compile Include="Api\Contracts\Common\NuGetFeedData.cs" />
-    <Compile Include="Api\Contracts\Common\ProjectData.cs" />
-    <Compile Include="Api\Contracts\Common\ProjectSettingsData.cs" />
-    <Compile Include="Api\Contracts\Common\RoleAceData.cs" />
-    <Compile Include="Api\Contracts\Common\ScriptData.cs" />
-    <Compile Include="Api\Contracts\Common\SecurityDescriptorData.cs" />
-    <Compile Include="Api\ProjectClient.cs" />
-    <Compile Include="Helpers\ScalarType.cs" />
-    <Compile Include="Helpers\YamlBlock.cs" />
-    <Compile Include="Helpers\YamlRegEx.cs" />
-    <Compile Include="Helpers\YamlRegExMatch.cs" />
-    <Compile Include="Shared\AvalonEditExtension\%28ViewModels%29\TextEditorControllerBehavior.cs" />
+  </ItemGroup>
+  <ItemGroup>
+    <Compile Include="Shared\AvalonEditExtension\%28ViewModels%29\CodeEditorControllerVM.cs" />
     <Compile Include="Shared\AvalonEditExtension\%28ViewModels%29\TextEditorBehavior.cs" />
+    <Compile Include="Shared\AvalonEditExtension\%28ViewModels%29\TextEditorControllerBehavior.cs" />
+    <Compile Include="Shared\AvalonEditExtension\%28ViewModels%29\TextEditorControllerVM.cs" />
+    <Compile Include="Shared\AvalonEditExtension\%28ViewModels%29\YamlEditorControllerVM.cs" />
     <Compile Include="Shared\AvalonEditExtension\ColorizeSearchRegex.cs" />
     <Compile Include="Shared\AvalonEditExtension\ColorizeSearchText.cs" />
+    <Compile Include="Shared\AvalonEditExtension\DocumentPosition.cs" />
     <Compile Include="Shared\AvalonEditExtension\TextEditorExtensions.cs" />
-    <Compile Include="Shared\FileStore.cs" />
-    <Compile Include="Shared\IListExtensions.cs" />
-    <Compile Include="Shared\Json\OnlyDeclaredMembersSerializerContractResolver.cs" />
-    <Compile Include="Shared\Json\PropertyRenameAndIgnoreSerializerContractResolver.cs" />
     <Compile Include="Shared\PresentationFramework\%28TextBox%29\CodeTextBoxControllerVM.cs" />
     <Compile Include="Shared\PresentationFramework\%28TextBox%29\TextBoxControllerBehavior.cs" />
     <Compile Include="Shared\PresentationFramework\%28TextBox%29\TextBoxControllerVM.cs" />
@@ -191,150 +112,14 @@
     <Content Include="Data\Templates.txt">
       <CopyToOutputDirectory>Always</CopyToOutputDirectory>
     </Content>
-    <Content Include="Shared\WpfPropertyGrid\WpfPropertyGrid.txt" />
-    <Compile Include="Shared\WpfPropertyGrid\PropertyGrid.cs" />
-    <Compile Include="Shared\TaskExtensions.cs" />
-    <Compile Include="Shared\WpfPropertyGrid\PropertySort.cs" />
-    <Compile Include="UI\PanelApiTester\ApiTesterPanel.xaml.cs">
-      <DependentUpon>ApiTesterPanel.xaml</DependentUpon>
-    </Compile>
-    <Compile Include="UI\PanelApiTester\ApiTesterPanelVM.cs" />
-    <Compile Include="UI\App\AppVM.cs" />
-    <Compile Include="Api\BuildWorker.cs" />
-    <Compile Include="Helpers\YamlHelper.cs" />
-    <Compile Include="Shared\AvalonEditExtension\DocumentPosition.cs" />
-    <Compile Include="UI\PanelAvalonEditor\AvalonEditorPanel.xaml.cs">
-      <DependentUpon>AvalonEditorPanel.xaml</DependentUpon>
-    </Compile>
-    <Compile Include="Shared\AvalonEditExtension\%28ViewModels%29\CodeEditorControllerVM.cs" />
-    <Compile Include="UI\Common\KeyAction.cs" />
-    <Compile Include="UI\PanelCommon\CommonPanelView.xaml.cs">
-      <DependentUpon>CommonPanelView.xaml</DependentUpon>
-    </Compile>
-    <Compile Include="UI\PanelCommon\CommonPanelVM.cs" />
-    <Compile Include="UI\PanelConfiguration\AppVeyorYamlEditorControllerVM.cs" />
-    <Compile Include="UI\PanelConfiguration\SelectSectionTemplateDialog.xaml.cs">
-      <DependentUpon>SelectSectionTemplateDialog.xaml</DependentUpon>
-    </Compile>
-    <Compile Include="UI\PanelConfiguration\YamlFoldingStrategy.cs" />
-    <Compile Include="UI\PanelSearch\SearchPanelVM.cs" />
-    <Compile Include="Shared\AvalonEditExtension\%28ViewModels%29\TextEditorControllerVM.cs" />
-    <Compile Include="Shared\AvalonEditExtension\%28ViewModels%29\YamlEditorControllerVM.cs" />
-    <Compile Include="UI\MainWindowVM.cs" />
-    <Compile Include="UI\PanelConfiguration\ConfigurationPanelView.xaml.cs">
-      <DependentUpon>ConfigurationPanelView.xaml</DependentUpon>
-    </Compile>
-    <Compile Include="UI\ViewModels\SettingsVM.cs" />
-    <Compile Include="UI\ViewModels\NavigationItemVM.cs" />
-    <Compile Include="UI\PanelProjectEnvironmentVariables\ProjectEnvironmentVariablesView.xaml.cs">
-      <DependentUpon>ProjectEnvironmentVariablesView.xaml</DependentUpon>
-    </Compile>
-    <Compile Include="UI\PanelConfiguration\ConfigurationPanelVM.cs" />
-    <Compile Include="UI\PanelProjectEnvironmentVariables\ProjectEnvironmentVariablesVM.cs" />
-    <Compile Include="UI\PanelProjectSelector\ProjectSelector.xaml.cs">
-      <DependentUpon>ProjectSelector.xaml</DependentUpon>
-    </Compile>
-    <Compile Include="UI\PanelProjectSelector\ProjectSelectorVM.cs" />
-    <Compile Include="UI\ViewModels\ProjectVM.cs" />
-    <Page Include="UI\PanelApiTester\ApiTesterPanel.xaml">
-      <SubType>Designer</SubType>
-      <Generator>MSBuild:Compile</Generator>
-    </Page>
-    <Page Include="UI\PanelAvalonEditor\AvalonEditorPanel.xaml">
-      <SubType>Designer</SubType>
-      <Generator>MSBuild:Compile</Generator>
-    </Page>
-    <Page Include="UI\MainWindow.xaml">
-      <Generator>MSBuild:Compile</Generator>
-      <SubType>Designer</SubType>
-    </Page>
-    <Compile Include="UI\App\App.xaml.cs">
-      <DependentUpon>App.xaml</DependentUpon>
-      <SubType>Code</SubType>
-    </Compile>
-    <Compile Include="Shared\HttpClientEx.cs" />
-    <Compile Include="Shared\CacheEntry.cs" />
-    <Compile Include="Api\Client.cs" />
-    <Compile Include="Api\Contracts\Common\BuildMessage.cs" />
-    <Compile Include="Api\Contracts\Common\CompilationMessage.cs" />
-    <Compile Include="Api\Contracts\Common\NameValueSecurePair.cs" />
-    <Compile Include="Api\Contracts\Common\Variable.cs" />
-    <Compile Include="Api\Contracts\Common\EnvironmentData.cs" />
-    <Compile Include="Api\Contracts\GetEnvironmentSettingsResponse.cs" />
-    <Compile Include="Api\Contracts\GetProjectsResponse.cs" />
-    <Compile Include="UI\MainWindow.xaml.cs">
-      <DependentUpon>MainWindow.xaml</DependentUpon>
-      <SubType>Code</SubType>
-    </Compile>
-    <Page Include="UI\PanelCommon\CommonPanelView.xaml">
-      <SubType>Designer</SubType>
-      <Generator>MSBuild:Compile</Generator>
-    </Page>
-    <Page Include="UI\PanelConfiguration\ConfigurationPanelView.xaml">
-      <Generator>MSBuild:Compile</Generator>
-      <SubType>Designer</SubType>
-    </Page>
-    <Page Include="UI\PanelConfiguration\SelectSectionTemplateDialog.xaml">
-      <SubType>Designer</SubType>
-      <Generator>MSBuild:Compile</Generator>
-    </Page>
-    <Page Include="UI\PanelProjectEnvironmentVariables\ProjectEnvironmentVariablesView.xaml">
-      <SubType>Designer</SubType>
-      <Generator>MSBuild:Compile</Generator>
-    </Page>
-    <Page Include="UI\PanelProjectSelector\ProjectSelector.xaml">
-      <SubType>Designer</SubType>
-      <Generator>MSBuild:Compile</Generator>
-    </Page>
-    <Page Include="UI\Resources\FlatComboBox.xaml">
-      <SubType>Designer</SubType>
-      <Generator>MSBuild:Compile</Generator>
-    </Page>
-    <Page Include="UI\Resources\Generic.xaml">
-      <SubType>Designer</SubType>
-      <Generator>MSBuild:Compile</Generator>
-    </Page>
-    <Page Include="UI\Resources\HelpButton.xaml">
-      <SubType>Designer</SubType>
-      <Generator>MSBuild:Compile</Generator>
-    </Page>
   </ItemGroup>
   <ItemGroup>
-    <Compile Include="Properties\AssemblyInfo.cs">
-      <SubType>Code</SubType>
-    </Compile>
-    <Compile Include="Properties\Resources.Designer.cs">
-      <AutoGen>True</AutoGen>
-      <DesignTime>True</DesignTime>
-      <DependentUpon>Resources.resx</DependentUpon>
-    </Compile>
-    <Compile Include="Properties\Settings.Designer.cs">
-      <AutoGen>True</AutoGen>
-      <DependentUpon>Settings.settings</DependentUpon>
-      <DesignTimeSharedInput>True</DesignTimeSharedInput>
-    </Compile>
-    <EmbeddedResource Include="Properties\Resources.resx">
-      <Generator>ResXFileCodeGenerator</Generator>
-      <LastGenOutput>Resources.Designer.cs</LastGenOutput>
-    </EmbeddedResource>
-    <None Include="Api\Contracts\Common\ProjectSettings.json" />
-    <None Include="Api\Contracts\Common\UpdateProject.json" />
-    <None Include="Api\Contracts\GetEnvironmentSettingsResponse.json" />
     <Content Include="Data\AppVeyor-Yaml.xshd">
       <CopyToOutputDirectory>Always</CopyToOutputDirectory>
     </Content>
-    <None Include="KsWare.AppVeyorClient_TemporaryKey.pfx" />
-    <None Include="packages.config" />
-    <None Include="Properties\Settings.settings">
-      <Generator>SettingsSingleFileGenerator</Generator>
-      <LastGenOutput>Settings.Designer.cs</LastGenOutput>
-    </None>
     <Content Include="Ressources\snippets.yaml">
       <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
     </Content>
-  </ItemGroup>
-  <ItemGroup>
-    <None Include="App.config" />
   </ItemGroup>
   <ItemGroup>
     <Resource Include="UI\Resources\appveyor_blue.ico" />
@@ -363,5 +148,34 @@
       <FileType>File</FileType>
     </PublishFile>
   </ItemGroup>
-  <Import Project="$(MSBuildToolsPath)\Microsoft.CSharp.targets" />
+  <ItemGroup>
+    <PackageReference Include="AutoMapper" Version="10.1.1" />
+    <PackageReference Include="Common.Logging" Version="3.4.1" />
+    <PackageReference Include="JetBrains.Annotations" Version="2021.2.0" />
+    <PackageReference Include="KsWare.Presentation" Version="0.19.22" />
+    <PackageReference Include="Microsoft.CSharp" Version="4.7.0" />
+    <PackageReference Include="Microsoft.Xaml.Behaviors.Wpf" Version="1.1.31" />
+    <PackageReference Include="Newtonsoft.Json" Version="13.0.1" />
+    <PackageReference Include="Microsoft.DotNet.UpgradeAssistant.Extensions.Default.Analyzers" Version="0.2.237901">
+      <PrivateAssets>all</PrivateAssets>
+    </PackageReference>
+    <PackageReference Include="AvalonEdit" Version="6.1.2.30" />
+    <PackageReference Include="Microsoft.Windows.Compatibility" Version="5.0.2" />
+  </ItemGroup>
+  <ItemGroup>
+    <Folder Include="UI\Common\" />
+  </ItemGroup>
+  <ItemGroup>
+    <Compile Update="Properties\Settings.Designer.cs">
+      <DesignTimeSharedInput>True</DesignTimeSharedInput>
+      <AutoGen>True</AutoGen>
+      <DependentUpon>Settings.settings</DependentUpon>
+    </Compile>
+  </ItemGroup>
+  <ItemGroup>
+    <None Update="Properties\Settings.settings">
+      <Generator>SettingsSingleFileGenerator</Generator>
+      <LastGenOutput>Settings.Designer.cs</LastGenOutput>
+    </None>
+  </ItemGroup>
 </Project>

@@ -76,7 +76,7 @@
 <!--					</i:EventTrigger>-->
 <!--				</i:Interaction.Triggers>-->
 
-				<StackPanel DockPanel.Dock="Top" Designtime.Visibility="Visible" Visibility="{ksv:VisibilityBinding YamlEditorController.IsEnabled, TrueVisibleElseCollapsed}">
+				<StackPanel DockPanel.Dock="Top" Designtime.Visibility="Visible" Visibility="{VisibilityBinding YamlEditorController.IsEnabled, TrueVisibleElseCollapsed}">
 					<DockPanel LastChildFill="False" Margin="0">
 						<ComboBox 
 							Style="{StaticResource ComboBoxFlatStyle}" 
@@ -94,7 +94,7 @@
 							<ComboBox.ItemTemplate>
 								<DataTemplate DataType="{x:Type viewModels:NavigationItemVM}">
 									<DockPanel>
-										<TextBlock Text="T" DockPanel.Dock="Right" Visibility="{ksv:VisibilityBinding HasTemplate, TrueVisibleElseCollapsed}"/>
+										<TextBlock Text="T" DockPanel.Dock="Right" Visibility="{VisibilityBinding HasTemplate, TrueVisibleElseCollapsed}"/>
 										<TextBlock x:Name="TextBlock" Text="{Binding DisplayName}" MinWidth="120"/>
 									</DockPanel>
 									

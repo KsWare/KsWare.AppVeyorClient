@@ -3,7 +3,7 @@ using System.Diagnostics;
 using System.Windows;
 using System.Windows.Data;
 using ICSharpCode.AvalonEdit;
-using KsWare.AppVeyorClient.UI.Common;
+// using KsWare.AppVeyorClient.UI.Common;
 using KsWare.Presentation.ViewFramework.AttachedBehavior;
 
 namespace KsWare.AppVeyorClient.Shared.AvalonEditExtension {

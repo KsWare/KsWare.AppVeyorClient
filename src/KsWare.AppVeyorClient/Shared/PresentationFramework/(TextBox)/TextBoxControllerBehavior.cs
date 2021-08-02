@@ -1,8 +1,8 @@
 ﻿using System.Windows;
 using System.Windows.Controls;
-using ICSharpCode.AvalonEdit;
-using KsWare.AppVeyorClient.Shared.AvalonEditExtension;
-using KsWare.AppVeyorClient.UI.Common;
+// using ICSharpCode.AvalonEdit;
+// using KsWare.AppVeyorClient.Shared.AvalonEditExtension;
+// using KsWare.AppVeyorClient.UI.Common;
 using KsWare.Presentation.ViewFramework.AttachedBehavior;
 
 namespace KsWare.AppVeyorClient.Shared.PresentationFramework {

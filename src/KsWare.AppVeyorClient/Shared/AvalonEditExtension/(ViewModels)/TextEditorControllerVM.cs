@@ -117,7 +117,4 @@ namespace KsWare.AppVeyorClient.Shared.AvalonEditExtension {
 			public string Text { get; set; }
 		}
 	}
-
-
-
 }

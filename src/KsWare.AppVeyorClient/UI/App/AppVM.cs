@@ -16,7 +16,7 @@ namespace KsWare.AppVeyorClient.UI.App {
 
 	public class AppVM:ApplicationVM {
 
-		public new static AppVM Current => (AppVM) ApplicationVM.Current;
+		public new static AppVM Current => (AppVM)ApplicationVM.Current;
 
 		public AppVM() {
 			RegisterChildren(()=>this);
