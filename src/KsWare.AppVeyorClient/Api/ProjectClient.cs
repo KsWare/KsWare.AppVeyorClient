@@ -1,6 +1,8 @@
 ﻿using System;
 using System.Collections.Generic;
+using System.Diagnostics;
 using System.Linq;
+using System.Net;
 using System.Threading.Tasks;
 using JetBrains.Annotations;
 using KsWare.AppVeyorClient.Api.Contracts;
@@ -28,6 +30,45 @@ namespace KsWare.AppVeyorClient.Api {
 		public string ApiVersion { get; private set; }
 
 		/// <summary>
+		/// Add Project
+		/// </summary>
+		/// <param name="repositoryProvider">Repository provider
+		/// <list type="bullet">
+		/// <item><term>gitHub</term></item>
+		/// <item><term>bitBucket</term></item>
+		/// <item><term>vso (Visual Studio Online)</term></item>
+		/// <item><term>gitLab</term></item>
+		/// <item><term>kiln</term></item>
+		/// <item><term>stash</term></item>
+		/// <item><term>git</term></item>
+		/// <item><term>mercurial</term></item>
+		/// <item><term>subversion</term></item>
+		/// </list>
+		/// </param>
+		/// <param name="repositoryName">Repository Name<example>FeodorFitsner/demo-app</example></param>
+		/// <param name="accountName"></param>
+		/// <returns></returns>
+		public Task<AddProjectResponse> AddProject(string repositoryProvider, string repositoryName, string accountName = null) {
+			// POST /api/projects
+			// {"repositoryProvider":"gitHub","repositoryName":"FeodorFitsner/demo-app"}
+			string api;
+			switch (ApiVersion) {
+				// case "v2" : api = $"/api/account/{accountName}/projects"; break;
+				default: api = "/api/projects"; break;
+			}
+			var s = $@"{{""repositoryProvider"":""{repositoryProvider}"",""repositoryName"":""{repositoryName}""}}";
+			return _client.PostJsonAsync<AddProjectResponse>(api, s);
+		}
+
+		public async Task DeleteProject(string accountName, string projectSlug) {
+			// DELETE /api/projects/{accountName}/{projectSlug}
+			// Response: 204
+			var api = $"/api/projects/{accountName}/{projectSlug}";
+
+			_client.Delete(api, expectedStatusCode: 204);
+		}
+
+		/// <summary>
 		/// Get the projects.
 		/// </summary>
 		/// <param name="accountName">The account name. Mandatory for API v2</param>
@@ -50,7 +91,7 @@ namespace KsWare.AppVeyorClient.Api {
 				c.Data = response;
 				c.CacheTime = TimeSpan.FromMinutes(5);
 			}
-			
+
 			return c.Data;
 		}
 

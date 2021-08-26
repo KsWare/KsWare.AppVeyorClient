@@ -64,6 +64,51 @@ namespace KsWare.AppVeyorClient.Shared {
 
 		public async Task<T> GetJsonAsync<T>(string api) {
 			var content = await SendAsync("GET", api, null, null);
+			return FromJson<T>(content);
+		}
+
+		/// <summary>
+		/// Gets or sets a value indicating whether returned json result shall validated.
+		/// </summary>
+		/// <value><c>true</c> if json result shall validated; otherwise, <c>false</c>.</value>
+		[PublicAPI]
+		public bool ValidateJsonResult { get; set; }
+
+		public HttpClient HttpClient => _httpClient;
+
+		public string GetJsonText(string api) => TaskExtensions.RunSync(async () => await GetJsonTextAsync(api));
+
+		public string GetJsonText(string api, out Exception exception) => TaskExtensions.RunSync(async () => await GetJsonTextAsync(api),out exception);
+
+		public async Task<string> GetJsonTextAsync(string api) => await SendAsync("GET", api); 
+
+		public async Task<string> GetTextAsync(string api) => await SendAsync("GET", api); 
+
+		public async Task PutTextAsync(string api, string text) => await SendAsync("PUT", api, text, "text/plain");
+
+		[Obsolete("use PostJsonAsync")]
+		public async Task PutJsonTextAsync(string api, string jsonString) {
+			await SendAsync("PUT", api, jsonString, "application/json");
+		}
+
+		public async Task PutJsonAsync(string api, object json) {
+			var jsonString = json is string s ? s : ToJsonString(json);
+			await SendAsync("PUT", api, jsonString, "application/json");
+		}
+
+		public async Task PostJsonAsync(string api, object json) {
+			var jsonString = json is string s ? s : ToJsonString(json);
+			await SendAsync("POST", api, jsonString, "application/json");
+		}
+
+		public async Task<T> PostJsonAsync<T>(string api, object json) {
+			var jsonString = json is string s ? s : ToJsonString(json);
+			var content = await SendAsync("POST", api, jsonString, "application/json");
+			if (typeof(T) == typeof(string)) return (T)(object)content;
+			return FromJson<T>(content);
+		}
+
+		private T FromJson<T>(string content) {
 			try {
 				// return JsonConvert.DeserializeObject<T>(content);
 
@@ -90,40 +135,8 @@ namespace KsWare.AppVeyorClient.Shared {
 			}
 		}
 
-		/// <summary>
-		/// Gets or sets a value indicating whether returned json result shall validated.
-		/// </summary>
-		/// <value><c>true</c> if json result shall validated; otherwise, <c>false</c>.</value>
-		[PublicAPI]
-		public bool ValidateJsonResult { get; set; }
-
-		public string GetJsonText(string api) => TaskExtensions.RunSync(async () => await GetJsonTextAsync(api));
-
-		public string GetJsonText(string api, out Exception exception) => TaskExtensions.RunSync(async () => await GetJsonTextAsync(api),out exception);
-
-		public async Task<string> GetJsonTextAsync(string api) => await SendAsync("GET", api); 
-
-		public async Task<string> GetTextAsync(string api) => await SendAsync("GET", api); 
-
-		public async Task PutTextAsync(string api, string text) => await SendAsync("PUT", api, text, "text/plain");
-
-		public async Task PutJsonAsync(string api, object json) {
-			var jsonString = ToJsonString(json);
-			await SendAsync("PUT", api, jsonString, "application/json");
-		}
-
-		public async Task PutJsonTextAsync(string api, string jsonString) {
-			await SendAsync("PUT", api, jsonString, "application/json");
-		}
-
-		public async Task PostJsonAsync(string api, object json) {
-			var jsonString = JsonConvert.SerializeObject(json);
-			await SendAsync("POST", api, jsonString, "application/json");
-		}
-
 		public string Send(HttpRequestMessage message, out Exception exception) =>
 			TaskExtensions.RunSync(async () => await SendAsync(message), out exception);
-		
 
 		public async Task<string> SendAsync(HttpRequestMessage message) {
 			Debug.WriteLine($"{message.Method} {message.RequestUri.PathAndQuery}");
@@ -149,33 +162,58 @@ namespace KsWare.AppVeyorClient.Shared {
 			}
 		}
 
-		private async Task<string> SendAsync(string method, string api, string content = null, string contentType=null) {
-			var message=CreateRequest(method,api,content,contentType);
+		private async Task<string> SendAsync(string method, string api, string content = null,
+			string contentType = null) {
+			var message = CreateRequest(method, api, content, contentType);
 			return await SendAsync(message);
 		}
 
 		public string Send(string method, string api, string content, string contentType, out Exception exception) {
 			var message = CreateRequest(method, api, content, contentType);
-			return Send(message,out exception);
+			return Send(message, out exception);
 		}
 
-		private HttpRequestMessage CreateRequest(string method, string api, string content, string contentType) {
+		public HttpRequestMessage CreateRequest(string method, string api, string content, string contentType) {
 			var m = new HttpMethod(method.ToUpperInvariant());
 			var r = new HttpRequestMessage(m, new Uri(BaseUri,api));
 			if(contentType!=null) r.Headers.Accept.Add(new MediaTypeWithQualityHeaderValue(contentType));
 			r.Headers.Authorization = new AuthenticationHeaderValue("Bearer", UnsecureToken); // make optional/configurable
 			if (content != null) {
 				//TODO validate contentType
-				r.Content=new StringContent(content,Encoding.UTF8,contentType);
+				r.Content=new StringContent(content, Encoding.UTF8,contentType);
 			}
 			return r;
 		}
 
 		private string ToJsonString(object json) {
-			return JsonConvert.SerializeObject(json,settings: JsonSerializerSettings);
+			return JsonConvert.SerializeObject(json, settings: JsonSerializerSettings);
 		}
 
+		public async Task Delete(string api, int expectedStatusCode) {
+			var request = CreateRequest("DELETE", api, null, null);
+			Debug.WriteLine($"{request.Method} {request.RequestUri.PathAndQuery}");
 
+			using var response = await _httpClient.SendAsync(request);
+			HttpClientEx.Log.Trace(response.StatusCode);
+			//TODO response.Content.Headers.ContentType
+
+			if (response.StatusCode == (HttpStatusCode)204) return;
+
+			var responseContent = await response.Content.ReadAsStringAsync();
+			if (!response.IsSuccessStatusCode) {
+				//  400 (Invalid input parameters. See response body for detailed error message.)
+				// {"message":"The request is invalid.","modelState":{"variables.Headers":["An error has occurred."]}}
+				try {
+					response.EnsureSuccessStatusCode();
+				}
+				catch (Exception ex) {
+					ex.Data.Add("Response.StatusCode", response.StatusCode);
+					ex.Data.Add("Response",            response.ToString());
+					ex.Data.Add("Response.Body",       responseContent);
+					throw;
+				}
+			}
+		}
 	}
 
 	public static class HttpClientExLogExtension {
