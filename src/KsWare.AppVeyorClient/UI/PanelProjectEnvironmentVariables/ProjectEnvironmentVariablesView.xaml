@@ -7,7 +7,7 @@
     xmlns:local="clr-namespace:KsWare.AppVeyorClient.UI"
     xmlns:panelProjectEnvironmentVariables="clr-namespace:KsWare.AppVeyorClient.UI.PanelProjectEnvironmentVariables"
     mc:Ignorable="d" 
-    d:DesignHeight="300" d:DesignWidth="300"
+    d:DesignHeight="200" d:DesignWidth="300"
 	d:DataContext="{d:DesignInstance Type={x:Type panelProjectEnvironmentVariables:ProjectEnvironmentVariablesVM}}"
 >
 
@@ -20,9 +20,10 @@
 				</Style>
 			</FrameworkElement.Resources>
 			<Button Content="Get" Command="{Binding GetAction}" />
+			<Button Content="Send" Command="{Binding PostAction}" />
+			<Canvas Width="5"/>
 			<Button Content="Load" Command="{Binding LoadAction}"/>
 			<Button Content="Save" Command="{Binding SaveAction}"/>
-			<Button Content="Send" Command="{Binding PostAction}" />
 		</WrapPanel>
 		<TextBox Text="{Binding PlainText}" FontFamily="Consolas" FontSize="12"
 		         HorizontalScrollBarVisibility="Visible"

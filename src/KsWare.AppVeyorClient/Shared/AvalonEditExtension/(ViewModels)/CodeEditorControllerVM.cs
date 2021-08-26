@@ -63,6 +63,7 @@ namespace KsWare.AppVeyorClient.Shared.AvalonEditExtension {
 				case Key.Back: e.Handled = true; break;
 			}
 		}
+
 		private void DataOnPreviewKeyDown(object sender, KeyEventArgs e) {
 			var modKey = e.KeyboardDevice.Modifiers;
 
