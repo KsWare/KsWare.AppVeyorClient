@@ -11,7 +11,7 @@ namespace KsWare.AppVeyorClient.Api.Contracts {
 
 		public string AccountName { get; set; }
 
-		public object[] Builds { get; set; } //TODO
+		public Build[] Builds { get; set; }
 
 		public string Name { get; set; }
 
@@ -52,6 +52,29 @@ namespace KsWare.AppVeyorClient.Api.Contracts {
 
 		public DateTime Updated { get; set; }
 
+	}
+
+	public class Build {
+		public int BuildId { get; set; } // "buildId": 26957076,
+		public int ProjectId { get; set; } // "projectId": 605066,
+		public object[] Jobs { get; set; } // "jobs": [],
+		public int BuildNumber  { get; set; } // "buildNumber": 1,
+		public string Version { get; set; } // "version": "0.1.1",
+		public string Message { get; set; } // "message": "deploy provider NuGet",
+		public string Branch { get; set; } // "branch": "PublishOnNuGet",
+		public bool IsTag { get; set; } // "isTag": false,
+		public string CommitId { get; set; } // "commitId": "daf6ebe9ca0d7ef3b9d0d15d7a0d3e33428e10fa",
+		public string AuthorName { get; set; } // "authorName": "Kay-Uwe Schreiner",
+		public string AuthorUsername { get; set; } // "authorUsername": "SchreinerK",
+		public string CommitterName { get; set; } // "committerName": "Kay-Uwe Schreiner",
+		public string CommitterUsername { get; set; } // "committerUsername": "SchreinerK",
+		public DateTime Committed { get; set; } // "committed": "2019-08-26T10:17:43+00:00",
+		public object[] Messages { get; set; } // "messages": [],
+		public string Status { get; set; } // "status": "success",
+		public DateTime Started { get; set; } // "started": "2019-08-26T10:20:15.1459989+00:00",
+		public DateTime Finished { get; set; } // "finished": "2019-08-26T10:20:39.6179467+00:00",
+		public DateTime Created { get; set; } // "created": "2019-08-26T10:17:56.1739485+00:00",
+		public DateTime Updated { get; set; } // "updated": "2019-08-26T10:20:39.6179467+00:00"
 	}
 
 }

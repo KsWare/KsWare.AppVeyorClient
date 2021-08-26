@@ -61,7 +61,7 @@ namespace KsWare.AppVeyorClient.Shared {
 //			return $"{Protocoll}://{Server}{api}";
 //			return new Uri(BaseUri, api);
 //		}
-
+		
 		public async Task<T> GetJsonAsync<T>(string api) {
 			var content = await SendAsync("GET", api, null, null);
 			try {

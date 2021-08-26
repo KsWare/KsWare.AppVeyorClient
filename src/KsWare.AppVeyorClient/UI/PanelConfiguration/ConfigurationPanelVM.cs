@@ -1,6 +1,7 @@
 ﻿using System;
 using System.Collections.Generic;
 using System.ComponentModel;
+using System.Diagnostics;
 using System.Diagnostics.CodeAnalysis;
 using System.IO;
 using System.Linq;
@@ -31,6 +32,8 @@ namespace KsWare.AppVeyorClient.UI.PanelConfiguration {
 	public class ConfigurationPanelVM : ObjectVM {
 
 		private YamlBlock _selectedBlock;
+		private List<SectionTemplateData>_sectionTemplates = new List<SectionTemplateData>();
+		private string _editorProjectName;
 
 		public ConfigurationPanelVM() {
 			RegisterChildren(()=>this);
@@ -50,8 +53,6 @@ namespace KsWare.AppVeyorClient.UI.PanelConfiguration {
 
 		public ListVM<NavigationItemVM> NavigationItems { get; [UsedImplicitly] private set; }
 
-		private List<SectionTemplateData>_sectionTemplates = new List<SectionTemplateData>();
-
 		private void FillNavigation() {
 			var lines = File.ReadAllLines("Data\\Navigation.txt");
 			foreach (var line in lines) Add(line);
@@ -69,8 +70,7 @@ namespace KsWare.AppVeyorClient.UI.PanelConfiguration {
 			}
 		}
 
-		private void FillSectionTemplates()
-		{
+		private void FillSectionTemplates() {
 			_sectionTemplates.Clear();
 
 			var lines = File.ReadAllLines("Data\\Templates.txt");
@@ -78,10 +78,8 @@ namespace KsWare.AppVeyorClient.UI.PanelConfiguration {
 			var templateString = new StringBuilder();
 			var template = new SectionTemplateData();
 			_sectionTemplates.Add(template);
-			foreach (var line in lines)
-			{
-				if (string.IsNullOrWhiteSpace(line))
-				{
+			foreach (var line in lines) {
+				if (string.IsNullOrWhiteSpace(line)) {
 					template.Content = templateString.ToString().TrimEnd();
 
 					templateString = new StringBuilder();
@@ -91,8 +89,7 @@ namespace KsWare.AppVeyorClient.UI.PanelConfiguration {
 				}
 
 				templateString.AppendLine(line);
-				if (template.Key == null)
-				{
+				if (template.Key == null) {
 					var match = Regex.Match(line, @"^(?<key>[a-z_0-9]+:)", RegexOptions.Compiled | RegexOptions.IgnoreCase);
 					if (match.Success) { template.Key = match.Groups["key"].Value; }
 				}
@@ -101,8 +98,7 @@ namespace KsWare.AppVeyorClient.UI.PanelConfiguration {
 			template.Content = templateString.ToString().TrimEnd();
 
 			// clear empty keys
-			for (int i = 0; i < _sectionTemplates.Count; i++)
-			{
+			for (int i = 0; i < _sectionTemplates.Count; i++) {
 				if(string.IsNullOrWhiteSpace(_sectionTemplates[i].Key))
 					_sectionTemplates.RemoveAt(i);
 			}
@@ -116,20 +112,18 @@ namespace KsWare.AppVeyorClient.UI.PanelConfiguration {
 		public  ActionVM PostAction { get; [UsedImplicitly] private set; }
 		public  ActionVM InsertTemplate { get; [UsedImplicitly] private set; }
 
-		private void DoInsertTemplate()
-		{
+		public string EditorProjectName { get => Fields.GetValue<string>(); private set => Fields.SetValue(value); }
+
+		private void DoInsertTemplate() {
 			if(SelectedNavigationItem==null) return;
 			var templates = _sectionTemplates.Where(t => t.Key == SelectedNavigationItem.DisplayName.Trim()).ToArray();
 
 			SectionTemplateData selectedTemplate = null;
-			if (Keyboard.Modifiers == ModifierKeys.Control && templates.Length > 0)
-			{
+			if (Keyboard.Modifiers == ModifierKeys.Control && templates.Length > 0) {
 				selectedTemplate = templates.First();
 			}
-			else
-			{
-				var dlg = new SelectSectionTemplateDialog
-				{
+			else {
+				var dlg = new SelectSectionTemplateDialog {
 					Templates = templates,
 					SelectedTemplate = templates.FirstOrDefault()
 				};
@@ -140,8 +134,7 @@ namespace KsWare.AppVeyorClient.UI.PanelConfiguration {
 			if(selectedTemplate==null) return;
 
 			var navItemIndex = NavigationItems.IndexOf(SelectedNavigationItem);
-			for (int i = navItemIndex; i < NavigationItems.Count; i++)
-			{
+			for (int i = navItemIndex; i < NavigationItems.Count; i++) {
 				var match = NavigationItems[i].Regex.Match(YamlEditorController.Data.Text);
 				SelectedNavigationItem.ExistsInDocument = match.Success;
 				if (!match.Success) continue;
@@ -170,8 +163,38 @@ namespace KsWare.AppVeyorClient.UI.PanelConfiguration {
 		/// </summary>
 		/// <seealso cref="DoEditScript"/>
 		public ActionVM EditScriptAction { get; [UsedImplicitly] private set; }
+		public ActionVM OpenAppVeyorAction { get; [UsedImplicitly] private set; }
+		public ActionVM OpenGitHubAction { get; [UsedImplicitly] private set; }
 
-		
+		private void DoOpenGitHub() {
+			string url = null;
+			var d = ProjectSelector.SelectedProject.Data;
+			switch (d.RepositoryType) {
+				case "gitHub": {
+					var tree = d.Builds.Any() ? $"tree/{d.Builds.FirstOrDefault().Branch}" : "";
+					url = $"https://github.com/{d.RepositoryName}/{tree}";
+					break;
+				}
+			}
+
+			if (url != null) {
+				var psi = new ProcessStartInfo(url) { UseShellExecute = true };
+				Process.Start(psi);
+			}
+		}
+
+		private void DoOpenAppVeyor() {
+			var d = ProjectSelector.SelectedProject.Data;
+			// Current build ""
+			// history
+			// deployments
+			// events
+			// settings
+			var page = ""; //
+			var url = $"https://ci.appveyor.com/project/{d.AccountName}/{d.Slug}/{page}";
+			var psi = new ProcessStartInfo(url) { UseShellExecute = true };
+			Process.Start(psi);
+		}
 
 		/// <summary>
 		/// Method for <see cref="EditScriptAction"/>
@@ -243,10 +266,8 @@ namespace KsWare.AppVeyorClient.UI.PanelConfiguration {
 
 			var match = SelectedNavigationItem.Regex.Match(YamlEditorController.Data.Text);
 			SelectedNavigationItem.ExistsInDocument = match.Success;
-			if (!match.Success)
-			{
-				if (Keyboard.Modifiers == ModifierKeys.Control)
-				{
+			if (!match.Success) {
+				if (Keyboard.Modifiers == ModifierKeys.Control) {
 					DoInsertTemplate();
 					return;
 				}
@@ -256,19 +277,15 @@ namespace KsWare.AppVeyorClient.UI.PanelConfiguration {
 			YamlEditorController.Data.ScrollTo(YamlEditorController.Data.TextArea.Caret.Line,0);
 		}
 
-		private void AtIsNavigationDropDownOpenChanged(object sender, ValueChangedEventArgs e)
-		{
+		private void AtIsNavigationDropDownOpenChanged(object sender, ValueChangedEventArgs e) {
 			if ((bool) e.NewValue == true) Task.Run(RefreshNavigationItemsAsync);
 		}
 
-		private async Task RefreshNavigationItemsAsync()
-		{
+		private async Task RefreshNavigationItemsAsync() {
 			string text = null;
 			ApplicationDispatcher.Instance.Invoke(() => text = YamlEditorController.Data.Text);
-			foreach (var navItem in NavigationItems)
-			{
-				await Task.Run(() =>
-				{
+			foreach (var navItem in NavigationItems) {
+				await Task.Run(() => {
 					var match = navItem.Regex.Match(text);
 					ApplicationDispatcher.Instance.Invoke(() => navItem.ExistsInDocument = match.Success);
 				}).ConfigureAwait(false);
@@ -330,6 +347,7 @@ namespace KsWare.AppVeyorClient.UI.PanelConfiguration {
 						// ReSharper disable once AsyncConverter.AsyncWait // ContinueWithUIDispatcher
 						YamlEditorController.Text = task.Result;
 					YamlEditorController.ResetHasChanges();
+					EditorProjectName = ProjectSelector.SelectedProject.Data.Name;
 				}
 				});
 		}
@@ -344,6 +362,7 @@ namespace KsWare.AppVeyorClient.UI.PanelConfiguration {
 			using (var reader = File.OpenText(dlg.FileName)) {
 				YamlEditorController.Text = reader.ReadToEnd();
 			}
+			EditorProjectName = Path.GetFileName(dlg.FileName);
 		}
 
 		/// <summary>
@@ -369,8 +388,7 @@ namespace KsWare.AppVeyorClient.UI.PanelConfiguration {
 		/// Method for <see cref="PostAction"/>
 		/// </summary>
 		[UsedImplicitly]
-		private void DoPost()
-		{
+		private void DoPost() {
 			if (ProjectSelector.SelectedProject == null) {
 				StatusBarText = "WARNING: No project selected!";
 				return;
@@ -394,8 +412,7 @@ namespace KsWare.AppVeyorClient.UI.PanelConfiguration {
 		}
 	}
 
-	public class SectionTemplateData
-	{
+	public class SectionTemplateData {
 		public string Key { get; set; }
 		public string Content { get; set; }
 	}

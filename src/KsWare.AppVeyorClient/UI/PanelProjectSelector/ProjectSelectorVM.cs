@@ -1,4 +1,5 @@
 ﻿using System;
+using System.ComponentModel;
 using System.Diagnostics;
 using System.IO;
 using System.Linq;
@@ -13,6 +14,7 @@ using KsWare.Presentation.ViewModelFramework;
 using KsWare.Presentation.ViewModelFramework.Providers;
 using Microsoft.Win32;
 using Newtonsoft.Json;
+using Newtonsoft.Json.Linq;
 using Newtonsoft.Json.Serialization;
 
 namespace KsWare.AppVeyorClient.UI.PanelProjectSelector {
@@ -41,7 +43,14 @@ namespace KsWare.AppVeyorClient.UI.PanelProjectSelector {
 
 				if (!Client.Base.HasToken) return;
 				var projects = await AppVM.Client.Project.GetProjects();
+				// projects.Sort((a, b) => -a.Updated.CompareTo(b.Updated));
+				projects.Sort((a, b) =>
+					-(a.Builds.FirstOrDefault()?.Updated ?? a.Updated).CompareTo(b.Builds.FirstOrDefault()?.Updated ??
+						b.Updated));
+
+				Projects.Clear();
 				Projects.MːData = projects;
+				Debug.WriteLine($"Number of projects: {Projects.Count}");
 				((ErrorProvider) Metadata.ErrorProvider).ResetError();
 			}
 			catch (Exception ex) {
@@ -87,8 +96,7 @@ namespace KsWare.AppVeyorClient.UI.PanelProjectSelector {
 
 
 		private void DoImport() {
-			var dlg = new OpenFileDialog
-			{
+			var dlg = new OpenFileDialog {
 				Filter = "JSON-Files|*.json",
 				FilterIndex = 1,
 				Title = "Import projects..."
