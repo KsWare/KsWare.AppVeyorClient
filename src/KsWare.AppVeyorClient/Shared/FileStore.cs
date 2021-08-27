@@ -73,16 +73,10 @@ namespace KsWare.AppVeyorClient.Shared {
 			return GetEntry<T>(name, throwIfNotExists).Data;
 		}
 
-		public ICacheEntry<T> GetEntry<T>(string name, bool throwIfNotExists=false) {
-			ICacheEntry entry;
-			if (!_cache.TryGetValue(name, out entry)) {
+		public ICacheEntry<T> GetEntry<T>(string name, bool throwIfNotExists = false) {
+			if (!_cache.TryGetValue(name, out var entry)) {
 				var fn = Path.Combine(_baseFolder, name);
-				if (File.Exists(fn)) {
-					entry = LoadEntry<T>(name);
-				}
-				else {
-					entry = new CacheEntry<T>();
-				}
+				entry = File.Exists(fn) ? LoadEntry<T>(name) : new CacheEntry<T>();
 				_cache.Add(name, entry);
 			}
 			var entryT = (entry as ICacheEntry<T>) ?? new CacheEntryWrapper<T>(entry); //TODO maybe clone to new CacheEntry<T>

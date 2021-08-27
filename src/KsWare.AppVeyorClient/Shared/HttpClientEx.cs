@@ -16,7 +16,7 @@ namespace KsWare.AppVeyorClient.Shared {
 
 	public sealed class HttpClientEx {
 
-		// TODO remove out of class
+		// TODO move out of class
 		private static readonly JsonSerializerSettings JsonSerializerSettings = new JsonSerializerSettings {
 			ContractResolver = new CamelCasePropertyNamesContractResolver(),
 		};
@@ -31,7 +31,7 @@ namespace KsWare.AppVeyorClient.Shared {
 			_httpClient = new HttpClient();
 		}
 
-		public HttpClientEx(string unsecureToken) : this(CreateSecureToken(unsecureToken)) {}
+		public HttpClientEx(string insecureToken) : this(CreateSecureToken(insecureToken)) {}
 
 		public Uri BaseUri { get; set; }
 
@@ -39,9 +39,10 @@ namespace KsWare.AppVeyorClient.Shared {
 
 		public event EventHandler TokenChanged;
 
-		public static SecureString CreateSecureToken(string unsecureToken) {
+		public static SecureString CreateSecureToken(string insecureToken) {
 			var s = new SecureString();
-			if (unsecureToken != null) foreach (var c in unsecureToken) s.AppendChar(c);
+			if (insecureToken == null) return s;
+			foreach (var c in insecureToken) s.AppendChar(c);
 			return s;
 		}
 
@@ -50,18 +51,18 @@ namespace KsWare.AppVeyorClient.Shared {
 			TokenChanged?.Invoke(this, EventArgs.Empty);
 		}
 
-		internal string UnsecureToken =>
+		internal string InsecureToken =>
 			System.Runtime.InteropServices.Marshal.PtrToStringAuto(
 				System.Runtime.InteropServices.Marshal.SecureStringToBSTR(_secureToken));
 
 //		private string GetUrl(string api) {
-//			if(string.IsNullOrWhiteSpace(Protocoll)) throw new InvalidOperationException("Protocol not specified.");
+//			if(string.IsNullOrWhiteSpace(Protocol)) throw new InvalidOperationException("Protocol not specified.");
 //			if(string.IsNullOrWhiteSpace(Server)) throw new InvalidOperationException("Server not specified.");
 //			if (!api.StartsWith("/")) api = "/" + api;
-//			return $"{Protocoll}://{Server}{api}";
+//			return $"{Protocol}://{Server}{api}";
 //			return new Uri(BaseUri, api);
 //		}
-		
+
 		public async Task<T> GetJsonAsync<T>(string api) {
 			var content = await SendAsync("GET", api, null, null);
 			return FromJson<T>(content);
@@ -74,38 +75,35 @@ namespace KsWare.AppVeyorClient.Shared {
 		[PublicAPI]
 		public bool ValidateJsonResult { get; set; }
 
-		public HttpClient HttpClient => _httpClient;
-
 		public string GetJsonText(string api) => TaskExtensions.RunSync(async () => await GetJsonTextAsync(api));
 
 		public string GetJsonText(string api, out Exception exception) => TaskExtensions.RunSync(async () => await GetJsonTextAsync(api),out exception);
 
-		public async Task<string> GetJsonTextAsync(string api) => await SendAsync("GET", api); 
+		public Task<string> GetJsonTextAsync(string api) => SendAsync("GET", api);
 
-		public async Task<string> GetTextAsync(string api) => await SendAsync("GET", api); 
+		public Task<string> GetTextAsync(string api) => SendAsync("GET", api);
 
-		public async Task PutTextAsync(string api, string text) => await SendAsync("PUT", api, text, "text/plain");
+		public Task PutTextAsync(string api, string text) => SendAsync("PUT", api, text, "text/plain");
 
 		[Obsolete("use PostJsonAsync")]
-		public async Task PutJsonTextAsync(string api, string jsonString) {
-			await SendAsync("PUT", api, jsonString, "application/json");
+		public Task PutJsonTextAsync(string api, string jsonString) {
+			return SendAsync("PUT", api, jsonString, "application/json");
 		}
 
-		public async Task PutJsonAsync(string api, object json) {
+		public Task PutJsonAsync(string api, object json) {
 			var jsonString = json is string s ? s : ToJsonString(json);
-			await SendAsync("PUT", api, jsonString, "application/json");
+			return SendAsync("PUT", api, jsonString, "application/json");
 		}
 
-		public async Task PostJsonAsync(string api, object json) {
+		public Task PostJsonAsync(string api, object json) {
 			var jsonString = json is string s ? s : ToJsonString(json);
-			await SendAsync("POST", api, jsonString, "application/json");
+			return SendAsync("POST", api, jsonString, "application/json");
 		}
 
 		public async Task<T> PostJsonAsync<T>(string api, object json) {
 			var jsonString = json is string s ? s : ToJsonString(json);
 			var content = await SendAsync("POST", api, jsonString, "application/json");
-			if (typeof(T) == typeof(string)) return (T)(object)content;
-			return FromJson<T>(content);
+			return typeof(T) == typeof(string) ? (T)(object)content : FromJson<T>(content);
 		}
 
 		private T FromJson<T>(string content) {
@@ -141,25 +139,24 @@ namespace KsWare.AppVeyorClient.Shared {
 		public async Task<string> SendAsync(HttpRequestMessage message) {
 			Debug.WriteLine($"{message.Method} {message.RequestUri.PathAndQuery}");
 
-			using (var response = await _httpClient.SendAsync(message)) {
-				Log.Trace(response.StatusCode);
-				//TODO response.Content.Headers.ContentType
-				var responseContent = await response.Content.ReadAsStringAsync();
-				if (!response.IsSuccessStatusCode) {
-					//  400 (Invalid input parameters. See response body for detailed error message.)
-					// {"message":"The request is invalid.","modelState":{"variables.Headers":["An error has occurred."]}}
-					try {
-						response.EnsureSuccessStatusCode();
-					}
-					catch (Exception ex) {
-						ex.Data.Add("Response.StatusCode", response.StatusCode);
-						ex.Data.Add("Response",            response.ToString());
-						ex.Data.Add("Response.Body",       responseContent);
-						throw;
-					}
+			using var response = await _httpClient.SendAsync(message);
+			Log.Trace(response.StatusCode);
+			//TODO response.Content.Headers.ContentType
+			var responseContent = await response.Content.ReadAsStringAsync();
+			if (!response.IsSuccessStatusCode) {
+				//  400 (Invalid input parameters. See response body for detailed error message.)
+				// {"message":"The request is invalid.","modelState":{"variables.Headers":["An error has occurred."]}}
+				try {
+					response.EnsureSuccessStatusCode();
 				}
-				return responseContent;
+				catch (Exception ex) {
+					ex.Data.Add("Response.StatusCode", response.StatusCode);
+					ex.Data.Add("Response",            response.ToString());
+					ex.Data.Add("Response.Body",       responseContent);
+					throw;
+				}
 			}
+			return responseContent;
 		}
 
 		private async Task<string> SendAsync(string method, string api, string content = null,
@@ -176,11 +173,11 @@ namespace KsWare.AppVeyorClient.Shared {
 		public HttpRequestMessage CreateRequest(string method, string api, string content, string contentType) {
 			var m = new HttpMethod(method.ToUpperInvariant());
 			var r = new HttpRequestMessage(m, new Uri(BaseUri,api));
-			if(contentType!=null) r.Headers.Accept.Add(new MediaTypeWithQualityHeaderValue(contentType));
-			r.Headers.Authorization = new AuthenticationHeaderValue("Bearer", UnsecureToken); // make optional/configurable
+			if (contentType != null) r.Headers.Accept.Add(new MediaTypeWithQualityHeaderValue(contentType));
+			r.Headers.Authorization = new AuthenticationHeaderValue("Bearer", InsecureToken); // make optional/configurable
 			if (content != null) {
 				//TODO validate contentType
-				r.Content=new StringContent(content, Encoding.UTF8,contentType);
+				r.Content = new StringContent(content, Encoding.UTF8, contentType);
 			}
 			return r;
 		}
@@ -189,15 +186,15 @@ namespace KsWare.AppVeyorClient.Shared {
 			return JsonConvert.SerializeObject(json, settings: JsonSerializerSettings);
 		}
 
-		public async Task Delete(string api, int expectedStatusCode) {
+		public async Task Delete(string api, HttpStatusCode expectedStatusCode = HttpStatusCode.OK) {
 			var request = CreateRequest("DELETE", api, null, null);
-			Debug.WriteLine($"{request.Method} {request.RequestUri.PathAndQuery}");
+			Debug.WriteLine($"{request.Method} {request.RequestUri?.PathAndQuery}");
 
 			using var response = await _httpClient.SendAsync(request);
-			HttpClientEx.Log.Trace(response.StatusCode);
+			Log.Trace(response.StatusCode);
 			//TODO response.Content.Headers.ContentType
 
-			if (response.StatusCode == (HttpStatusCode)204) return;
+			if (response.StatusCode == expectedStatusCode) return;
 
 			var responseContent = await response.Content.ReadAsStringAsync();
 			if (!response.IsSuccessStatusCode) {
@@ -218,7 +215,7 @@ namespace KsWare.AppVeyorClient.Shared {
 
 	public static class HttpClientExLogExtension {
 		public static void Trace(this ILog log, HttpStatusCode statusCode) {
-			log.Trace($"done {(int) statusCode} {statusCode}");
+			log.Trace($"done {(int)statusCode} {statusCode}");
 		}
 	}
 }

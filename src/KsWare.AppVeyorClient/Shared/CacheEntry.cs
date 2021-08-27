@@ -10,7 +10,7 @@ namespace KsWare.AppVeyorClient.Shared {
 
 		/// <inheritdoc cref="FileSystemInfo.LastWriteTime"/>
 		DateTime LastWriteTime { get; set; }
-		
+
 		/// <inheritdoc cref="FileInfo.LastAccessTime"/>
 		DateTime LastAccessTime { get; set; }
 
@@ -65,7 +65,6 @@ namespace KsWare.AppVeyorClient.Shared {
 
 	public interface ICacheEntry<TData> : ICacheEntry {
 
-		/// <inheritdoc/>
 		new TData Data { get; set; }
 	}
 
@@ -104,7 +103,7 @@ namespace KsWare.AppVeyorClient.Shared {
 				}
 				else {
 					HasData = true;
-					CreationTime=LastWriteTime = DateTime.Now;					
+					CreationTime=LastWriteTime = DateTime.Now;
 				}
 				_data = value;
 			}
@@ -142,7 +141,8 @@ namespace KsWare.AppVeyorClient.Shared {
 	}
 
 	public class CacheEntryWrapper<T> : ICacheEntry<T> {
-		ICacheEntry _entry;
+
+		readonly ICacheEntry _entry;
 
 		public CacheEntryWrapper(ICacheEntry entry) { _entry = entry ?? throw new ArgumentNullException(nameof(entry)); }
 

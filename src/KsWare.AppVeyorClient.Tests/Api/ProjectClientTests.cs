@@ -12,10 +12,10 @@ namespace KsWare.AppVeyorClient.Tests.Api {
 	[TestFixture]
 	public class ProjectClientTests {
 
-		//[Test]//manual test
+		//[Test]//manual test, 2021-08-27 tested with v1 and v2 tokens
 		public async Task AddDeleteProject() {
 			// var token = GetLocalToken();
-			var token = "input your token";
+			var token = "input your token"; 
 			var accountName = "KsWare";
 			var httpClientEx=new HttpClientEx(token) {
 				BaseUri = new Uri("https://ci.appveyor.com/")

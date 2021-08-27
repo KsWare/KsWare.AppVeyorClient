@@ -11,8 +11,8 @@ namespace KsWare.AppVeyorClient.UI.PanelCommon {
 
 		public CommonPanelView() {
 			InitializeComponent();
-			AppVM.Client.Base.TokenChanged += (s, e) => TokenPasswordBox.Password = AppVM.Client.Base.UnsecureToken;
-			TokenPasswordBox.Password      =  AppVM.Client.Base.UnsecureToken;
+			AppVM.Client.Base.TokenChanged += (s, e) => TokenPasswordBox.Password = AppVM.Client.Base.InsecureToken;
+			TokenPasswordBox.Password      =  AppVM.Client.Base.InsecureToken;
 		}
 
 		private void AtTokenTextBoxLostFocus(object sender, RoutedEventArgs e) {

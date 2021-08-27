@@ -14,20 +14,20 @@ namespace KsWare.AppVeyorClient.Api {
 
 		private readonly HttpClientEx _client;
 
-		public ProjectClient([NotNull]HttpClientEx client) {
-			if (client == null) throw new ArgumentNullException("Argument 'client' must not be null!",nameof(client));
-			_client = client;
-			_client.TokenChanged+=ClientOnTokenChanged;
+		public ProjectClient([NotNull] HttpClientEx client) {
+			_client = client ?? throw new ArgumentNullException(nameof(client), "Argument 'client' must not be null!");
+			_client.TokenChanged += ClientOnTokenChanged;
 			ClientOnTokenChanged(null, null);
 		}
 
 		private void ClientOnTokenChanged(object sender, EventArgs e) {
-			if (($"{_client.UnsecureToken}").StartsWith("v2.")) ApiVersion = "v2";
+			ApiVersion = "v1";
+			if ($"{_client.InsecureToken}".StartsWith("v2.")) ApiVersion = "v2";
 		}
 
-		public string ProjectName { get; set; } = "Playground";
-
 		public string ApiVersion { get; private set; }
+
+		public string ProjectName { get; set; }
 
 		/// <summary>
 		/// Add Project
@@ -46,26 +46,28 @@ namespace KsWare.AppVeyorClient.Api {
 		/// </list>
 		/// </param>
 		/// <param name="repositoryName">Repository Name<example>FeodorFitsner/demo-app</example></param>
-		/// <param name="accountName"></param>
+		/// <param name="accountName">Account name. Mandatory for API v2.</param>
 		/// <returns></returns>
 		public Task<AddProjectResponse> AddProject(string repositoryProvider, string repositoryName, string accountName = null) {
 			// POST /api/projects
 			// {"repositoryProvider":"gitHub","repositoryName":"FeodorFitsner/demo-app"}
 			string api;
 			switch (ApiVersion) {
-				// case "v2" : api = $"/api/account/{accountName}/projects"; break;
+				case "v2" :
+					if (string.IsNullOrWhiteSpace(accountName)) throw new ArgumentNullException(nameof(accountName));
+					api = $"/api/account/{accountName}/projects"; 
+					break;
 				default: api = "/api/projects"; break;
 			}
 			var s = $@"{{""repositoryProvider"":""{repositoryProvider}"",""repositoryName"":""{repositoryName}""}}";
 			return _client.PostJsonAsync<AddProjectResponse>(api, s);
 		}
 
-		public async Task DeleteProject(string accountName, string projectSlug) {
+		public Task DeleteProject(string accountName, string projectSlug) {
 			// DELETE /api/projects/{accountName}/{projectSlug}
 			// Response: 204
 			var api = $"/api/projects/{accountName}/{projectSlug}";
-
-			_client.Delete(api, expectedStatusCode: 204);
+			return _client.Delete(api, expectedStatusCode: (HttpStatusCode)204);
 		}
 
 		/// <summary>
@@ -95,16 +97,17 @@ namespace KsWare.AppVeyorClient.Api {
 			return c.Data;
 		}
 
-		private async Task<ProjectData> Project() {
+		private async Task<ProjectData> Project(/*ProjectName?*/) {
 			const string n = nameof(ProjectClient) + "." + nameof(Project);
 			var entry = FileStore.Instance.GetEntry<ProjectData>(n);
-			if (!entry.HasData) { 
+			if (!entry.HasData) {
 				var projects = await GetProjects();
-				if(string.IsNullOrEmpty(ProjectName)) entry.Data = projects.First();
-				else  entry.Data                                 = projects.First(p=>string.Compare(p.Name, ProjectName, StringComparison.OrdinalIgnoreCase) ==0);
+				entry.Data = string.IsNullOrEmpty(ProjectName)
+					? projects.First()
+					: projects.First(p => string.Compare(p.Name, ProjectName, StringComparison.OrdinalIgnoreCase) == 0);
 				ProjectName = entry.Data.Name;
 				entry.IsPersistent = true;
-				entry.CacheTime=TimeSpan.FromHours(24);
+				entry.CacheTime = TimeSpan.FromHours(24);
 				FileStore.Instance.Flush(n);
 			}
 			return entry.Data;
