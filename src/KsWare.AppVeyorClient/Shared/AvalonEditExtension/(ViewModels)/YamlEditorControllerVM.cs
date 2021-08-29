@@ -1,6 +1,7 @@
 ﻿using System.Diagnostics;
 using System.Text.RegularExpressions;
 using System.Xml;
+using ICSharpCode.AvalonEdit.Document;
 using ICSharpCode.AvalonEdit.Highlighting;
 using ICSharpCode.AvalonEdit.Highlighting.Xshd;
 using KsWare.AppVeyorClient.Helpers;
@@ -70,45 +71,63 @@ namespace KsWare.AppVeyorClient.Shared.AvalonEditExtension {
 			}
 		}
 
-		public void ExpandCodeBlock() {
-			
-			var l0=Data.Document.GetLineByOffset(Data.SelectionStart);
-			var t0 = "";
-			var l1 = Data.SelectionStart + Data.SelectionLength > l0.Offset + l0.TotalLength
+		public YamlTextRange MeasureBlock() {
+			var tr = new YamlTextRange();
+
+			tr.StartLine = Data.Document.GetLineByOffset(Data.SelectionStart);
+			tr.EndLine = Data.SelectionStart + Data.SelectionLength > tr.StartLine.Offset + tr.StartLine.TotalLength
 				? Data.Document.GetLineByOffset(Data.SelectionStart + Data.SelectionLength)
-				: l0;
+				: tr.StartLine;
 			var multiLine = "";
 
 			// find block-start "- ps: "
 			while (true) {
-				t0 = Data.GetLineText(l0);
-				var m = YamlRegEx.Match(t0);
-				if (m.Success) {
-					multiLine = m.Multiline;
+				var s = Data.GetLineText(tr.StartLine);
+				var match = YamlRegEx.Match(s);
+				if (match.Success) {
+					multiLine = match.Multiline;
+					tr.StartMatch = match;
 					break;
 				}
-				if(l0.LineNumber==1) break;
-				l0 = l0.PreviousLine;
+
+				if (tr.StartLine.LineNumber == 1) break;
+				tr.StartLine = tr.StartLine.PreviousLine;
 			}
 
 			if (!string.IsNullOrWhiteSpace(multiLine)) {
-				// find block-end
-				while (true) {
-					var t = Data.GetLineText(l1);
-					if (!Regex.IsMatch(t, @"^\x20{4}|^$")) {
-						l1 = l1.PreviousLine;
-						break;
+				if (tr.StartLine == tr.EndLine && tr.EndLine.NextLine == null) {
+					// incomplete code block
+				}
+				else {
+					// find block-end
+					while (true) {
+						tr.EndLine = tr.EndLine.NextLine;
+						var s = Data.GetLineText(tr.EndLine);
+						if (!Regex.IsMatch(s, @"^\x20{4}|^\s*$")) { // code has always 4 spaces because each command start without indentation
+							tr.EndLine = tr.EndLine.PreviousLine;
+							break;
+						}
+						if (tr.EndLine.NextLine == null) break;
 					}
-					if (l1.NextLine == null) break;
-					l1 = l1.NextLine;
 				}
 			}
 			else {
-				l1 = l0;
+				tr.EndLine = tr.StartLine;
 			}
 
-			Data.Select(l0.Offset,l1.Offset+l1.Length - l0.Offset);
+			return tr;
 		}
+
+		public void ExpandCodeBlock() {
+			var tr = MeasureBlock();
+			Data.Select(tr.StartLine.Offset, tr.EndLine.Offset + tr.EndLine.Length - tr.StartLine.Offset);
+		}
+	}
+
+	public class YamlTextRange {
+		public DocumentLine StartLine { get; set; }
+		public DocumentLine EndLine { get; set; }
+		public YamlRegExMatch StartMatch { get; set; }
 	}
 
 }

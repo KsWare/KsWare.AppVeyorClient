@@ -77,4 +77,5 @@ $END$</s:String>
 	<s:String x:Key="/Default/PatternsAndTemplates/LiveTemplates/Template/=F700CE7C45DB6B4C9DD0D16C6A190E28/Text/@EntryValue">public DateTime $name$ { get; set; }&#xD;
 &#xD;
 $END$</s:String>
-	<s:Boolean x:Key="/Default/UserDictionary/Words/=Appveyor/@EntryIndexedValue">True</s:Boolean></wpf:ResourceDictionary>
+	<s:Boolean x:Key="/Default/UserDictionary/Words/=Appveyor/@EntryIndexedValue">True</s:Boolean>
+	<s:Boolean x:Key="/Default/UserDictionary/Words/=pwsh/@EntryIndexedValue">True</s:Boolean></wpf:ResourceDictionary>

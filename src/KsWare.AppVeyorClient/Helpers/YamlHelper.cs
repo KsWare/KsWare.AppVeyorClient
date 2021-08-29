@@ -42,7 +42,7 @@ namespace KsWare.AppVeyorClient.Helpers {
 					sb.AppendLine($"{sp}{name}|-");
 					foreach (var line in lines) sb.AppendLine($"{sp2}{line}");
 					break;
-				
+
 				case ScalarType.BlockFolded:
 					sb.AppendLine($"{sp}{name}>");
 					foreach (var line in lines)sb.AppendLine(string.IsNullOrWhiteSpace(line) ? "" : $"{sp2}{line}");
@@ -55,7 +55,7 @@ namespace KsWare.AppVeyorClient.Helpers {
 					sb.AppendLine($"{sp}{name}>-");
 					foreach (var line in lines)sb.AppendLine(string.IsNullOrWhiteSpace(line) ? "" : $"{sp2}{line}");
 					break;
-				
+
 				case ScalarType.FlowDoubleQuoted:
 					sb.AppendLine($"{sp}{name}\"" + EscapeDoubleQuotedString(content) + "\"");
 					break;
@@ -71,11 +71,9 @@ namespace KsWare.AppVeyorClient.Helpers {
 			return sb.ToString().TrimEnd();
 		}
 
-		private static ScalarType DetectScalarType(YamlRegExMatch match)
-		{
+		private static ScalarType DetectScalarType(YamlRegExMatch match) {
 			if(!match.Success) return ScalarType.None;
-			switch (match.Multiline + match.Chomping)
-			{
+			switch (match.Multiline + match.Chomping) {
 				case "|" : return ScalarType.BlockLiteral/*Clip*/;
 				case "|+": return ScalarType.BlockLiteralKeep;
 				case "|-": return ScalarType.BlockLiteralStrip;
@@ -83,8 +81,7 @@ namespace KsWare.AppVeyorClient.Helpers {
 				case ">+": return ScalarType.BlockFoldedKeep;
 				case ">-": return ScalarType.BlockFoldedStrip;
 				default:
-					switch (match.Quotes)
-					{
+					switch (match.Quotes) {
 						case "\"": return ScalarType.FlowDoubleQuoted;
 						case "'": return ScalarType.FlowSingleQuoted;
 						case "": return ScalarType.Plain;
@@ -93,16 +90,12 @@ namespace KsWare.AppVeyorClient.Helpers {
 			}
 		}
 
-		public static ScalarType DetectScalarType(string line) 
-			=> DetectScalarType(YamlRegEx.Match(line));
+		public static ScalarType DetectScalarType(string line) => DetectScalarType(YamlRegEx.Match(line));
 
-
-		public static YamlBlock ExtractBlock(string s)
-		{
+		public static YamlBlock ExtractBlock(string s) {
 			var match = YamlRegEx.MatchFull(s);
 			var scalarType = DetectScalarType(match);
-			switch (scalarType)
-			{
+			switch (scalarType) {
 				case ScalarType.FlowDoubleQuoted:
 					return new YamlBlock(match.IndentLength, match.Suffix, UnescapeDoubleQuotedString(match.Content));
 				case ScalarType.FlowSingleQuoted:
@@ -120,15 +113,13 @@ namespace KsWare.AppVeyorClient.Helpers {
 					return null;
 			}
 		}
-		
-		public static string UnescapeBlock(string content, ScalarType scalarType)
-		{
+
+		public static string UnescapeBlock(string content, ScalarType scalarType) {
 			if (content.StartsWith("\r\n")) content = content.Substring(2);
 			else if (content.StartsWith("\n")) content = content.Substring(1);
 			var indent = Regex.Match(content, @"^\s+").Value;
 			var indentPattern = "^" + indent.Replace(" ", @"\x20").Replace("\t", @"\x09");
-			switch (scalarType)
-			{
+			switch (scalarType) {
 				case ScalarType.BlockFolded:
 				case ScalarType.BlockFoldedStrip:
 				case ScalarType.BlockFoldedKeep:
@@ -140,14 +131,12 @@ namespace KsWare.AppVeyorClient.Helpers {
 			}
 		}
 
-		public static string EscapeSingleQuotedString(string s)
-		{
+		public static string EscapeSingleQuotedString(string s) {
 			var s1=s.Replace("'", "''");
 			return s1;
 		}
 
-		public static string EscapeDoubleQuotedString(string s)
-		{
+		public static string EscapeDoubleQuotedString(string s) {
 			// https://yaml.org/spec/current.html#id2517668
 			var s1 = s
 				.Replace("\\", "\\\\")
@@ -158,8 +147,7 @@ namespace KsWare.AppVeyorClient.Helpers {
 			return s1;
 		}
 
-		public static string UnescapeSingleQuotedString(string s)
-		{
+		public static string UnescapeSingleQuotedString(string s) {
 			var s1 = s.Replace("''", "'");
 			return s1;
 		}
@@ -196,7 +184,7 @@ namespace KsWare.AppVeyorClient.Helpers {
 				Array.Reverse(bytes);
 				return HexEncoding[numberChars].GetString(bytes);
 			}
-			
+
 		}
 	}
 }

@@ -49,9 +49,20 @@
 			<Button Content="Load" Command="{Binding LoadAction}" ToolTip="Loads the configuration from file."/>
 			<Button Content="Save" Command="{Binding SaveAction}" ToolTip="Saves the configuration to file."/>
 			<Canvas Width="12"/>
-			<Button Content="Edit Script" Command="{Binding EditScriptAction}" ToolTip="Edit selected script block" Padding="6 0"/>
+			<Button Content="Edit Block" Command="{Binding EditScriptBlockAction}" ToolTip="Edit selected script block" Padding="6 0"/>
 			<Button Content="A" ToolTip="AppVeyor" Command="{Binding OpenAppVeyorAction}"/>
 			<Button Content="G" ToolTip="GitHub" Command="{Binding OpenGitHubAction}"/>
+			<ComboBox SelectedItem="{Binding SelectedEnvironmentVariable}" ItemsSource="{Binding EnvironmentVariables}" IsTextSearchEnabled="True" IsTextSearchCaseSensitive="False" TextSearch.TextPath="Name" IsEditable="True" Width="180" Margin="5 0 0 0">
+				<ComboBox.ItemTemplate>
+					<ItemContainerTemplate DataType="{x:Type panelConfiguration:EnvironmentVariableInfo}">
+						<DockPanel>
+							<TextBlock Text="{Binding Name}" Width="200"/>
+							<TextBlock Text="{Binding Description}" MinWidth="300" TextTrimming="CharacterEllipsis" ToolTip="{Binding Description}"/>
+						</DockPanel>
+					</ItemContainerTemplate>
+				</ComboBox.ItemTemplate>
+			</ComboBox>
+			<Button Content="V" ToolTip="Insert Variable" Command="{Binding InsertVariableAction}" MinWidth="22"/>
 		</WrapPanel>
 		<StatusBar DockPanel.Dock="Bottom">
 			<StatusBarItem>

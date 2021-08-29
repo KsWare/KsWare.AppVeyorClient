@@ -1,5 +1,6 @@
 ﻿using System;
 using System.Collections.Generic;
+using System.Collections.ObjectModel;
 using System.ComponentModel;
 using System.Diagnostics;
 using System.Diagnostics.CodeAnalysis;
@@ -58,7 +59,7 @@ namespace KsWare.AppVeyorClient.UI.PanelConfiguration {
 			foreach (var line in lines) Add(line);
 
 			void Add(string key) {
-				key = key.Trim(); 
+				key = key.Trim();
 				var pattern = @"(?mnx-is)^" + Regex.Escape(key) + @"(\x20|\r\n|\n)";
 				NavigationItems.Add(new NavigationItemVM {
 					DisplayName = key.StartsWith("-- ") ? key.Substring(3) : "  "+key,
@@ -106,13 +107,48 @@ namespace KsWare.AppVeyorClient.UI.PanelConfiguration {
 
 		private Client Client => AppVM.Client;
 
-		public  ActionVM GetAction { get; [UsedImplicitly] private set; }
-		public  ActionVM LoadAction { get; [UsedImplicitly] private set; }
-		public  ActionVM SaveAction { get; [UsedImplicitly] private set; }
-		public  ActionVM PostAction { get; [UsedImplicitly] private set; }
-		public  ActionVM InsertTemplate { get; [UsedImplicitly] private set; }
+		public ActionVM GetAction { get; [UsedImplicitly] private set; }
+		public ActionVM LoadAction { get; [UsedImplicitly] private set; }
+		public ActionVM SaveAction { get; [UsedImplicitly] private set; }
+		public ActionVM PostAction { get; [UsedImplicitly] private set; }
+		public ActionVM InsertTemplate { get; [UsedImplicitly] private set; }
+		public ActionVM InsertVariableAction { get; [UsedImplicitly] private set; }
 
 		public string EditorProjectName { get => Fields.GetValue<string>(); private set => Fields.SetValue(value); }
+
+		private void DoInsertVariable() {
+			// CMD:
+			//	%MY_VARIABLE%
+			//	set MY_VARIABLE
+			// PS|PWSH:  (also SH?)
+			//	$env:MY_VARIABLE
+			// Property:
+			//	$(MY_VARIABLE)
+
+			if(SelectedEnvironmentVariable==null) return;
+
+			var block = YamlEditorController.MeasureBlock();
+			string s;
+			switch (block.StartMatch.Entry) {
+				case "- ps: ": case "- pwsh: ":case "- sh: ":
+					s = "$env:" + SelectedEnvironmentVariable.Name;
+					break;
+				case "- cmd: ":
+				case "- ": // e.g. "- git commit"
+					s = $"%{SelectedEnvironmentVariable.Name}%";
+					break;
+				default:
+					s = $"$({SelectedEnvironmentVariable.Name})";
+					break;
+			}
+
+			if (YamlEditorController.IsEnabled) {
+				YamlEditorController.SelectedText = s;
+			}
+			else if (CodeEditorController.IsEnabled) {
+				CodeEditorController.SelectedText = s;
+			}
+		}
 
 		private void DoInsertTemplate() {
 			if(SelectedNavigationItem==null) return;
@@ -127,7 +163,7 @@ namespace KsWare.AppVeyorClient.UI.PanelConfiguration {
 					Templates = templates,
 					SelectedTemplate = templates.FirstOrDefault()
 				};
-				if (dlg.ShowDialog()!=true) return;
+				if (dlg.ShowDialog() != true) return;
 				selectedTemplate = dlg.SelectedTemplate;
 			}
 
@@ -149,7 +185,7 @@ namespace KsWare.AppVeyorClient.UI.PanelConfiguration {
 			var pos = new DocumentPosition(YamlEditorController.Data, YamlEditorController.Data.Document.TextLength);
 			if(pos.LineCharIndex>0)
 				YamlEditorController.SelectedText = "\r\n" + selectedTemplate.Content;
-			else 
+			else
 				YamlEditorController.SelectedText = selectedTemplate.Content + "\r\n";
 			SelectedNavigationItem.ExistsInDocument = true;
 			//TODO optimize line breaks
@@ -161,8 +197,8 @@ namespace KsWare.AppVeyorClient.UI.PanelConfiguration {
 		/// <summary>
 		/// Gets the <see cref="ActionVM"/> to EditCode
 		/// </summary>
-		/// <seealso cref="DoEditScript"/>
-		public ActionVM EditScriptAction { get; [UsedImplicitly] private set; }
+		/// <seealso cref="DoEditScriptBlock"/>
+		public ActionVM EditScriptBlockAction { get; [UsedImplicitly] private set; }
 		public ActionVM OpenAppVeyorAction { get; [UsedImplicitly] private set; }
 		public ActionVM OpenGitHubAction { get; [UsedImplicitly] private set; }
 
@@ -171,7 +207,7 @@ namespace KsWare.AppVeyorClient.UI.PanelConfiguration {
 			var d = ProjectSelector.SelectedProject.Data;
 			switch (d.RepositoryType) {
 				case "gitHub": {
-					var tree = d.Builds.Any() ? $"tree/{d.Builds.FirstOrDefault().Branch}" : "";
+						var tree = d.Builds.Any() ? $"tree/{d.Builds.FirstOrDefault().Branch}" : "";
 					url = $"https://github.com/{d.RepositoryName}/{tree}";
 					break;
 				}
@@ -192,6 +228,10 @@ namespace KsWare.AppVeyorClient.UI.PanelConfiguration {
 			}
 		}
 
+		public ObservableCollection<EnvironmentVariableInfo> EnvironmentVariables { get; } = EnvironmentVariableInfo.Create<ObservableCollection<EnvironmentVariableInfo>>();
+		
+		public EnvironmentVariableInfo SelectedEnvironmentVariable { get => Fields.GetValue<EnvironmentVariableInfo>(); set => Fields.SetValue(value); }
+
 		private void DoOpenAppVeyor() {
 			var d = ProjectSelector.SelectedProject.Data;
 			// Current build ""
@@ -206,10 +246,10 @@ namespace KsWare.AppVeyorClient.UI.PanelConfiguration {
 		}
 
 		/// <summary>
-		/// Method for <see cref="EditScriptAction"/>
+		/// Method for <see cref="EditScriptBlockAction"/>
 		/// </summary>
 		[UsedImplicitly]
-		private void DoEditScript() {
+		private void DoEditScriptBlock() {
 			YamlEditorController.ExpandCodeBlock();
 			_selectedBlock = YamlHelper.ExtractBlock(YamlEditorController.SelectedText);
 			if(_selectedBlock==null) return;
