@@ -5,12 +5,13 @@ namespace KsWare.AppVeyorClient.Helpers {
 	public static class YamlRegEx {
 
 		private static readonly string indent = /*         lang=regex*/ @"(?<indent>\s*)";
-		private static readonly string entry = /*          lang=regex*/ @"(?<entry>(-(\s*[a-z]+\s*:)?|[a-z]+\s*:)\x20+)";
+		private static readonly string name = /*           lang=regex*/ @"(?<name>[a-z_]+)";
+		private static readonly string entry = /*          lang=regex*/ $@"(?<entry>(-\s+({name}\s*:)?|{name}\s*:))"; 
 		private static readonly string multiline = /*      lang=regex*/ @"(?<multiline>[>|])";
 		private static readonly string indentIndicator = /*lang=regex*/ @"(?<indentIndicator>[0-9]*)";
 		private static readonly string chomping = /*       lang=regex*/ @"(?<chomping>[+-]?)";
 		private static readonly string flow = /*           lang=regex*/ @"(?<flow>[\x22|']?)";
-		private static readonly string pattern = /*        lang=regex*/ $@"^{indent}(?<suffix>{entry}({multiline}{chomping}{indentIndicator}|{flow}))";
+		private static readonly string pattern = /*        lang=regex*/ $@"^{indent}(?<preContent>{entry}\s*({multiline}{chomping}{indentIndicator}|{flow})?)";
 		private static readonly string fullPattern = /*    lang=regex*/ $@"{pattern}(?<content>.*?)[\x22']?\s*$";
 		private static readonly Regex regex = new Regex(pattern, RegexOptions.Compiled | RegexOptions.IgnoreCase);
 		private static readonly Regex regexFull = new Regex(fullPattern, RegexOptions.Compiled | RegexOptions.IgnoreCase | RegexOptions.Singleline);
@@ -20,6 +21,7 @@ namespace KsWare.AppVeyorClient.Helpers {
 		public static YamlRegExMatch MatchFull(string input) => new YamlRegExMatch(regexFull.Match(input));
 	}
 
+	//DRAFT
 	public static class AppVeyorYamlRegEx {
 
 		private static readonly string scriptSections =

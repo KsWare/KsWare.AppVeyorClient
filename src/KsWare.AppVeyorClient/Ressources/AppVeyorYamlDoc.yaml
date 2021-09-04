@@ -1,0 +1,509 @@
+﻿version:
+  description: version format
+  type: string
+  examples:
+  - <c>1.0.{build}</c> <a href="http://appveyor.com/docs/appveyor-yml">here</a>
+  - <c>1.0.{build}-{branch}</c>
+branches:
+  description: branches to build
+  type: section
+branches/only:
+  description: whitelist
+  type: list
+branches/except:
+  description: blacklist
+  type: list
+skip_tags:
+  description: 'if set to <c>true</c>: Do not build on tags (GitHub, Bitbucket, GitLab, Gitea)'
+  type: bool
+  default: false
+skip_non_tags:
+  description: 'if set to <c>true</c>: Start builds on tags only (GitHub, BitBucket, GitLab, Gitea)'
+  type: bool
+  default: false
+skip_commits:
+  description: Skipping commits with particular message or from specific user
+  type: section
+skip_commits/message:
+  description: Regex for matching commit message
+  example: <c>/Created.*\.(png|jpg|jpeg|bmp|gif)/</c>
+skip_commits/only_commits:
+  description: Start a new build for commit of user with email e.g. "jack@company.com"
+  example: <c>jack@company.com</c>
+only_commits/files:
+  description: 'Including commits affecting specific files (GitHub only). More details <a>[here](http://appveyor.com/docs/appveyor-yml)</a>'
+  type: list
+skip_branch_with_pr:
+  description: 'if set to true: Do not build feature branch with open Pull Requests'
+  type: bool
+  default: false
+max_jobs:
+  description: Maximum number of concurrent jobs for the project
+  type: integer
+image:
+  description: Build worker image (VM template)
+  example: Visual Studio 2019
+init:
+  description: scripts that are called at very beginning, before repo cloning
+  type: list
+clone_folder:
+  description: clone directory
+  example: c:\projects\myproject
+shallow_clone:
+  description: 'if set to true: fetch repository as zip archive'
+  default: false
+clone_depth:
+  description: set clone depth. clone entire repository history if not defined.
+  type: integer
+clone_script:
+  description: to run your custom scripts instead of automatic clone
+  type: list #of commands
+hosts:
+  description: setting up etc\hosts file
+  type: dictionary
+environment:
+  description: environment variables
+  type: dictionary
+environment/*/secure:
+  description: encrypted variable. Go to "Settings" -> "Encrypt YAML" page in account menu to encrypt data.
+environment/global:
+  type: dictionary
+environment/matrix:
+  type: list #of dictionary
+matrix:
+  type: section
+matrix/fast_finish:
+  description: set this flag to immediately finish build once one of the jobs fails.
+  type: bool
+matrix/allow_failures:
+  description: this is how to allow failing jobs in the matrix
+  type: list #of dictionary platform:/configuration:
+matrix/exclude:
+  description: exclude configuration from the matrix. Works similarly to 'allow_failures' but build not even being started for excluded combination.
+  type: list #of dictionary platform:/configuration:
+cache:
+  description: build cache to preserve files/folders between builds
+  type: list
+  examples:
+  - '- packages -> **\packages.config  # preserve "packages" directory in the root of build folder but will reset it if packages.config is modified'
+  - '- projectA\libs'
+  - '- node_modules                    # local npm modules'
+  - '- ''%LocalAppData%\NuGet\Cache''    # NuGet < v3'
+  - '- ''%LocalAppData%\NuGet\v3-cache'' # NuGet v3'
+services:
+  description: enable service required for build/tests
+  type: list
+  examples:
+  - '- mssql2014           # start SQL Server 2014 Express'
+  - '- mssql2014rs         # start SQL Server 2014 Express and Reporting Services'
+  - '- mssql2012sp1        # start SQL Server 2012 SP1 Express'
+  - '- mssql2012sp1rs      # start SQL Server 2012 SP1 Express and Reporting Services'
+  - '- mssql2008r2sp2      # start SQL Server 2008 R2 SP2 Express'
+  - '- mssql2008r2sp2rs    # start SQL Server 2008 R2 SP2 Express and Reporting Services'
+  - '- mysql               # start MySQL 5.6 service'
+  - '- postgresql          # start PostgreSQL 9.5 service'
+  - '- iis                 # start IIS'
+  - '- msmq                # start Queuing services'
+  - '- mongodb             # start MongoDB'
+install:
+  description: scripts that run after cloning repository
+  type: list #of commands
+assembly_info:
+  type: section
+  description: enable patching of AssemblyInfo.* files
+assembly_info/patch:
+  type: bool
+assembly_info/file:
+  type: string
+  example: AssemblyInfo.*
+assembly_info/assembly_version:
+  type: string
+  example: "2.2.{build}"
+assembly_info/assembly_file_version:
+  type: string
+  example: "{version}"
+assembly_info/assembly_informational_version:
+  type: string
+  example: "{version}"
+dotnet_csproj:
+  type: section
+  description: .NET Core `*.*proj` files patching
+dotnet_csproj/patch:
+  description: 'if set to true: enables the patching of .NET Core `*.*proj` files'
+  type: bool
+dotnet_csproj/file:
+  type: string
+  example: '**\*.csproj'
+dotnet_csproj/version:
+  type: string
+  example: "{version}"
+dotnet_csproj/version_prefix:
+  type: string
+  example: "{version}"
+dotnet_csproj/package_version:
+  type: string
+  example: "{version}"
+dotnet_csproj/assembly_version:
+  type: string
+  example: "{version}"
+dotnet_csproj/file_version:
+  example: "{version}"
+dotnet_csproj/informational_version:
+  type: string
+  example: "{version}"
+nuget:
+  type: section
+  description: Automatically register private account and/or project AppVeyor NuGet feeds.
+nuget/account_feed:
+  type: bool
+nuget/project_feed:
+  type: bool
+nuget/disable_publish_on_pr:
+  type: bool
+  description: disable publishing of .nupkg artifacts to account/project feeds for pull request builds
+nuget/publish_wap_octopus:
+  type: bool
+  description: disable publishing of Octopus Deploy .nupkg artifacts to account/project feeds
+platform:
+  description: build platform, i.e. x86, x64, Any CPU. This setting is optional.
+  type: string #or list to add several platforms to build matrix use list type
+configuration:
+  description: build Configuration, i.e. Debug, Release, etc.
+  type: string #or list to add several configurations to build matrix use list type
+
+#---------------------------------#
+#       build configuration       #
+#---------------------------------#
+build:
+  description: Build settings. To disable automatic builds, set value to 'off'
+  type: section #or string 'off'
+build/parallel    :
+  description: enable MSBuild parallel builds
+  type: bool
+build/project:
+  description: path to Visual Studio solution or project. project is relative to the original build directory and not influenced by directory changes in "before_build".
+  example: MyTestAzureCS.sln
+  type: bool
+build/publish_wap:
+  description: package Web Application Projects (WAP) for Web Deploy
+  type: bool
+build/publish_wap_xcopy:
+  description: package Web Application Projects (WAP) for XCopy deployment
+  type: bool
+build/publish_wap_beanstalk  :
+  description: Package Web Applications for AWS Elastic Beanstalk deployment
+  type: bool
+build/publish_wap_octopus:
+  description: Package Web Applications for Octopus deployment
+  type: bool
+build/publish_azure_webjob:
+  description: Package Azure WebJobs for Zip Push deployment
+  type: bool
+build/publish_azure:
+  description: package Azure Cloud Service projects and push to artifacts
+  type: bool
+build/publish_aspnet_core:
+  description: Package ASP.NET Core projects
+  type: bool
+build/publish_core_console:
+  description: Package .NET Core console projects
+  type: bool
+build/publish_nuget:
+  description: package projects with .nuspec files and push to artifacts
+  type: bool
+build/publish_nuget_symbols:
+  description: generate and publish NuGet symbol packages
+  type: bool
+build/include_nuget_references:
+  description: add -IncludeReferencedProjects option while packaging NuGet artifacts
+  type: bool
+
+build/verbosity:
+  description: MSBuild verbosity level (quiet|minimal|normal|detailed)
+  type: string
+  values:
+  - quiet
+  - minimal
+  - normal
+  - detailed
+
+before_build:
+  description: scripts to run before build
+  type: list #of commands
+
+build_script:
+  description: to run your custom scripts instead of automatic MSBuild
+  type: list #of commands
+
+after_build:
+  description: scripts to run after build (working directory and environment changes are persisted from the previous steps)
+  type: list #of commands
+
+before_package:
+  description: scripts to run *after* solution is built and *before* automatic packaging occurs (web apps, NuGet packages, Azure Cloud Services)
+  type: list #of commands
+
+#---------------------------------#
+#       tests configuration       #
+#---------------------------------#
+test:
+  description: tests configuration. To disable automatic test, set value to 'off'
+  type: section #or string 'off'
+
+test/assemblies/only:
+  description: to run tests against only selected assemblies
+  type: list #of string
+
+test/categories/only:
+  description: to run tests against only selected categories
+  type: list #of string
+
+test/assemblies/except:
+  description: to run tests against all except selected assemblies
+  type: list #of string
+
+test/categories/except:
+  description: to run tests against all except selected categories
+  type: list #of string
+
+# to run tests from different categories as separate jobs in parallel
+#test:
+#  categories:
+#    - A            # A category common for all jobs
+#    - [UI]         # 1st job
+#    - [DAL, BL]    # 2nd job
+
+before_test:
+  description: scripts to run before tests (working directory and environment changes are persisted from the previous steps such as "before_build")
+  type: list #of commands
+test_script:
+  description: to run your custom scripts instead of automatic tests
+  type: list #of commands
+after_test:
+  description: scripts to run after tests
+  type: list #of commands
+
+#---------------------------------#
+#      artifacts configuration    #
+#---------------------------------#
+
+artifacts:
+  description: artifacts configuration
+  type: section
+  examples:
+  - '- path: test.zip # pushing a single file'
+  - '- path: logs # pushing entire folder as a zip archive'
+  - '- path: ''**\*.nupkg'' # pushing all *.nupkg files in build directory recursively'
+artifacts/path:
+  type: string
+artifacts/name:
+  type: string
+# pushing a single file with environment variable in path and "Deployment name" specified
+#  - path: MyProject\bin\$(configuration)
+#    name: myapp
+
+#---------------------------------#
+#     deployment configuration    #
+#---------------------------------#
+
+deploy:
+  description: To disable deployment, set value to 'off'
+  type: section
+deploy/provider:
+  description: 'providers: Local, FTP, WebDeploy, AzureCS, AzureBlob, S3, NuGet, Environment. provider names are case-sensitive!'
+  type: string
+  values: 
+  - Local
+  - FTP
+  - WebDeploy
+  - AzureCS
+  - AzureBlob
+  - S3
+  - NuGet
+  - Environment
+
+    # FTP deployment provider settings
+#  - provider: FTP
+#    protocol: ftp|ftps|sftp
+#    host: ftp.myserver.com
+#    username: admin
+#    password:
+#      secure: eYKZKFkkEvFYWX6NfjZIVw==
+#    folder:
+#    application:
+#    active_mode: false
+#    beta: true      # enable alternative FTP library for 'ftp' and 'ftps' modes
+#    debug: true     # show complete FTP log
+
+    # Amazon S3 deployment provider settings
+#  - provider: S3
+#    access_key_id:
+#      secure: ABcd==
+#    secret_access_key:
+#      secure: ABcd==
+#    bucket: my_bucket
+#    folder:
+#    artifact:
+#    set_public: false
+
+    # Azure Blob storage deployment provider settings
+#  - provider: AzureBlob
+#    storage_account_name:
+#      secure: ABcd==
+#    storage_access_key:
+#      secure: ABcd==
+#    container: my_container
+#    folder:
+#    artifact:
+
+    # Web Deploy deployment provider settings
+#  - provider: WebDeploy
+#    server: http://www.deploy.com/myendpoint
+#    website: mywebsite
+#    username: user
+#    password:
+#      secure: eYKZKFkkEvFYWX6NfjZIVw==
+#    ntlm: false
+#    remove_files: false
+#    app_offline: false
+#    do_not_use_checksum: true           # do not use check sum for comparing source and destination files. By default checksums are used.
+#    sync_retry_attempts: 2              # sync attempts, max
+#    sync_retry_interval: 2000           # timeout between sync attempts, milliseconds
+#    aspnet_core: true                   # artifact zip contains ASP.NET Core application
+#    aspnet_core_force_restart: true     # poke app's web.config before deploy to force application restart
+#    skip_dirs: \\App_Data
+#    skip_files: web.config
+#    on:
+#      branch: release
+#      platform: x86
+#      configuration: debug
+
+    # Deploying to Azure Cloud Service
+#  - provider: AzureCS
+#    subscription_id:
+#      secure: fjZIVw==
+#    subscription_certificate:
+#      secure: eYKZKFkkEv...FYWX6NfjZIVw==
+#    storage_account_name: my_storage
+#    storage_access_key:
+#      secure: ABcd==
+#    service: my_service
+#    slot: Production
+#    target_profile: Cloud
+#    artifact: MyPackage.cspkg
+
+    # Deploying to NuGet feed
+#  - provider: NuGet
+#    server: https://my.nuget.server/feed
+#    api_key:
+#      secure: FYWX6NfjZIVw==
+#    skip_symbols: false
+#    symbol_server: https://your.symbol.server/feed
+#    artifact: MyPackage.nupkg
+
+    # Deploy to GitHub Releases
+#  - provider: GitHub
+#    artifact: /.*\.nupkg/           # upload all NuGet packages to release assets
+#    draft: false
+#    prerelease: false
+#    on:
+#      branch: master                # release from master branch only
+#      APPVEYOR_REPO_TAG: true       # deploy on tag push only
+
+    # Deploying to a named environment
+#  - provider: Environment
+#    name: staging
+#    on:
+#      branch: staging
+#      env_var1: value1
+#      env_var2: value2
+
+before_deploy:
+  description: scripts to run before deployment
+  type: list #of commands
+after_deploy:
+  description: scripts to run after deployment
+  type: list #of commands
+deploy_script:
+  description: to run your custom scripts instead of provider deployments
+  type: list #of commands
+
+#---------------------------------#
+#        global handlers          #
+#---------------------------------#
+
+on_success:
+  description: global handler on successful build
+  type: list #of commands
+
+on_failure:
+  description: global handler on build failure
+  type: list #of commands
+
+on_finish:
+  description: global handler after build failure or success
+  type: list #of commands
+
+
+#---------------------------------#
+#         notifications           #
+#---------------------------------#
+
+notifications:
+  type: section
+notifications/provider:
+  description:
+  type: string
+  values:
+  - Email
+  - HipChat
+  - Slack
+  - Campfire
+  - Webhook
+
+  # Email
+#  - provider: Email
+#    to:
+#      - user1@email.com
+#      - user2@email.com
+#    subject: 'Build {{status}}'                  # optional
+#    message: "{{message}}, {{commitId}}, ..."    # optional
+#    on_build_status_changed: true
+
+  # HipChat
+#  - provider: HipChat
+#    auth_token:
+#      secure: RbOnSMSFKYzxzFRrxM1+XA==
+#    room: ProjectA
+#    template: "{message}, {commitId}, ..."
+
+  # Slack
+ # - provider: Slack
+ #   incoming_webhook: http://incoming-webhook-url
+
+  # ...or using auth token
+
+#  - provider: Slack
+#    auth_token:
+#      secure: kBl9BlxvRMr9liHmnBs14A==
+#    channel: development
+#    template: "{message}, {commitId}, ..."
+
+  # Campfire
+#  - provider: Campfire
+#    account: appveyor
+#    auth_token:
+#      secure: RifLRG8Vfyol+sNhj9u2JA==
+#    room: ProjectA
+#    template: "{message}, {commitId}, ..."
+
+  # Webhook
+#  - provider: Webhook
+#    url: http://www.myhook2.com
+#    headers:
+#      User-Agent: myapp 1.0
+#      Authorization:
+#        secure: GhD+5xhLz/tkYY6AO3fcfQ==
+#    on_build_success: false
+#    on_build_failure: true
+#    on_build_status_changed: true

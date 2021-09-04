@@ -1,0 +1,39 @@
+﻿<Window 
+	x:Class="KsWare.AppVeyorClient.UI.CommandLineHelpWindow"
+    xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
+    xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+    xmlns:d="http://schemas.microsoft.com/expression/blend/2008"
+    xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
+    xmlns:local="clr-namespace:KsWare.AppVeyorClient.UI"
+    mc:Ignorable="d"
+    Title="Command Line Help" Height="450" Width="800">
+	<DockPanel>
+		<Button Content="Close" Click="CloseButton_OnClick" DockPanel.Dock="Bottom" HorizontalAlignment="Center" Margin="0 10 0 10" Padding="5 2" Width="80"/>
+		<FlowDocumentScrollViewer>
+			<FlowDocumentScrollViewer.Document>
+				<FlowDocument>
+					<Paragraph><Run>AppVeyorClient.exe &lt;options&gt; &lt;file&gt; </Run></Paragraph>
+					<Table>
+						<TableRowGroup>
+							<TableRow>
+								<TableCell><Paragraph><Run>&lt;options&gt;</Run></Paragraph></TableCell>
+							</TableRow>
+							<TableRow>
+								<TableCell><Paragraph><Run>-h, --help</Run></Paragraph></TableCell>
+								<TableCell><Paragraph><Run>Shows this help screen.</Run></Paragraph></TableCell>
+							</TableRow>
+							<TableRow>
+								<TableCell><Paragraph><Run></Run></Paragraph></TableCell>
+							</TableRow>
+							<TableRow>
+								<TableCell><Paragraph><Run>&lt;file&gt;</Run></Paragraph></TableCell>
+								<TableCell><Paragraph><Run>An appveyor.yml file.</Run></Paragraph></TableCell>
+							</TableRow>
+						</TableRowGroup>
+					</Table>
+				</FlowDocument>
+			</FlowDocumentScrollViewer.Document>
+		</FlowDocumentScrollViewer>
+	</DockPanel>
+
+</Window>

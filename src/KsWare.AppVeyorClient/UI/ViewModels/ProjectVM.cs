@@ -1,4 +1,4 @@
-﻿using KsWare.AppVeyorClient.Api.Contracts;
+﻿using KsWare.AppVeyor.Api.Contracts;
 using KsWare.Presentation.Core.Providers;
 using KsWare.Presentation.ViewModelFramework;
 

@@ -1,43 +1,47 @@
 ﻿using System;
 using System.Collections.Generic;
 using System.Collections.ObjectModel;
-using System.ComponentModel;
 using System.Diagnostics;
-using System.Diagnostics.CodeAnalysis;
 using System.IO;
 using System.Linq;
 using System.Text;
 using System.Text.RegularExpressions;
 using System.Threading.Tasks;
 using System.Windows;
+using System.Windows.Controls.Primitives;
 using System.Windows.Input;
 using System.Windows.Threading;
-using ICSharpCode.AvalonEdit;
-using ICSharpCode.AvalonEdit.Document;
 using JetBrains.Annotations;
-using KsWare.AppVeyorClient.Api;
+using KsWare.AppVeyor.Api;
 using KsWare.AppVeyorClient.Helpers;
 using KsWare.AppVeyorClient.Shared;
 using KsWare.AppVeyorClient.Shared.AvalonEditExtension;
+using KsWare.AppVeyorClient.Shared.CommandSink;
 using KsWare.AppVeyorClient.UI.App;
+using KsWare.AppVeyorClient.UI.Common;
 using KsWare.AppVeyorClient.UI.PanelProjectSelector;
 using KsWare.AppVeyorClient.UI.PanelSearch;
 using KsWare.AppVeyorClient.UI.ViewModels;
 using KsWare.Presentation;
 using KsWare.Presentation.ViewModelFramework;
-using Microsoft.Win32;
 using BindingMode = System.Windows.Data.BindingMode;
+using MessageBox = System.Windows.MessageBox;
+using OpenFileDialog = Microsoft.Win32.OpenFileDialog;
+using Path = System.IO.Path;
+using SaveFileDialog = Microsoft.Win32.SaveFileDialog;
 
 namespace KsWare.AppVeyorClient.UI.PanelConfiguration {
 
-	public class ConfigurationPanelVM : ObjectVM {
+	public class ConfigurationPanelVM : ObjectVM,IHaveTitle {
+
+		private static readonly Dictionary<string, HelpEntry> HelpDictionary = HelpEntry.LoadResource();
 
 		private YamlBlock _selectedBlock;
 		private List<SectionTemplateData>_sectionTemplates = new List<SectionTemplateData>();
 		private string _editorProjectName;
 
 		public ConfigurationPanelVM() {
-			RegisterChildren(()=>this);
+			RegisterChildren(() => this);
 
 			SearchPanel.Editor = YamlEditorController;
 
@@ -51,6 +55,8 @@ namespace KsWare.AppVeyorClient.UI.PanelConfiguration {
 //			YamlEditorController.Fields[nameof(YamlEditorController.IsModified)].ValueChangedEvent.add=
 //				(s, e) => IsModified = YamlEditorController.IsModified;
 		}
+
+		public string Title => "Configuration";
 
 		public ListVM<NavigationItemVM> NavigationItems { get; [UsedImplicitly] private set; }
 
@@ -113,6 +119,38 @@ namespace KsWare.AppVeyorClient.UI.PanelConfiguration {
 		public ActionVM PostAction { get; [UsedImplicitly] private set; }
 		public ActionVM InsertTemplate { get; [UsedImplicitly] private set; }
 		public ActionVM InsertVariableAction { get; [UsedImplicitly] private set; }
+		public ActionVM ContextHelpAction { get; [UsedImplicitly] private set; }
+		public ActionVM EscapeAction { get; [UsedImplicitly] private set; }
+
+		public PopupVM Popup { get; } = new PopupVM();
+
+		private void DoEscape() {
+			if (Popup.IsOpen) Popup.IsOpen = false;
+		}
+
+		public void DoContextHelp() {
+			var path=YamlEditorController.GetPath();
+			Debug.WriteLine(path);
+			var pathSegments = path.Split('/');
+			var helpEntries = new List<HelpEntry>();
+			for (int i = pathSegments.Length - 1; i >= 0; i--) {
+				var key = string.Join("/", pathSegments.Take(i+1));
+				if(HelpDictionary.TryGetValue(key, out var help)) helpEntries.Add(help);
+			}
+
+			helpEntries.Reverse();
+			
+
+			Popup.View.PlacementTarget = YamlEditorController.Data;
+			Popup.View.Placement=PlacementMode.Relative;
+			Popup.Title = "AppVeyor Help";
+			Popup.Document = HelpEntryFormatter.Instance.CreateFlowDocument(helpEntries);
+			Popup.Show();
+
+			var caretRect = YamlEditorController.Data.TextArea.Caret.CalculateCaretRectangle();
+			Popup.View.HorizontalOffset = caretRect.X - YamlEditorController.Data.TextArea.TextView.HorizontalOffset;
+			Popup.View.VerticalOffset = caretRect.Bottom - YamlEditorController.Data.TextArea.TextView.VerticalOffset;
+		}
 
 		public string EditorProjectName { get => Fields.GetValue<string>(); private set => Fields.SetValue(value); }
 
@@ -129,12 +167,12 @@ namespace KsWare.AppVeyorClient.UI.PanelConfiguration {
 
 			var block = YamlEditorController.MeasureBlock();
 			string s;
-			switch (block.StartMatch.Entry) {
-				case "- ps: ": case "- pwsh: ":case "- sh: ":
+			switch (block.StartMatch.Name) {
+				case "ps": case "pwsh":case "sh":
 					s = "$env:" + SelectedEnvironmentVariable.Name;
 					break;
-				case "- cmd: ":
-				case "- ": // e.g. "- git commit"
+				case "cmd":
+				case "": // e.g. "- git commit"
 					s = $"%{SelectedEnvironmentVariable.Name}%";
 					break;
 				default:
@@ -203,6 +241,10 @@ namespace KsWare.AppVeyorClient.UI.PanelConfiguration {
 		public ActionVM OpenGitHubAction { get; [UsedImplicitly] private set; }
 
 		private void DoOpenGitHub() {
+			if (ProjectSelector.SelectedProject == null) {
+				Process.Start(new ProcessStartInfo("https://github.com/") { UseShellExecute = true });
+				return;
+			}
 			string url = null;
 			var d = ProjectSelector.SelectedProject.Data;
 			switch (d.RepositoryType) {
@@ -233,6 +275,11 @@ namespace KsWare.AppVeyorClient.UI.PanelConfiguration {
 		public EnvironmentVariableInfo SelectedEnvironmentVariable { get => Fields.GetValue<EnvironmentVariableInfo>(); set => Fields.SetValue(value); }
 
 		private void DoOpenAppVeyor() {
+			if (ProjectSelector.SelectedProject == null) {
+				Process.Start(new ProcessStartInfo("https://ci.appveyor.com/") { UseShellExecute = true });
+				return;
+			}
+
 			var d = ProjectSelector.SelectedProject.Data;
 			// Current build ""
 			// history
@@ -304,7 +351,7 @@ namespace KsWare.AppVeyorClient.UI.PanelConfiguration {
 
 		private void CloseCodeEditor() {
 			YamlEditorController.SetEnabled("YAML Editor is open", true);
-			YamlEditorHeight = new GridLength(100,GridUnitType.Star);
+			YamlEditorHeight = new GridLength(100, GridUnitType.Star);
 
 			CodeEditorController.SetEnabled("Code Editor is open", false);
 			CodeEditorHeight = new GridLength(0, GridUnitType.Star);
@@ -378,11 +425,16 @@ namespace KsWare.AppVeyorClient.UI.PanelConfiguration {
 		/// Method for <see cref="GetAction"/>
 		/// </summary>
 		[UsedImplicitly]
-		private void DoGet() {
+		public void DoGet() {
 			if (ProjectSelector.SelectedProject == null) {
 				StatusBarText = "WARNING: No project selected!";
 				return;
 			}
+			if (YamlEditorController.Data.IsModified) {
+				if (MessageBox.Show("Discard current changes?", "Get Configuration", MessageBoxButton.OKCancel) !=
+				    MessageBoxResult.OK) return;
+			}
+
 			StatusBarText = "Get project settings.";
 			Client.Project.GetProjectSettingsYaml(ProjectSelector.SelectedProject.Data.AccountName, ProjectSelector.SelectedProject.Data.Slug)
 				.ContinueWithUIDispatcher(task => {
@@ -405,13 +457,13 @@ namespace KsWare.AppVeyorClient.UI.PanelConfiguration {
 		/// Method for <see cref="LoadAction"/>
 		/// </summary>
 		[UsedImplicitly]
-		private void DoLoad() {
-			var dlg = new OpenFileDialog {Title = "Load configuration...", Filter = "YAML-File|*.yml", FilterIndex = 1};
-			if (dlg.ShowDialog() != true) return;
-			using (var reader = File.OpenText(dlg.FileName)) {
-				YamlEditorController.Text = reader.ReadToEnd();
+		public void DoLoad() {
+			if (YamlEditorController.Data.IsModified) {
+				if (MessageBox.Show("Discard current changes?", "Open File", MessageBoxButton.OKCancel) != MessageBoxResult.OK) return;
 			}
-			EditorProjectName = Path.GetFileName(dlg.FileName);
+			var dlg = new OpenFileDialog {Title = "Load configuration...", Filter = "YAML-File|*.y*ml", FilterIndex = 1};
+			if (dlg.ShowDialog() != true) return;
+			LoadFile(dlg.FileName);
 		}
 
 		/// <summary>
@@ -459,6 +511,80 @@ namespace KsWare.AppVeyorClient.UI.PanelConfiguration {
 					}
 				});
 		}
+
+		public void DoNewFile() {
+			if (YamlEditorController.Data.IsModified) {
+				if (MessageBox.Show("Discard current changes?", "New File", MessageBoxButton.OKCancel) !=
+				    MessageBoxResult.OK) return;
+			}
+
+			YamlEditorController.Text = "";
+			EditorProjectName = "NewFile.yml";
+		}
+
+		public void LoadFile(string path) {
+			using (var reader = File.OpenText(path)) {
+				YamlEditorController.Text = reader.ReadToEnd();
+			}
+			EditorProjectName = Path.GetFileName(path);
+			StatusBarText = "File loaded " + Path.GetFileName(path);
+		}
+
+		/// <summary>
+		/// Gets the <see cref="ActionVM"/> to ValidateYaml
+		/// </summary>
+		/// <seealso cref="DoValidateYaml"/>
+		public ActionVM ValidateYamlAction { get; [UsedImplicitly] private set; }
+
+		/// <summary>
+		/// Method for <see cref="ValidateYamlAction"/>
+		/// </summary>
+		[UsedImplicitly]
+		private void DoValidateYaml() {
+			StatusBarText = "Validating project settings...";
+			Client.Project.ValidateYaml(YamlEditorController.Text, ProjectSelector.SelectedProject.Data.AccountName)
+				.ContinueWithUIDispatcher(task => {
+					if (task.Exception != null) {
+						StatusBarText = $"Validation failed. {task.Exception.InnerException?.Message}";
+						MessageBox.Show($"Validation failed.\n\nDetails:\n{task.Exception.InnerException?.Message}",
+							"Error", MessageBoxButton.OK, MessageBoxImage.Error);
+						return;
+					}
+
+					var result = task.Result;
+					if (result.IsValid) {
+						StatusBarText = $"Validation successful.";
+					}
+					else {
+						StatusBarText = $"Validation failed. In {result.Line},{result.Column}. {result.ErrorMessage}";
+						var line = YamlEditorController.Data.Document.GetLineByNumber(result.Line);
+						YamlEditorController.Data.Select(line.Offset+result.Column-1, line.Length-result.Column+1);
+					}
+				});
+		}
+
+		/// <summary>
+		/// Gets the <see cref="ActionVM"/> to Encrypt
+		/// </summary>
+		/// <seealso cref="DoEncrypt"/>
+		public ActionVM EncryptAction { get; [UsedImplicitly] private set; }
+
+		/// <summary>
+		/// Method for <see cref="EncryptAction"/>
+		/// </summary>
+		[UsedImplicitly]
+		private void DoEncrypt() {
+			// TODO IMPROVEMENT check for section "environment" consider property "secure"
+			var t=YamlEditorController.Data.SelectedText;
+			StatusBarText = "Encrypting value...";
+			Task.Run(()=>Client.Encrypt(t))
+				.ContinueWithUIDispatcher(task => {
+					if (task.Exception!=null) throw task.Exception;
+					StatusBarText = "Value encrypted";
+					YamlEditorController.Data.SelectedText = task.Result;
+				});
+		}
+
 	}
 
 	public class SectionTemplateData {

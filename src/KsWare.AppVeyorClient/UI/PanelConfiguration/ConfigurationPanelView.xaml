@@ -10,6 +10,7 @@
     xmlns:viewModels="clr-namespace:KsWare.AppVeyorClient.UI.ViewModels"
     xmlns:ksv="http://ksware.de/Presentation/ViewFramework"
     xmlns:kslab="http://ksware.de/Presentation/Labs"
+    xmlns:commandSink="clr-namespace:KsWare.AppVeyorClient.Shared.CommandSink"
     mc:Ignorable="d" 
     d:DesignHeight="300" d:DesignWidth="700"
 	d:DataContext="{d:DesignInstance Type={x:Type panelConfiguration:ConfigurationPanelVM}}"
@@ -22,6 +23,8 @@
 	</ResourceDictionary>
 </FrameworkElement.Resources>
 	<DockPanel>
+		<panelConfiguration:PopupView DataContext="{Binding Popup}" IsOpen="{Binding IsOpen}" AllowsTransparency="True" StaysOpen="True"/>
+
 		<WrapPanel DockPanel.Dock="Top" IsEnabled="{Binding YamlEditorController.IsEnabled}">
 			<FrameworkElement.Resources>
 				<Style x:Key="ButtonStyle" TargetType="Button">
@@ -50,8 +53,12 @@
 			<Button Content="Save" Command="{Binding SaveAction}" ToolTip="Saves the configuration to file."/>
 			<Canvas Width="12"/>
 			<Button Content="Edit Block" Command="{Binding EditScriptBlockAction}" ToolTip="Edit selected script block" Padding="6 0"/>
-			<Button Content="A" ToolTip="AppVeyor" Command="{Binding OpenAppVeyorAction}"/>
-			<Button Content="G" ToolTip="GitHub" Command="{Binding OpenGitHubAction}"/>
+			<Button ToolTip="Navigate to AppVeyor CI" Command="{Binding OpenAppVeyorAction}" MinWidth="22">
+				<Image Source="https://www.appveyor.com/assets/img/favicons/favicon-16x16.png" Height="15" />
+			</Button>
+			<Button ToolTip="Navigate to GitHub" Command="{Binding OpenGitHubAction}" MinWidth="22">
+				<Image Source="https://github.githubassets.com/favicons/favicon.png" Height="15" />
+			</Button>
 			<ComboBox SelectedItem="{Binding SelectedEnvironmentVariable}" ItemsSource="{Binding EnvironmentVariables}" IsTextSearchEnabled="True" IsTextSearchCaseSensitive="False" TextSearch.TextPath="Name" IsEditable="True" Width="180" Margin="5 0 0 0">
 				<ComboBox.ItemTemplate>
 					<ItemContainerTemplate DataType="{x:Type panelConfiguration:EnvironmentVariableInfo}">
@@ -63,6 +70,13 @@
 				</ComboBox.ItemTemplate>
 			</ComboBox>
 			<Button Content="V" ToolTip="Insert Variable" Command="{Binding InsertVariableAction}" MinWidth="22"/>
+			<Button Content="i" ToolTip="Context Help" Command="{Binding ContextHelpAction}" MinWidth="22" FontFamily="Webdings" FontSize="15" Foreground="#3030FE"/>
+			<Button ToolTip="Validate YAML" Command="{Binding ValidateYamlAction}" MinWidth="22">
+				<TextBlock FontFamily="Wingdings" FontSize="13" FontWeight="Bold">
+					<Run Text="D" Foreground="Red"/><Run Text="C" Foreground="DarkGreen"/>
+				</TextBlock>
+			</Button>
+			<Button Content="a" ToolTip="Encrypt Value" Command="{Binding EncryptAction}" MinWidth="22" FontFamily="Wingdings" />
 		</WrapPanel>
 		<StatusBar DockPanel.Dock="Bottom">
 			<StatusBarItem>
@@ -160,6 +174,13 @@
 					FontFamily="Consolas"
 					FontSize="12pt"
 					aee:TextEditorControllerBehavior.Controller="{Binding YamlEditorController}">
+					<UIElement.InputBindings>
+						<KeyBinding Key="F1" Command="{Binding ContextHelpAction}" />
+						<KeyBinding Key="Escape" Command="{Binding EscapeAction}" />
+					</UIElement.InputBindings>
+					<UIElement.CommandBindings>
+						<commandSink:CommandBindingMapper Command="ApplicationCommands.Help" CommandBinding="{RootBinding Path=ContextHelpAction}"/>
+					</UIElement.CommandBindings>
 					<avalonEdit:TextEditor.ContextMenu>
 						<ContextMenu 
 							DataContext="{Binding YamlEditorController.ContextMenu}"

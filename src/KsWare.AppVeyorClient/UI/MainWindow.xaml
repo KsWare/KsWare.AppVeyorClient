@@ -14,16 +14,56 @@
     mc:Ignorable="d"
     Title="Appveyor Client" Height="600" Width="800"
 	d:DataContext="{d:DesignInstance Type={x:Type ui:MainWindowVM}}"
-	>
-	<DockPanel Margin="4 4 4 4">
+	Language="en-US"
+>
+	<Window.Resources>
+		
+	</Window.Resources>
+	<Window.InputBindings>
+		<KeyBinding  Key="N" Modifiers="Control+Shift" Command="{Binding NewProjectAction}"/>
+		<KeyBinding  Key="N" Modifiers="Control" Command="{Binding NewFileAction}"/>
+		<KeyBinding  Key="O" Modifiers="Control" Command="{Binding OpenFileAction}"/>
+		<KeyBinding  Key="W" Modifiers="Control" Command="{Binding NewWindowAction}"/>
+	</Window.InputBindings>
+
+	<DockPanel Margin="4 0 4 4">
+		<Menu DockPanel.Dock="Top">
+			<MenuItem Header="_File">
+				<MenuItem Header="_New">
+					<MenuItem Header="_Project..." Command="{Binding NewProjectAction}" InputGestureText="Ctrl+Shift+N"/>
+					<MenuItem Header="_File..." Command="{Binding NewFileAction}" InputGestureText="Ctrl+N"/>
+				</MenuItem>
+				<MenuItem Header="_Open..." Command="{Binding OpenFileAction}" InputGestureText="Ctrl+O"/>
+				<Separator/>
+				<MenuItem Header="E_xit" Command="{Binding AppExitAction}" InputGestureText="Alt+F4"/>
+			</MenuItem>
+			<MenuItem Header="_Edit">
+				<MenuItem Command="ApplicationCommands.Undo"/> 
+				<MenuItem Command="ApplicationCommands.Redo"/> 
+				<Separator/>
+				<MenuItem Command="ApplicationCommands.Cut"/> 
+				<MenuItem Command="ApplicationCommands.Copy"/> 
+				<MenuItem Command="ApplicationCommands.Paste"/> 
+				<Separator/>
+				<MenuItem Command="ApplicationCommands.SelectAll"/>
+			</MenuItem>
+			<MenuItem Header="_View">
+				<MenuItem Header="New _Window" Command="{Binding NewWindowAction}" InputGestureText="Ctrl+W"/>
+			</MenuItem>
+			<MenuItem Header="_Help">
+				<MenuItem Command="ApplicationCommands.Help"/>
+				<MenuItem Command="{Binding CommandLineHelpAction}" Header="_Command Line Help" />
+				<MenuItem Command="{Binding AboutAction}" Header="_About..." />
+			</MenuItem>
+		</Menu>
 		<DockPanel DockPanel.Dock="Top">
 			<StackPanel DockPanel.Dock="Right">
 				<Button Content="New Window" Command="{Binding NewWindowAction}" />
 			</StackPanel>
 			<panelProjectSelector:ProjectSelector DataContext="{Binding ProjectSelector}" Margin="0 0 0 6" />
 		</DockPanel>
-		<TabControl>
-			<TabItem Header="Configuration" DataContext="{Binding ConfigurationPanel}">
+		<TabControl SelectedIndex="{Binding CurrentPageIndex}">
+			<TabItem Header="Project Configuration" DataContext="{Binding ConfigurationPanel}">
 				<panelConfiguration:ConfigurationPanelView/>
 			</TabItem>
 			<TabItem Header="Project Environment Variables" DataContext="{Binding ProjectEnvironmentVariablesPanel}">

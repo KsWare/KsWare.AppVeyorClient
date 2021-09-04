@@ -1,13 +1,16 @@
 ﻿using System;
 using System.Diagnostics;
 using System.IO;
+using System.Linq;
 using System.Security;
 using System.Security.Cryptography;
 using System.Text;
+using System.Text.RegularExpressions;
 using System.Windows;
 using System.Windows.Threading;
 using JetBrains.Annotations;
-using KsWare.AppVeyorClient.Api;
+using KsWare.AppVeyor.Api;
+using KsWare.AppVeyor.Api.Shared;
 using KsWare.AppVeyorClient.Shared;
 using KsWare.AppVeyorClient.UI.ViewModels;
 using KsWare.Presentation.ViewModelFramework;
@@ -26,6 +29,12 @@ namespace KsWare.AppVeyorClient.UI.App {
 		protected override void OnStartup(StartupEventArgs e) {
 			base.OnStartup(e);
 			Application.Current.Dispatcher.Invoke(DispatcherPriority.ApplicationIdle, new Action(OnStartIdle));
+
+			var args = Environment.GetCommandLineArgs();
+			if (args.Length > 1) {
+				if (Regex.IsMatch(args[1], @"^([/-][h?]|--help)$")) 
+					Application.Current.Dispatcher.Invoke(DispatcherPriority.ApplicationIdle,new Action(() => new CommandLineHelpWindow().ShowDialog()));
+			}
 		}
 
 		private void OnStartIdle() {
@@ -34,7 +43,7 @@ namespace KsWare.AppVeyorClient.UI.App {
 
 		internal static Client Client { get; } = new Client("");
 
-		public static FileStore FileStore { get; private set; }
+		internal static FileStore FileStore { get; private set; }
 
 		public SettingsVM Settings { get; [UsedImplicitly] private set; }
 

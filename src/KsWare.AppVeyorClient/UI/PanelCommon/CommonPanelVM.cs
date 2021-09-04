@@ -1,12 +1,13 @@
 ﻿using System.Diagnostics;
 using JetBrains.Annotations;
 using KsWare.AppVeyorClient.UI.App;
+using KsWare.AppVeyorClient.UI.Common;
 using KsWare.AppVeyorClient.UI.ViewModels;
 using KsWare.Presentation.ViewModelFramework;
 
 namespace KsWare.AppVeyorClient.UI.PanelCommon {
 
-	public class CommonPanelVM : ObjectVM {
+	public class CommonPanelVM : ObjectVM,IHaveTitle {
 
 		public CommonPanelVM() {
 			RegisterChildren(() => this);
@@ -28,6 +29,9 @@ namespace KsWare.AppVeyorClient.UI.PanelCommon {
 			string url = (string) parameter;
 			Process.Start(url);
 		}
+
+		/// <inheritdoc />
+		public string Title => "Settings";
 	}
 
 }

@@ -1,11 +1,11 @@
-﻿namespace KsWare.AppVeyorClient.Helpers
-{
+﻿namespace KsWare.AppVeyorClient.Helpers {
+
 	/// <summary>
 	/// ScalarType 
 	/// </summary>
 	/// <remarks>More info online: https://yaml-multiline.info/ </remarks>
-	public enum ScalarType
-	{
+	public enum ScalarType {
+
 		None,
 
 		/// <summary>

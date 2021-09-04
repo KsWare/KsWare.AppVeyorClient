@@ -1,0 +1,360 @@
+﻿{
+  "project": {
+    "projectId": 419088,
+    "accountId": 89048,
+    "accountName": "KsWare",
+    "builds": [],
+    "name": "Playground",
+    "slug": "playground",
+    "repositoryType": "gitHub",
+    "repositoryScm": "git",
+    "repositoryName": "KsWare/Playground",
+    "isPrivate": false,
+    "skipBranchesWithoutAppveyorYml": false,
+    "enableSecureVariablesInPullRequests": false,
+    "enableSecureVariablesInPullRequestsFromSameRepo": false,
+    "enableDeploymentInPullRequests": false,
+    "saveBuildCacheInPullRequests": false,
+    "rollingBuilds": false,
+    "rollingBuildsDoNotCancelRunningBuilds": false,
+    "alwaysBuildClosedPullRequests": false,
+    "tags": "",
+    "securityDescriptor": {
+      "accessRightDefinitions": [
+        {
+          "name": "View",
+          "description": "View"
+        },
+        {
+          "name": "RunBuild",
+          "description": "Run build"
+        },
+        {
+          "name": "Update",
+          "description": "Update settings"
+        },
+        {
+          "name": "Delete",
+          "description": "Delete project"
+        }
+      ],
+      "roleAces": [
+        {
+          "roleId": 166791,
+          "name": "Administrator",
+          "isAdmin": true,
+          "accessRights": [
+            {
+              "name": "View",
+              "allowed": true
+            },
+            {
+              "name": "RunBuild",
+              "allowed": true
+            },
+            {
+              "name": "Update",
+              "allowed": true
+            },
+            {
+              "name": "Delete",
+              "allowed": true
+            }
+          ]
+        },
+        {
+          "roleId": 166792,
+          "name": "User",
+          "isAdmin": false,
+          "accessRights": [
+            {
+              "name": "View"
+            },
+            {
+              "name": "RunBuild"
+            },
+            {
+              "name": "Update"
+            },
+            {
+              "name": "Delete"
+            }
+          ]
+        }
+      ]
+    },
+    "created": "2018-02-21T21:31:07.5386498+00:00",
+    "updated": "2018-02-26T21:00:21.2501251+00:00"
+  },
+	"settings": {
+		"projectId": 419088,
+		"accountId": 89048,
+		"accountName": "KsWare",
+		"builds": [],
+		"name": "Playground",
+		"slug": "playground",
+		"versionFormat": "{branch}#{build}",
+		"nextBuildNumber": 25,
+		"repositoryType": "gitHub",
+		"repositoryScm": "git",
+		"repositoryName": "KsWare/Playground",
+		"repositoryBranch": "master",
+		"webhookId": "on620fd2rw2eq8ph",
+		"webhookUrl": "https://ci.appveyor.com/api/github/webhook?id=on620fd2rw2eq8ph",
+		"statusBadgeId": "3rb837gbxyd5tsy0",
+		"isPrivate": false,
+		"ignoreAppveyorYml": true,
+		"skipBranchesWithoutAppveyorYml": false,
+		"enableSecureVariablesInPullRequests": false,
+		"enableSecureVariablesInPullRequestsFromSameRepo": false,
+		"enableDeploymentInPullRequests": false,
+		"saveBuildCacheInPullRequests": false,
+		"rollingBuilds": false,
+		"rollingBuildsDoNotCancelRunningBuilds": false,
+		"alwaysBuildClosedPullRequests": false,
+		"configuration": {
+			"versionFormat": "{branch}#{build}",
+			"doNotIncrementBuildNumberOnPullRequests": false,
+			"hotFixScripts": [],
+			"initScripts": [{
+				"language": "ps",
+				"script": "echo \"--- Init script ---\"\n$meta= Get-Date -Format \"yyyyMMddHHmmss\"\nUpdate-AppveyorBuild -Version \"$Env:build_version.$($Env:APPVEYOR_BUILD_NUMBER)+$meta\""
+			}],
+			"branchesMode": "include",
+			"includeBranches": [{
+				"value": "master"
+			}],
+			"excludeBranches": [],
+			"skipTags": true,
+			"skipNonTags": false,
+			"skipBranchWithPullRequests": false,
+			"skipCommitsFiles": [],
+			"onlyCommitsFiles": [],
+			"cloneScripts": [],
+			"onBuildSuccessScripts": [{
+				"language": "ps",
+				"script": "echo \"--- On build success script ---\"\necho \"#configure git\"\ngit config --global credential.helper store\nAdd-Content \"$env:USERPROFILE\\\\.git-credentials\" \"https://$($env:github_access_token):x-oauth-basic@github.com`n\"\ngit config --global user.email \"ks@ksware.de\"\ngit config --global user.name \"SchreinerK\"\n\ngit checkout master\nif ($LastExitCode -ne 0) { write-host \"git checkout failed! $LastExitCode\"  }\nOut-File \"$env:APPVEYOR_BUILD_FOLDER\\\\.appveyor.version\"\nAdd-Content \"$env:APPVEYOR_BUILD_FOLDER\\\\.appveyor.version\" \"$Env:APPVEYOR_BUILD_VERSION\"\ngit add .\ngit commit -v -a -m \"[skip ci] increment version $Env:APPVEYOR_BUILD_VERSION\"\ngit push\nif ($LastExitCode -ne 0) { write-host \"git push failed! $LastExitCode\"  }\u0000"
+			}],
+			"onBuildErrorScripts": [],
+			"onBuildFinishScripts": [],
+			"patchAssemblyInfo": false,
+			"assemblyInfoFile": "AssemblyInfo.*",
+			"assemblyVersionFormat": "{version}",
+			"assemblyFileVersionFormat": "{version}",
+			"assemblyInformationalVersionFormat": "{version}",
+			"patchDotnetCsproj": false,
+			"dotnetCsprojFile": "**\\*.csproj",
+			"dotnetCsprojVersionFormat": "{version}",
+			"dotnetCsprojPackageVersionFormat": "{version}",
+			"dotnetCsprojAssemblyVersionFormat": "{version}",
+			"dotnetCsprojFileVersionFormat": "{version}",
+			"dotnetCsprojInformationalVersionFormat": "{version}",
+			"buildCloud": [],
+			"operatingSystem": [{
+				"value": "Visual Studio 2017"
+			}],
+			"services": [],
+			"shallowClone": false,
+			"forceHttpsClone": false,
+			"environmentVariables": [{
+				"name": "build_version",
+				"value": {
+					"isEncrypted": false,
+					"value": "0.1"
+				}
+			},
+			{
+				"name": "github_access_token",
+				"value": {
+					"isEncrypted": true,
+					"value": "236cc60a9eddc451b0c70890c09ffd8544300737"
+				}
+			},
+			{
+				"name": "github_user_email",
+				"value": {
+					"isEncrypted": false,
+					"value": "ks@ksware.de"
+				}
+			},
+			{
+				"name": "github_user_name",
+				"value": {
+					"isEncrypted": false,
+					"value": "SchreinerK"
+				}
+			},
+			{
+				"name": "github_credentials",
+				"value": {
+					"isEncrypted": true,
+					"value": "BqtNr3JlK85SZdqNKOm6yqxWQZlLD6fFsSOOZjLSsw6yAt90iDt7ZnhfbSvCk5CCNm3zmnOaUgYBk3fpCoLKMyVBoMp+3dxjnRra4/F7sG8="
+				}
+			},
+			{
+				"name": "github_ssh_priv_key",
+				"value": {
+					"isEncrypted": true,
+					"value": "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"
+				}
+			}],
+			"environmentVariablesMatrix": [],
+			"installScripts": [],
+			"hostsEntries": [],
+			"cacheEntries": [],
+			"configureNuGetProjectSource": false,
+			"configureNuGetAccountSource": false,
+			"disableNuGetPublishOnPullRequests": false,
+			"buildMode": "none",
+			"platform": [],
+			"configuration": [],
+			"packageWebApplicationProjects": false,
+			"packageWebApplicationProjectsXCopy": false,
+			"packageAzureCloudServiceProjects": false,
+			"packageNuGetProjects": false,
+			"packageNuGetSymbols": false,
+			"includeNuGetReferences": false,
+			"msBuildInParallel": false,
+			"buildScripts": [],
+			"beforeBuildScripts": [],
+			"beforePackageScripts": [],
+			"afterBuildScripts": [],
+			"testMode": "auto",
+			"testAssemblies": [],
+			"testCategories": [],
+			"testCategoriesMatrix": [],
+			"testScripts": [],
+			"beforeTestScripts": [],
+			"afterTestScripts": [],
+			"deployMode": "providers",
+			"deployments": [],
+			"deployScripts": [],
+			"beforeDeployScripts": [],
+			"afterDeployScripts": [],
+			"xamarinRegisterAndroidProduct": false,
+			"xamarinRegisterIosProduct": false,
+			"matrixFastFinish": false,
+			"matrixAllowFailures": [],
+			"matrixExclude": [],
+			"artifacts": [],
+			"notifications": []
+		},
+		"tags": "",
+		"nuGetFeed": {
+			"id": "playground-aqfdlsm22864",
+			"name": "Project Playground",
+			"accountId": 89048,
+			"projectId": 419088,
+			"isPrivateProject": false,
+			"publishingEnabled": false,
+			"accountTimeZoneId": "W. Europe Standard Time",
+			"created": "2018-02-21T21:31:09.8980049+00:00"
+		},
+		"securityDescriptor": {
+			"accessRightDefinitions": [{
+				"name": "View",
+				"description": "View"
+			},
+			{
+				"name": "RunBuild",
+				"description": "Run build"
+			},
+			{
+				"name": "Update",
+				"description": "Update settings"
+			},
+			{
+				"name": "Delete",
+				"description": "Delete project"
+			}],
+			"roleAces": [{
+				"roleId": 166791,
+				"name": "Administrator",
+				"isAdmin": true,
+				"accessRights": [{
+					"name": "View",
+					"allowed": true
+				},
+				{
+					"name": "RunBuild",
+					"allowed": true
+				},
+				{
+					"name": "Update",
+					"allowed": true
+				},
+				{
+					"name": "Delete",
+					"allowed": true
+				}]
+			},
+			{
+				"roleId": 166792,
+				"name": "User",
+				"isAdmin": false,
+				"accessRights": [{
+					"name": "View"
+				},
+				{
+					"name": "RunBuild"
+				},
+				{
+					"name": "Update"
+				},
+				{
+					"name": "Delete"
+				}]
+			}]
+		},
+		"created": "2018-02-21T21:31:07.5386498+00:00",
+		"updated": "2018-02-26T21:00:21.2501251+00:00"
+	},
+	"images": [{
+		"buildWorkerImageId": 368,
+		"name": "Previous Visual Studio 2017",
+		"buildCloudName": "pro-vs2017",
+		"osType": "Windows"
+	},
+	{
+		"buildWorkerImageId": 362,
+		"name": "Visual Studio 2017",
+		"buildCloudName": "pro-vs2017",
+		"osType": "Windows"
+	},
+	{
+		"buildWorkerImageId": 382,
+		"name": "Visual Studio 2017 Preview",
+		"buildCloudName": "gce",
+		"osType": "Windows"
+	},
+	{
+		"buildWorkerImageId": 34,
+		"name": "Visual Studio 2015",
+		"osType": "Windows"
+	},
+	{
+		"buildWorkerImageId": 38,
+		"name": "Visual Studio 2013",
+		"buildCloudName": "pro-vs2013",
+		"osType": "Windows"
+	},
+	{
+		"buildWorkerImageId": 40,
+		"name": "WMF 5",
+		"buildCloudName": "gce",
+		"osType": "Windows"
+	},
+	{
+		"buildWorkerImageId": 36,
+		"name": "Previous Visual Studio 2015",
+		"osType": "Windows"
+	},
+	{
+		"buildWorkerImageId": 39,
+		"name": "Previous Visual Studio 2013",
+		"buildCloudName": "pro-vs2013",
+		"osType": "Windows"
+	}],
+	"buildClouds": [],
+	"defaultImageName": "Visual Studio 2015"
+}

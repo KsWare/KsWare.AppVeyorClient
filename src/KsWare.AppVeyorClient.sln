@@ -3,17 +3,24 @@ Microsoft Visual Studio Solution File, Format Version 12.00
 # Visual Studio Version 16
 VisualStudioVersion = 16.0.29102.190
 MinimumVisualStudioVersion = 10.0.40219.1
-Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "KsWare.AppVeyorClient", "KsWare.AppVeyorClient\KsWare.AppVeyorClient.csproj", "{E11C87D0-2B64-4D73-8BC6-B3FB747BE726}"
+Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "KsWare.AppVeyorClient", "KsWare.AppVeyorClient\KsWare.AppVeyorClient.csproj", "{E11C87D0-2B64-4D73-8BC6-B3FB747BE726}"
 EndProject
-Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "KsWare.AppVeyorClient.Tests", "KsWare.AppVeyorClient.Tests\KsWare.AppVeyorClient.Tests.csproj", "{92B3F74D-53E7-4D69-B54A-083CA80DE6E5}"
+Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "KsWare.AppVeyorClient.Tests", "KsWare.AppVeyorClient.Tests\KsWare.AppVeyorClient.Tests.csproj", "{92B3F74D-53E7-4D69-B54A-083CA80DE6E5}"
 EndProject
 Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "Solution Items", "Solution Items", "{F0851F96-3DAC-4DDC-AEFF-8B7CCA27B51A}"
 	ProjectSection(SolutionItems) = preProject
 		.appveyor.version = .appveyor.version
 		..\.editorconfig = ..\.editorconfig
 		..\ChangeLog.md = ..\ChangeLog.md
+		..\Features.xlsx = ..\Features.xlsx
 		..\README.md = ..\README.md
 	EndProjectSection
+EndProject
+Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "KsWare.AppVeyor.Api", "KsWare.AppVeyor.Api\KsWare.AppVeyor.Api.csproj", "{2577D3E7-79E3-4097-8644-1EE356BDDF81}"
+EndProject
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "KsWare.AppVeyor.Api.Tests", "KsWare.AppVeyor.Api.Tests\KsWare.AppVeyor.Api.Tests.csproj", "{A38D034A-26D3-46EA-81E7-26073E44782E}"
+EndProject
+Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "Tests", "Tests", "{CEA945BB-BA80-409E-850C-57866E5FC3A7}"
 EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
@@ -29,9 +36,21 @@ Global
 		{92B3F74D-53E7-4D69-B54A-083CA80DE6E5}.Debug|Any CPU.Build.0 = Debug|Any CPU
 		{92B3F74D-53E7-4D69-B54A-083CA80DE6E5}.Release|Any CPU.ActiveCfg = Release|Any CPU
 		{92B3F74D-53E7-4D69-B54A-083CA80DE6E5}.Release|Any CPU.Build.0 = Release|Any CPU
+		{2577D3E7-79E3-4097-8644-1EE356BDDF81}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{2577D3E7-79E3-4097-8644-1EE356BDDF81}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{2577D3E7-79E3-4097-8644-1EE356BDDF81}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{2577D3E7-79E3-4097-8644-1EE356BDDF81}.Release|Any CPU.Build.0 = Release|Any CPU
+		{A38D034A-26D3-46EA-81E7-26073E44782E}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{A38D034A-26D3-46EA-81E7-26073E44782E}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{A38D034A-26D3-46EA-81E7-26073E44782E}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{A38D034A-26D3-46EA-81E7-26073E44782E}.Release|Any CPU.Build.0 = Release|Any CPU
 	EndGlobalSection
 	GlobalSection(SolutionProperties) = preSolution
 		HideSolutionNode = FALSE
+	EndGlobalSection
+	GlobalSection(NestedProjects) = preSolution
+		{92B3F74D-53E7-4D69-B54A-083CA80DE6E5} = {CEA945BB-BA80-409E-850C-57866E5FC3A7}
+		{A38D034A-26D3-46EA-81E7-26073E44782E} = {CEA945BB-BA80-409E-850C-57866E5FC3A7}
 	EndGlobalSection
 	GlobalSection(ExtensibilityGlobals) = postSolution
 		SolutionGuid = {29688F03-6F49-4BD5-A3E1-0742E4DC1653}

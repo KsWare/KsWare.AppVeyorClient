@@ -1,6 +1,5 @@
 ﻿using System.Collections.Generic;
 using System.Collections.ObjectModel;
-using KsWare.AppVeyorClient.Api.Contracts;
 
 namespace KsWare.AppVeyorClient.UI.PanelConfiguration {
 

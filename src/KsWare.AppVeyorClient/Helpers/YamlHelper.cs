@@ -22,7 +22,7 @@ namespace KsWare.AppVeyorClient.Helpers {
 
 		public static string FormatBlock(string content, string suffix, int indent, ScalarType scalarType) {
 			var lines = content.Split(new[] {"\r\n", "\n"}, StringSplitOptions.None);
-			var sb=new StringBuilder();
+			var sb = new StringBuilder();
 			var sp = new string(' ', indent);
 			var sp2 = new string(' ', indent + 4);
 			var name = Regex.Match(suffix, @"^(?<name>-(\s+[a-z]+:)?\s)\s*", RegexOptions.Compiled | RegexOptions.IgnoreCase).Groups["name"].Value;
@@ -97,18 +97,18 @@ namespace KsWare.AppVeyorClient.Helpers {
 			var scalarType = DetectScalarType(match);
 			switch (scalarType) {
 				case ScalarType.FlowDoubleQuoted:
-					return new YamlBlock(match.IndentLength, match.Suffix, UnescapeDoubleQuotedString(match.Content));
+					return new YamlBlock(match.IndentLength, match.PreContent, UnescapeDoubleQuotedString(match.Content));
 				case ScalarType.FlowSingleQuoted:
-					return new YamlBlock(match.IndentLength, match.Suffix, UnescapeSingleQuotedString(match.Content));
+					return new YamlBlock(match.IndentLength, match.PreContent, UnescapeSingleQuotedString(match.Content));
 				case ScalarType.BlockFolded:
 				case ScalarType.BlockFoldedKeep:
 				case ScalarType.BlockFoldedStrip:
 				case ScalarType.BlockLiteral:
 				case ScalarType.BlockLiteralKeep:
 				case ScalarType.BlockLiteralStrip:
-					return new YamlBlock(match.IndentLength, match.Suffix, UnescapeBlock(match.Content, scalarType));
+					return new YamlBlock(match.IndentLength, match.PreContent, UnescapeBlock(match.Content, scalarType));
 				case ScalarType.Plain:
-					return new YamlBlock(match.IndentLength, match.Suffix, match.Content);
+					return new YamlBlock(match.IndentLength, match.PreContent, match.Content);
 				default:
 					return null;
 			}
@@ -126,7 +126,8 @@ namespace KsWare.AppVeyorClient.Helpers {
 				case ScalarType.BlockLiteral:
 				case ScalarType.BlockLiteralStrip:
 				case ScalarType.BlockLiteralKeep:
-					return Regex.Replace(content, indentPattern, "", RegexOptions.Multiline | RegexOptions.Compiled);
+					var s = Regex.Replace(content, indentPattern, "", RegexOptions.Multiline | RegexOptions.Compiled); // remove indentation
+					return Regex.Replace(s, @"\r?\n", "\r\n", RegexOptions.Multiline | RegexOptions.Compiled); //normalize line endings
 				default: throw new NotSupportedException();
 			}
 		}
@@ -140,7 +141,7 @@ namespace KsWare.AppVeyorClient.Helpers {
 			// https://yaml.org/spec/current.html#id2517668
 			var s1 = s
 				.Replace("\\", "\\\\")
-				.Replace("\r", "\\r")
+				.Replace("\r\n", "\\n")
 				.Replace("\n", "\\n")
 				.Replace("\"", "\\\""
 				);
@@ -156,8 +157,8 @@ namespace KsWare.AppVeyorClient.Helpers {
 			/*  YAML’s double-quoted style uses familiar C-style escape sequences. This enables ASCII encoding of non-printable or 8-
 				bit (ISO 8859-1) characters such as “\x3B”. Non-printable 16-bit Unicode and 32-bit (ISO/IEC 10646) characters are
 				supported with escape sequences such as “\u003B” and “\U0000003B”. */
-			var sb=new StringBuilder();
-			bool esc=false;
+			var sb = new StringBuilder();
+			bool esc = false;
 			for (int i = 0; i < s.Length; i++) {
 				if (!esc && s[i] == '\\') {esc = true;continue;}
 				if (!esc) {sb.Append(s[i]); continue;}
