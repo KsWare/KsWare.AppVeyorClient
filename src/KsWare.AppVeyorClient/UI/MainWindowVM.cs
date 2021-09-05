@@ -26,9 +26,8 @@ namespace KsWare.AppVeyorClient.UI {
 	public class MainWindowVM : WindowVM {
 
 		public MainWindowVM() {
-			RegisterChildren(()=>this);
-			AppVM.LoadToken(); // TODO load after UI loaded
-			AppVM.InitFileStore(); // TODO load after UI loaded
+			RegisterChildren(() => this);
+			AppVM.OnMainWindowLoading();
 
 			Pages = new IHaveTitle[] {
 				ConfigurationPanel,

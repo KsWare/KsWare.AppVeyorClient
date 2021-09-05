@@ -26,7 +26,7 @@ namespace KsWare.AppVeyor.Api {
 
 		public string ApiVersion { get; private set; }
 
-		public string ProjectName { get; set; }
+		// public string ProjectName { get; set; }
 
 		/// <summary>
 		/// Add Project
@@ -96,21 +96,37 @@ namespace KsWare.AppVeyor.Api {
 			return c.Data;
 		}
 
-		private async Task<ProjectData> Project(/*ProjectName?*/) {
-			const string n = nameof(ProjectClient) + "." + nameof(Project);
-			var entry = FileStore.Instance.GetEntry<ProjectData>(n);
-			if (!entry.HasData) {
-				var projects = await GetProjects();
-				entry.Data = string.IsNullOrEmpty(ProjectName)
-					? projects.First()
-					: projects.First(p => string.Compare(p.Name, ProjectName, StringComparison.OrdinalIgnoreCase) == 0);
-				ProjectName = entry.Data.Name;
-				entry.IsPersistent = true;
-				entry.CacheTime = TimeSpan.FromHours(24);
-				FileStore.Instance.Flush(n);
-			}
-			return entry.Data;
-		}
+		// private async Task<ProjectData> Project() {
+		// 	const string n = nameof(ProjectClient) + "." + nameof(Project);
+		// 	var entry = FileStore.Instance.GetEntry<ProjectData>(n);
+		// 	if (!entry.HasData) {
+		// 		var projects = await GetProjects();
+		// 		entry.Data = string.IsNullOrEmpty(ProjectName)
+		// 			? projects.First()
+		// 			: projects.First(p => string.Compare(p.Name, ProjectName, StringComparison.OrdinalIgnoreCase) == 0);
+		// 		ProjectName = entry.Data.Name;
+		// 		entry.IsPersistent = true;
+		// 		entry.CacheTime = TimeSpan.FromHours(24);
+		// 		FileStore.Instance.Flush(n);
+		// 	}
+		// 	return entry.Data;
+		// }
+
+		// private async Task<ProjectData> Project(string projectName) {
+		// 	string n = $"{nameof(ProjectClient)}.{nameof(Project)}.{projectName}";
+		// 	var entry = FileStore.Instance.GetEntry<ProjectData>(n);
+		// 	if (!entry.HasData) {
+		// 		var projects = await GetProjects();
+		// 		entry.Data = string.IsNullOrEmpty(projectName)
+		// 			? projects.First()
+		// 			: projects.First(p => string.Compare(p.Name, projectName, StringComparison.OrdinalIgnoreCase) == 0);
+		// 		projectName = entry.Data.Name;
+		// 		entry.IsPersistent = true;
+		// 		entry.CacheTime = TimeSpan.FromHours(24);
+		// 		FileStore.Instance.Flush(n);
+		// 	}
+		// 	return entry.Data;
+		// }
 
 		#region ProjectSettingsYaml
 
@@ -122,16 +138,16 @@ namespace KsWare.AppVeyor.Api {
 			return yaml;
 		}
 
-		public async Task<string> GetProjectSettingsYaml() {
-			var p    = await Project();
-			var yaml = await GetProjectSettingsYaml(p.AccountName, p.Slug);
-			return yaml;
-		}
+		// public async Task<string> GetProjectSettingsYaml() {
+		// 	var p    = await Project();
+		// 	var yaml = await GetProjectSettingsYaml(p.AccountName, p.Slug);
+		// 	return yaml;
+		// }
 
-		public async Task UpdateProjectSettingsYaml(string yaml) {
-			var project = await Project();
-			await UpdateProjectSettingsYamlAsync(project.AccountName, project.Slug, yaml);
-		}
+		// public async Task UpdateProjectSettingsYaml(string yaml) {
+		// 	var project = await Project();
+		// 	await UpdateProjectSettingsYamlAsync(project.AccountName, project.Slug, yaml);
+		// }
 
 		public async Task UpdateProjectSettingsYamlAsync(string accountName, string projectSlug, string yaml) {
 			// Request: PUT /api/projects/{accountName}/{projectSlug}/settings/yaml
@@ -151,11 +167,11 @@ namespace KsWare.AppVeyor.Api {
 			return projectSettings;
 		}
 
-		public async Task<GetProjectSettingsResponse> GetProjectSettings() {
-			var p    = await Project();
-			var projectSettings = await GetProjectSettings(p.AccountName, p.Slug);
-			return projectSettings;
-		}
+		// public async Task<GetProjectSettingsResponse> GetProjectSettings() {
+		// 	var p    = await Project();
+		// 	var projectSettings = await GetProjectSettings(p.AccountName, p.Slug);
+		// 	return projectSettings;
+		// }
 
 		public async Task UpdateProjectSettings(ProjectSettingsData projectSettings) {
 			await _client.PutJsonAsync($"/api/projects", projectSettings);
@@ -190,15 +206,15 @@ GET /api/projects/{accountName}/{projectSlug}/settings/environment-variables
 			return result;
 		}
 
-		public async Task<NameValueSecurePair[]> GetProjectEnvironmentVariables() {
-			var project = await Project();
-			return await GetProjectEnvironmentVariables(project.AccountName, project.Slug);
-		}
+		// public async Task<NameValueSecurePair[]> GetProjectEnvironmentVariables() {
+		// 	var project = await Project();
+		// 	return await GetProjectEnvironmentVariables(project.AccountName, project.Slug);
+		// }
 
-		public async void UpdateProjectEnvironmentVariables(IEnumerable<NameValueSecurePair> variables) {
-			var project = await Project();
-			await UpdateProjectEnvironmentVariables(project.AccountName, project.Slug, variables);
-		}
+		// public async void UpdateProjectEnvironmentVariables(IEnumerable<NameValueSecurePair> variables) {
+		// 	var project = await Project();
+		// 	await UpdateProjectEnvironmentVariables(project.AccountName, project.Slug, variables);
+		// }
 
 		// PUT /api/projects/{accountName}/{projectSlug}/settings/environment-variables
 		public async Task UpdateProjectEnvironmentVariables(string accountName, string projectSlug, IEnumerable<NameValueSecurePair> variables) {

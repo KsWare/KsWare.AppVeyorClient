@@ -1,7 +1,6 @@
 ﻿using System;
 using System.Diagnostics;
 using System.IO;
-using System.Linq;
 using System.Security;
 using System.Security.Cryptography;
 using System.Text;
@@ -11,7 +10,6 @@ using System.Windows.Threading;
 using JetBrains.Annotations;
 using KsWare.AppVeyor.Api;
 using KsWare.AppVeyor.Api.Shared;
-using KsWare.AppVeyorClient.Shared;
 using KsWare.AppVeyorClient.UI.ViewModels;
 using KsWare.Presentation.ViewModelFramework;
 
@@ -20,6 +18,7 @@ namespace KsWare.AppVeyorClient.UI.App {
 	public class AppVM:ApplicationVM {
 
 		public new static AppVM Current => (AppVM)ApplicationVM.Current;
+		private static bool _firstLoad = true;
 
 		public AppVM() {
 			RegisterChildren(()=>this);
@@ -124,6 +123,13 @@ namespace KsWare.AppVeyorClient.UI.App {
 			var path = Path.Combine(Path.GetDirectoryName(SettingsVM.FilePath), "Cache");
 			Directory.CreateDirectory(path);
 			FileStore=FileStore.Instance=new FileStore(path);
+		}
+
+		public static void OnMainWindowLoading() {
+			if (_firstLoad == false) return;
+			_firstLoad = false;
+			AppVM.LoadToken(); // TODO load after UI loaded
+			AppVM.InitFileStore(); // TODO load after UI loaded
 		}
 	}
 }

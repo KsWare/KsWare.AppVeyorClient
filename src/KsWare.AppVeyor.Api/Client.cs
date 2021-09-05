@@ -9,7 +9,7 @@ namespace KsWare.AppVeyor.Api {
 		private HttpClientEx _httpClientEx;
 
 		public Client(SecureString token) {
-			_httpClientEx=new HttpClientEx( token) {
+			_httpClientEx = new HttpClientEx( token) {
 				BaseUri = new Uri("https://ci.appveyor.com/")
 			};
 			BuildWorker =new BuildWorker(_httpClientEx);
