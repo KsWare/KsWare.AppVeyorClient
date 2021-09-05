@@ -104,9 +104,6 @@
     <Content Include="Data\AppVeyor-Yaml.xshd">
       <CopyToOutputDirectory>Always</CopyToOutputDirectory>
     </Content>
-    <Content Include="Ressources\snippets.yaml">
-      <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
-    </Content>
   </ItemGroup>
   <ItemGroup>
     <Resource Include="Ressources\AppVeyorYamlDoc.yaml" />
