@@ -54,10 +54,10 @@
 			<Canvas Width="12"/>
 			<Button Content="Edit Block" Command="{Binding EditScriptBlockAction}" ToolTip="Edit selected script block" Padding="6 0"/>
 			<Button ToolTip="Navigate to AppVeyor CI" Command="{Binding OpenAppVeyorAction}" MinWidth="22">
-				<Image Source="https://www.appveyor.com/assets/img/favicons/favicon-16x16.png" Height="15" />
+				<Image Source="/KsWare.AppVeyorClient;component/Ressources/appveyor-favicon-16x16.png" Height="15" />
 			</Button>
 			<Button ToolTip="Navigate to GitHub" Command="{Binding OpenGitHubAction}" MinWidth="22">
-				<Image Source="https://github.githubassets.com/favicons/favicon.png" Height="15" />
+				<Image Source="/KsWare.AppVeyorClient;component/Ressources/github-favicon.png" Height="15" />
 			</Button>
 			<ComboBox SelectedItem="{Binding SelectedEnvironmentVariable}" ItemsSource="{Binding EnvironmentVariables}" IsTextSearchEnabled="True" IsTextSearchCaseSensitive="False" TextSearch.TextPath="Name" IsEditable="True" Width="180" Margin="5 0 0 0">
 				<ComboBox.ItemTemplate>

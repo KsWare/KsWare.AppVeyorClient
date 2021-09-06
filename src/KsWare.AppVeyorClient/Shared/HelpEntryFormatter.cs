@@ -3,12 +3,10 @@ using System.Collections.Generic;
 using System.Diagnostics;
 using System.Linq;
 using System.Text.RegularExpressions;
-using System.Threading.Tasks;
 using System.Windows;
 using System.Windows.Documents;
 using System.Windows.Media;
 using System.Windows.Shapes;
-using KsWare.Presentation.Core.Logging;
 
 namespace KsWare.AppVeyorClient.Shared {
 
@@ -17,7 +15,7 @@ namespace KsWare.AppVeyorClient.Shared {
 		public static readonly HelpEntryFormatter Instance = new HelpEntryFormatter();
 
 		public FlowDocument CreateFlowDocument(IEnumerable<HelpEntry> helpEntries) {
-			var doc = new FlowDocument();
+			var doc = new FlowDocument{FontSize = 14};
 			foreach (var helpEntry in helpEntries) {
 				Debug.WriteLine($"{helpEntry.Path}: {helpEntry.Description}");
 

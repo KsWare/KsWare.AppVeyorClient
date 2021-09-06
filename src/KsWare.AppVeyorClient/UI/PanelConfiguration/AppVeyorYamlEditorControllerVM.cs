@@ -81,7 +81,7 @@ namespace KsWare.AppVeyorClient.UI.PanelConfiguration {
 		}
 
 		protected override void OnDisableSyntaxHighlightingChanged(bool value) {
-			if(Data==null)return;
+			if (Data == null) return;
 			if (false == value) {
 				var reader = XmlReader.Create("Data\\AppVeyor-yaml.xshd");
 				Data.SyntaxHighlighting = HighlightingLoader.Load(reader, HighlightingManager.Instance);

@@ -11,7 +11,7 @@
 		<Button Content="Close" Click="CloseButton_OnClick" DockPanel.Dock="Bottom" HorizontalAlignment="Center" Margin="0 10 0 10" Padding="5 2" Width="80"/>
 		<FlowDocumentScrollViewer>
 			<FlowDocumentScrollViewer.Document>
-				<FlowDocument>
+				<FlowDocument FontSize="14" FontFamily="Calibri">
 					<Paragraph><Run>AppVeyorClient.exe &lt;options&gt; &lt;file&gt; </Run></Paragraph>
 					<Table>
 						<TableRowGroup>

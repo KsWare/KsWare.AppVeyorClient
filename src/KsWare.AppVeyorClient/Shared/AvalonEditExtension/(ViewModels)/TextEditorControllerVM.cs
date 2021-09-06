@@ -98,7 +98,10 @@ namespace KsWare.AppVeyorClient.Shared.AvalonEditExtension {
 			//				ItemsSource = ContextMenu.Items,
 			//				ItemTemplate = 
 			//			};
+			ViewConnected?.Invoke(this, EventArgs.Empty);
 		}
+
+		public event EventHandler ViewConnected;
 
 		public ContextMenuVM ContextMenu { get; [UsedImplicitly] private set; }
 

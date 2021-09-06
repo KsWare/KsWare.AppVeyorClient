@@ -57,7 +57,11 @@
   </ItemGroup>
   <ItemGroup>
     <None Remove="KsWare.AppVeyorClient.csproj.DotSettings" />
+    <None Remove="Ressources\appveyor-favicon-16x16.png" />
+    <None Remove="Ressources\appveyor-favicon-32x32.png" />
     <None Remove="Ressources\AppVeyorYamlDoc.yaml" />
+    <None Remove="Ressources\github-favicon-dark.png" />
+    <None Remove="Ressources\github-favicon.png" />
   </ItemGroup>
   <ItemGroup>
     <Page Remove="UI\App\App.xaml" />
@@ -94,7 +98,11 @@
     </Content>
   </ItemGroup>
   <ItemGroup>
+    <Resource Include="Ressources\appveyor-favicon-16x16.png" />
+    <Resource Include="Ressources\appveyor-favicon-32x32.png" />
     <Resource Include="Ressources\AppVeyorYamlDoc.yaml" />
+    <Resource Include="Ressources\github-favicon-dark.png" />
+    <Resource Include="Ressources\github-favicon.png" />
     <Resource Include="UI\Resources\appveyor_blue.ico" />
   </ItemGroup>
   <ItemGroup>

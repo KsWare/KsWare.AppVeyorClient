@@ -8,6 +8,7 @@ using System.Text;
 using System.Text.RegularExpressions;
 using System.Threading.Tasks;
 using System.Windows;
+using System.Windows.Controls;
 using System.Windows.Controls.Primitives;
 using System.Windows.Input;
 using System.Windows.Threading;
@@ -16,7 +17,6 @@ using KsWare.AppVeyor.Api;
 using KsWare.AppVeyorClient.Helpers;
 using KsWare.AppVeyorClient.Shared;
 using KsWare.AppVeyorClient.Shared.AvalonEditExtension;
-using KsWare.AppVeyorClient.Shared.CommandSink;
 using KsWare.AppVeyorClient.UI.App;
 using KsWare.AppVeyorClient.UI.Common;
 using KsWare.AppVeyorClient.UI.PanelProjectSelector;
@@ -37,8 +37,8 @@ namespace KsWare.AppVeyorClient.UI.PanelConfiguration {
 		private static readonly Dictionary<string, HelpEntry> HelpDictionary = HelpEntry.LoadResource();
 
 		private YamlBlock _selectedBlock;
-		private List<SectionTemplateData>_sectionTemplates = new List<SectionTemplateData>();
-		private string _editorProjectName;
+		private readonly List<SectionTemplateData>_sectionTemplates = new List<SectionTemplateData>();
+		private readonly MenuItemVM _editScriptBlockMenuItem;
 
 		public ConfigurationPanelVM() {
 			RegisterChildren(() => this);
@@ -54,6 +54,42 @@ namespace KsWare.AppVeyorClient.UI.PanelConfiguration {
 			Fields[nameof(IsModified)].SetBinding(new FieldBinding(YamlEditorController.Fields[nameof(YamlEditorController.IsModified)],BindingMode.OneWay));
 //			YamlEditorController.Fields[nameof(YamlEditorController.IsModified)].ValueChangedEvent.add=
 //				(s, e) => IsModified = YamlEditorController.IsModified;
+
+			YamlEditorController.ContextMenu.Items.Add(_editScriptBlockMenuItem=new MenuItemVM {
+				Caption = "Edit Code Block",
+				CommandAction = {
+					MːExecutedCallback = (s, e) => DoEditScriptBlock(),
+				}
+			});
+
+			if (YamlEditorController.MːData != null) YamlEditorControllerOnViewConnected(null, null);
+			else YamlEditorController.ViewConnected += YamlEditorControllerOnViewConnected;
+		}
+
+		private void YamlEditorControllerOnViewConnected(object sender, EventArgs e) {
+			YamlEditorController.Data.ContextMenuOpening+=TextEditor_OnContextMenuOpening;
+			YamlEditorController.Data.TextArea.Caret.PositionChanged+=CaretOnPositionChanged;
+		}
+
+		private void CaretOnPositionChanged(object sender, EventArgs e) {
+			EditScriptBlockAction.SetCanExecute("IsCodeBlock", CanEditScriptBlock());
+		}
+
+		private void TextEditor_OnContextMenuOpening(object sender, ContextMenuEventArgs e) {
+			_editScriptBlockMenuItem.CommandAction.SetCanExecute("IsCodeBlock", CanEditScriptBlock());
+		}
+
+		private bool CanEditScriptBlock() {
+			var block = YamlEditorController.MeasureBlock();
+			if (block.StartMatch != null && block.StartMatch.Success) {
+				switch (block.StartMatch.Name) {
+					case "": case "ps": case "cmd": case "sh": {
+						return true;
+					}
+				}
+			}
+
+			return false;
 		}
 
 		public string Title => "Configuration";
@@ -139,7 +175,6 @@ namespace KsWare.AppVeyorClient.UI.PanelConfiguration {
 			}
 
 			helpEntries.Reverse();
-			
 
 			Popup.View.PlacementTarget = YamlEditorController.Data;
 			Popup.View.Placement=PlacementMode.Relative;
@@ -249,19 +284,19 @@ namespace KsWare.AppVeyorClient.UI.PanelConfiguration {
 			var d = ProjectSelector.SelectedProject.Data;
 			switch (d.RepositoryType) {
 				case "gitHub": {
-						var tree = d.Builds.Any() ? $"tree/{d.Builds.FirstOrDefault().Branch}" : "";
+					var tree = d.Builds.Any() ? $"tree/{d.Builds.FirstOrDefault().Branch}" : "";
 					url = $"https://github.com/{d.RepositoryName}/{tree}";
 					break;
 				}
-					// gitHub
-					// bitBucket
-					// vso (Visual Studio Online)
-					// gitLab
-					// kiln
-					// stash
-					// git
-					// mercurial
-					// subversion
+				// gitHub
+				// bitBucket
+				// vso (Visual Studio Online)
+				// gitLab
+				// kiln
+				// stash
+				// git
+				// mercurial
+				// subversion
 			}
 
 			if (url != null) {
@@ -299,12 +334,12 @@ namespace KsWare.AppVeyorClient.UI.PanelConfiguration {
 		private void DoEditScriptBlock() {
 			YamlEditorController.ExpandCodeBlock();
 			_selectedBlock = YamlHelper.ExtractBlock(YamlEditorController.SelectedText);
-			if(_selectedBlock==null) return;
+			if (_selectedBlock == null) return;
 
 			BlockFormat = "(unchanged)";
 			YamlEditorController.SetEnabled("YAML Editor is open", false);
-			YamlEditorHeight=new GridLength(50);
-			CodeEditorHeight=new GridLength(100,GridUnitType.Star);
+			YamlEditorHeight = new GridLength(50);
+			CodeEditorHeight = new GridLength(100, GridUnitType.Star);
 			CodeEditorController.Text = _selectedBlock.Content;
 			CodeEditorController.SetEnabled("Code Editor is open", true);
 			Dispatcher.BeginInvoke(DispatcherPriority.Background, () => YamlEditorController.Data.ScrollToLine(YamlEditorController.Data.TextArea.Caret.Line));
@@ -329,7 +364,7 @@ namespace KsWare.AppVeyorClient.UI.PanelConfiguration {
 					break;
 				case "Block":
 					s = YamlHelper.FormatBlock(CodeEditorController.Text,
-						_selectedBlock.Suffix, _selectedBlock.Indent, ScalarType.BlockFoldedStrip);
+						_selectedBlock.Suffix, _selectedBlock.Indent, ScalarType.BlockLiteralStrip);
 					break;
 				case "Split":
 					s = YamlHelper.FormatBlock(CodeEditorController.Text,
