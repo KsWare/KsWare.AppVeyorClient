@@ -3,25 +3,22 @@ using Moq;
 using NUnit.Framework;
 using System;
 
-namespace KsWare.AppVeyorClient.Tests.Helpers
-{
-	[TestFixture]
-	public class YamlHelperTests
-	{
-		private MockRepository _mockRepository; 
+namespace KsWare.AppVeyorClient.Tests.Helpers {
 
+	[TestFixture]
+	public class YamlHelperTests {
+
+		private MockRepository _mockRepository;
 
 		[SetUp]
-		public void SetUp()
-		{
+		public void SetUp() {
 			_mockRepository = new MockRepository(MockBehavior.Strict);
 
 
 		}
 
 		[TearDown]
-		public void TearDown()
-		{
+		public void TearDown() {
 			_mockRepository.VerifyAll();
 		}
 
@@ -67,7 +64,7 @@ namespace KsWare.AppVeyorClient.Tests.Helpers
 
 		[TestCase("foo", ExpectedResult = "foo")]
 		[TestCase("\n", ExpectedResult = "\\n")]
-		[TestCase("\r\n", ExpectedResult = "\\r\\n")]
+		[TestCase("\r\n", ExpectedResult = "\\n")]
 		[TestCase("foo\" \nbar\\glue\\n", ExpectedResult = "foo\\\" \\nbar\\\\glue\\\\n")]
 		public string EscapeDoubleQuotedString_TestData_Success(string input)
 			=> YamlHelper.EscapeDoubleQuotedString(input);
@@ -107,8 +104,8 @@ namespace KsWare.AppVeyorClient.Tests.Helpers
 		public string UnescapeSingleQuotedString_TestData_Success(string input)
 			=> YamlHelper.UnescapeSingleQuotedString(input);
 
-		[TestCase("\n  foo\n\n  bar", ScalarType.BlockFolded, ExpectedResult = "foo\n\nbar")]
-		[TestCase("\n    foo\n\n    bar", ScalarType.BlockFolded, ExpectedResult = "foo\n\nbar")]
+		[TestCase("\n  foo\n\n  bar", ScalarType.BlockFolded, ExpectedResult = "foo\r\n\r\nbar")]
+		[TestCase("\n    foo\n\n    bar", ScalarType.BlockFolded, ExpectedResult = "foo\r\n\r\nbar")]
 		public string UnescapeBlock_TestData_Success(string input, ScalarType scalarType)
 			=> YamlHelper.UnescapeBlock(input, scalarType);
 

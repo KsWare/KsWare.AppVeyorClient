@@ -1,7 +1,9 @@
 ﻿using System;
 using System.Diagnostics;
+using System.Threading.Tasks;
 using JetBrains.Annotations;
-using KsWare.AppVeyorClient.Api;
+using KsWare.AppVeyor.Api;
+using KsWare.AppVeyorClient.Shared;
 using KsWare.AppVeyorClient.UI.App;
 using KsWare.Presentation.ViewModelFramework;
 using Newtonsoft.Json;
@@ -51,22 +53,26 @@ namespace KsWare.AppVeyorClient.UI.PanelApiTester {
 		/// </summary>
 		[UsedImplicitly]
 		private void DoSend() {
-			var result = Client.Base.Send("GET", Url, null, ContentType, out var ex);
-			if (ex != null) {
-				result = ex?.ToString();
-				return;
-			}
-			switch (ContentType) {
-				case "application/json":
-					try {
-						result = JsonConvert.SerializeObject(JsonConvert.DeserializeObject(result), Formatting.Indented);
+			Client.Base.SendAsync(Client.Base.CreateRequest("GET", Url, null, ContentType))
+				.ContinueWithUIDispatcher(delegate(Task<string> task) {
+				
+					if (task.Exception != null) {
+						ResultText = task.Exception.ToString();
+						return;
 					}
-					catch (Exception ex2) {}
-					break;
-			}
+					switch (ContentType) {
+						case "application/json":
+							try {
+								var result = JsonConvert.SerializeObject(JsonConvert.DeserializeObject(task.Result), Formatting.Indented);
+							}
+							catch (Exception ex2) {}
+							break;
+					}
 
-			Debug.WriteLine($"ResultText changing");
-			ResultText=result;
+					Debug.WriteLine($"ResultText changing");
+					ResultText = task.Result;
+				});
+
 		}
 	}
 

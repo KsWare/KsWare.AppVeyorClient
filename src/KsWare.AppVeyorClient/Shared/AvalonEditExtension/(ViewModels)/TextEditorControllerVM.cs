@@ -10,7 +10,7 @@ namespace KsWare.AppVeyorClient.Shared.AvalonEditExtension {
 
 	public class TextEditorControllerVM:DataVM<TextEditor> {
 
-		TextEditorData _data=new TextEditorData();
+		private TextEditorData _data = new TextEditorData();
 
 		public TextEditorControllerVM() {
 			RegisterChildren(() => this);
@@ -32,7 +32,7 @@ namespace KsWare.AppVeyorClient.Shared.AvalonEditExtension {
 				return Data?.SelectedText;
 			}
 			set {
-				if(Data==null) throw new InvalidOperationException("View is not connected.");
+				if (Data == null) throw new InvalidOperationException("View is not connected.");
 				Data.SelectedText = value;
 			}
 		}
@@ -40,14 +40,13 @@ namespace KsWare.AppVeyorClient.Shared.AvalonEditExtension {
 		public string Text {
 			get { return Data == null ? _data.Text : Data.Text; }
 			set {
-				if (Data == null) _data.Text=value;
+				if (Data == null) _data.Text = value;
 				else Data.Text = value;
 				OnTextChanged(Data.Document);
 			}
 		}
 
-		public void BringSelectionIntoView()
-		{
+		public void BringSelectionIntoView() {
 			var startLine = Data.TextArea.Selection.StartPosition.Line;
 //			var selectedLineCount = Data.TextArea.Selection.EndPosition.Line - Data.TextArea.Selection.StartPosition.Line + 1 ;
 //			var visibleLineCount = Data.TextArea.TextView.VisualLinesValid ? Data.TextArea.TextView.VisualLines.Count : 0;
@@ -65,8 +64,7 @@ namespace KsWare.AppVeyorClient.Shared.AvalonEditExtension {
 
 		protected sealed override void OnDataChanged(DataChangedEventArgs e) {
 			base.OnDataChanged(e);
-			if (e.PreviousData is TextEditor)
-			{
+			if (e.PreviousData is TextEditor) {
 				var dpd = DependencyPropertyDescriptor.FromProperty(TextEditor.IsModifiedProperty, typeof(TextEditor));
 				dpd.RemoveValueChanged(e.PreviousData, TextEditor_IsModifiedChanged);
 			}
@@ -77,15 +75,13 @@ namespace KsWare.AppVeyorClient.Shared.AvalonEditExtension {
 			}
 		}
 
-		private void TextEditor_IsModifiedChanged(object sender, EventArgs e)
-		{
+		private void TextEditor_IsModifiedChanged(object sender, EventArgs e) {
 			IsModified = Data.IsModified;
 		}
 
 		public bool IsModified { get => Fields.GetValue<bool>(); private set => Fields.SetValue(value); }
 
-		public void ResetHasChanges()
-		{
+		public void ResetHasChanges() {
 			Data.IsModified = false;
 		}
 
@@ -102,7 +98,10 @@ namespace KsWare.AppVeyorClient.Shared.AvalonEditExtension {
 			//				ItemsSource = ContextMenu.Items,
 			//				ItemTemplate = 
 			//			};
+			ViewConnected?.Invoke(this, EventArgs.Empty);
 		}
+
+		public event EventHandler ViewConnected;
 
 		public ContextMenuVM ContextMenu { get; [UsedImplicitly] private set; }
 
@@ -110,14 +109,11 @@ namespace KsWare.AppVeyorClient.Shared.AvalonEditExtension {
 
 		public DocumentPosition SelectionEndPosition => Data.GetSelectionEndPosition();
 
-		public DocumentPosition CarretPosition => Data.GetCaretPosition();
+		public DocumentPosition CaretPosition => Data.GetCaretPosition();
 
 		private class TextEditorData {
 			public bool IsEnabled { get; set; } = true;
 			public string Text { get; set; }
 		}
 	}
-
-
-
 }

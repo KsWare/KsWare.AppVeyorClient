@@ -1,4 +1,13 @@
-# 0.3
+# 0.4
+- use .Net 5.0
+- context help for appveyor.yml
+- insert variables
+- Encrypt values
+- Validate yaml
+- Navigate to AppVeyor/GitHub
+- command line parameter (open file)
+- Menu, NewFile, Edit, View, About, RemoveProject, NewProject
+- outsource appveyor API: KsWare.AppVeyor.Api
 
 # 0.3.11  (2019-09-06)
 - appveyor.yml (for external/fork use only)

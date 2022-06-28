@@ -5,27 +5,35 @@
 	xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
 	xmlns:d="http://schemas.microsoft.com/expression/blend/2008"
 	xmlns:local="clr-namespace:KsWare.AppVeyorClient.UI.PanelCommon"
-	xmlns:wpfPropertyGrid="clr-namespace:KsWare.AppVeyorClient.Shared.WpfPropertyGrid"
-	xmlns:sys="clr-namespace:System;assembly=mscorlib"
 	mc:Ignorable="d"
 	d:DesignHeight="140" d:DesignWidth="300"
-	d:DataContext="{d:DesignInstance Type={x:Type local:CommonPanelVM}}">
+	d:DataContext="{d:DesignInstance local:CommonPanelVM, IsDesignTimeCreatable=False}"
+>
+	<!-- d:DataContext="{d:DesignInstance local:CommonPanelVM, IsDesignTimeCreatable=False}" -->
 	<FrameworkElement.Resources>
-		<ObjectDataProvider x:Key="SortTypes" MethodName="GetValues" ObjectType="{x:Type sys:Enum}">
-			<ObjectDataProvider.MethodParameters>
-				<x:Type TypeName="wpfPropertyGrid:PropertySort" />
-			</ObjectDataProvider.MethodParameters>
-		</ObjectDataProvider>
+		<!-- TODO <ObjectDataProvider x:Key="SortTypes" MethodName="GetValues" ObjectType="{x:Type sys:Enum}"> -->
+		<!-- 	<ObjectDataProvider.MethodParameters> -->
+		<!-- 		<x:Type TypeName="wpfPropertyGrid:PropertySort" /> -->
+		<!-- 	</ObjectDataProvider.MethodParameters> -->
+		<!-- </ObjectDataProvider> -->
 	</FrameworkElement.Resources>
 	<DockPanel>
 		<StackPanel DockPanel.Dock="Top">
 			<StackPanel x:Name="TokenPanel">
+				<!-- <DockPanel Margin="0 0 4 0"> -->
+				<!-- 	<Button DockPanel.Dock="Right" Style="{DynamicResource HelpButton}" Command="{Binding HelpUrlAction}" -->
+				<!-- 	        CommandParameter="https://ci.appveyor.com/api-keys" /> -->
+				<!-- 	<Label Content="AppVeyor Account:" /> -->
+				<!-- </DockPanel> -->
+				<!-- <TextBox x:Name="AccountTextBoxBox" LostFocus="AtAccountTextBoxBoxLostFocus" Margin="4 0" /> -->
+
 				<DockPanel Margin="0 0 4 0">
 					<Button DockPanel.Dock="Right" Style="{DynamicResource HelpButton}" Command="{Binding HelpUrlAction}"
-					        CommandParameter="https://ci.appveyor.com/api-token" />
+					        CommandParameter="https://ci.appveyor.com/api-keys" />
 					<Label Content="AppVeyor API Token: " />
 				</DockPanel>
-				<PasswordBox x:Name="TokenPasswordBox" LostFocus="AtTokenTextBoxLostFocus" Margin="4 0" />
+				<PasswordBox x:Name="TokenPasswordBox" LostFocus="AtTokenTextBoxLostFocus" Margin="4 0" 
+				             ToolTip="Please input an account-specific API key (v1)"/>
 			</StackPanel>
 		</StackPanel>
 
@@ -34,20 +42,34 @@
 			<StackPanel Orientation="Horizontal" DockPanel.Dock="Bottom">
 				<CheckBox Name="ShowDescrip" Margin="3" Content="Help Visible" VerticalAlignment="Center" />
 				<CheckBox Name="ShowToolbar" Margin="3" IsChecked="True" Content="Toolbar Visible" VerticalAlignment="Center" />
-				<ComboBox Name="ComboSort" Margin="3" Width="95" FontSize="10"
-				          SelectedIndex="0" ItemsSource="{Binding Source={StaticResource SortTypes}}" />
+				<!-- TODO <ComboBox Name="ComboSort" Margin="3" Width="95" FontSize="10" SelectedIndex="0" ItemsSource="{Binding Source={StaticResource SortTypes}}" /> -->
 			</StackPanel>
-			<wpfPropertyGrid:PropertyGrid
-				SelectedObject="{Binding Settings.Data, Mode=OneWay}"
-				x:Name="PropertyGrid"
-				HelpVisible="{Binding ElementName=ShowDescrip, Path=IsChecked}"
-				ToolbarVisible="{Binding ElementName=ShowToolbar, Path=IsChecked}"
-				PropertySort="{Binding ElementName=ComboSort, Path=SelectedItem}" ShowGridLines="True" />
 
+			<!-- <wpfPropertyGrid:PropertyGrid -->
+			<!-- 	SelectedObject="{Binding Settings.Data, Mode=OneWay}" -->
+			<!-- 	x:Name="PropertyGrid" -->
+			<!-- 	HelpVisible="{Binding ElementName=ShowDescrip, Path=IsChecked}" -->
+			<!-- 	ToolbarVisible="{Binding ElementName=ShowToolbar, Path=IsChecked}" -->
+			<!-- 	PropertySort="{Binding ElementName=ComboSort, Path=SelectedItem}" ShowGridLines="True" /> -->
+			<StackPanel DataContext="{Binding Settings}">
+				<StackPanel.Resources>
+					
+				</StackPanel.Resources>
+				<Label Content="AppVeyor"/>
+				<DockPanel Margin="8 0 0 0">
+					<Label Content="Save Token" Width="200" Padding="0 1 0 1" />
+					<CheckBox IsChecked="{Binding SaveToken}"/>
+				</DockPanel>
+				<Label Content="YAML"/>
+				<DockPanel Margin="8 0 0 0">
+					<Label Content="Enable YAML Folding" Width="200" Padding="0 1 0 1" />
+					<CheckBox IsChecked="{Binding EnableYamlFolding}"/>
+				</DockPanel>
+				<DockPanel Margin="8 0 0 0">
+					<Label Content="Enable YAML Syntax-Highlighting" Width="200" Padding="0 1 0 1" />
+					<CheckBox IsChecked="{Binding EnableYamlSyntaxHighlighting}" />
+				</DockPanel>
+			</StackPanel>
 		</DockPanel>
-
-
 	</DockPanel>
-
-
 </UserControl>

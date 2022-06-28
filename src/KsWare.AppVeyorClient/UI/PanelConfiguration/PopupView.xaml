@@ -1,0 +1,29 @@
+﻿<Popup 
+	x:Class="KsWare.AppVeyorClient.UI.PanelConfiguration.PopupView"
+	xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
+	xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+	xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006" 
+	xmlns:d="http://schemas.microsoft.com/expression/blend/2008" 
+	xmlns:local="clr-namespace:KsWare.AppVeyorClient.UI.PanelConfiguration"
+	mc:Ignorable="d"
+	d:DataContext="{d:DesignInstance local:PopupVM, IsDesignTimeCreatable=true}"
+	d:DesignHeight="450" d:DesignWidth="800">
+	<DockPanel Background="Beige">
+		<UIElement.InputBindings>
+			<KeyBinding Key="Escape" Command="{Binding CloseAction}" />
+		</UIElement.InputBindings>
+		<Grid DockPanel.Dock="Top" Background="#00008D">
+			<DockPanel Margin="2" >
+				<Button Content="X" Command="{Binding CloseAction}" DockPanel.Dock="Right" Width="20" ToolTip="Close Tooltip"/>
+				<Thumb x:Name="DragMoveThumb">
+					<Thumb.Template>
+						<ControlTemplate>
+							<TextBlock Text="{Binding Title}" VerticalAlignment="Center" Foreground="White" Margin="5 -1 5 0"/>
+						</ControlTemplate>
+					</Thumb.Template>
+				</Thumb>
+			</DockPanel>
+		</Grid>
+		<FlowDocumentScrollViewer Document="{Binding Document}"/>
+    </DockPanel>
+</Popup>

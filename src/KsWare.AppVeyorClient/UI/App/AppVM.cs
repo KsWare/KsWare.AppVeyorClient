@@ -4,28 +4,36 @@ using System.IO;
 using System.Security;
 using System.Security.Cryptography;
 using System.Text;
+using System.Text.RegularExpressions;
 using System.Windows;
 using System.Windows.Threading;
 using JetBrains.Annotations;
-using KsWare.AppVeyorClient.Api;
-using KsWare.AppVeyorClient.Shared;
+using KsWare.AppVeyor.Api;
+using KsWare.AppVeyor.Api.Shared;
 using KsWare.AppVeyorClient.UI.ViewModels;
 using KsWare.Presentation.ViewModelFramework;
 
 namespace KsWare.AppVeyorClient.UI.App {
 
-	public class AppVM:ApplicationVM {
+	public class AppVM : ApplicationVM {
 
-		public new static AppVM Current => (AppVM) ApplicationVM.Current;
+		public new static AppVM Current => (AppVM)ApplicationVM.Current;
+		private static bool _firstLoad = true;
 
 		public AppVM() {
-			RegisterChildren(()=>this);
+			RegisterChildren(() => this);
 			StartupUri = typeof(MainWindowVM);
 		}
 
 		protected override void OnStartup(StartupEventArgs e) {
 			base.OnStartup(e);
 			Application.Current.Dispatcher.Invoke(DispatcherPriority.ApplicationIdle, new Action(OnStartIdle));
+
+			var args = Environment.GetCommandLineArgs();
+			if (args.Length > 1) {
+				if (Regex.IsMatch(args[1], @"^([/-][h?]|--help)$")) 
+					Application.Current.Dispatcher.Invoke(DispatcherPriority.ApplicationIdle,new Action(() => new CommandLineHelpWindow().ShowDialog()));
+			}
 		}
 
 		private void OnStartIdle() {
@@ -34,7 +42,7 @@ namespace KsWare.AppVeyorClient.UI.App {
 
 		internal static Client Client { get; } = new Client("");
 
-		public static FileStore FileStore { get; private set; }
+		internal static FileStore FileStore { get; private set; }
 
 		public SettingsVM Settings { get; [UsedImplicitly] private set; }
 
@@ -53,16 +61,13 @@ namespace KsWare.AppVeyorClient.UI.App {
 
 			// Generate additional entropy (will be used as the Initialization vector)
 			byte[] entropy = new byte[20];
-			using (RNGCryptoServiceProvider rng = new RNGCryptoServiceProvider())
+			using (RNGCryptoServiceProvider rng = new RNGCryptoServiceProvider()) 
 				rng.GetBytes(entropy);
-
 
 			byte[] ciphertext = ProtectedData.Protect(plaintext, entropy, DataProtectionScope.CurrentUser);
 
-
 			int chk = 0;
-			foreach (var b in ciphertext)
-				chk += b;
+			foreach (var b in ciphertext) chk += b;
 			Debug.WriteLine(chk);
 
 
@@ -118,6 +123,13 @@ namespace KsWare.AppVeyorClient.UI.App {
 			var path = Path.Combine(Path.GetDirectoryName(SettingsVM.FilePath), "Cache");
 			Directory.CreateDirectory(path);
 			FileStore=FileStore.Instance=new FileStore(path);
+		}
+
+		public static void OnMainWindowLoading() {
+			if (_firstLoad == false) return;
+			_firstLoad = false;
+			AppVM.LoadToken(); // TODO load after UI loaded
+			AppVM.InitFileStore(); // TODO load after UI loaded
 		}
 	}
 }

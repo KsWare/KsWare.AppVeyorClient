@@ -7,7 +7,7 @@
     xmlns:local="clr-namespace:KsWare.AppVeyorClient.UI"
     xmlns:panelProjectEnvironmentVariables="clr-namespace:KsWare.AppVeyorClient.UI.PanelProjectEnvironmentVariables"
     mc:Ignorable="d" 
-    d:DesignHeight="300" d:DesignWidth="300"
+    d:DesignHeight="200" d:DesignWidth="300"
 	d:DataContext="{d:DesignInstance Type={x:Type panelProjectEnvironmentVariables:ProjectEnvironmentVariablesVM}}"
 >
 
@@ -20,12 +20,65 @@
 				</Style>
 			</FrameworkElement.Resources>
 			<Button Content="Get" Command="{Binding GetAction}" />
+			<Button Content="Send" Command="{Binding PostAction}" />
+			<Canvas Width="5"/>
 			<Button Content="Load" Command="{Binding LoadAction}"/>
 			<Button Content="Save" Command="{Binding SaveAction}"/>
-			<Button Content="Send" Command="{Binding PostAction}" />
+			<Canvas Width="5"/>
+			<Button Content="+" Command="{Binding AddAction}"/>
 		</WrapPanel>
-		<TextBox Text="{Binding PlainText}" FontFamily="Consolas" FontSize="12"
-		         HorizontalScrollBarVisibility="Visible"
-		         VerticalScrollBarVisibility="Visible" AcceptsReturn="True" AcceptsTab="True" />
+		<!-- <TextBox Text="{Binding PlainText}" FontFamily="Consolas" FontSize="12" -->
+		<!--          HorizontalScrollBarVisibility="Visible" -->
+		<!--          VerticalScrollBarVisibility="Visible" AcceptsReturn="True" AcceptsTab="True" /> -->
+		<ListView ItemsSource="{Binding Variables}">
+			<ListView.Resources>
+				<Style TargetType="ListViewItem">
+					<Setter Property="HorizontalContentAlignment" Value="Stretch" />
+				</Style>
+				<Style TargetType="TextBox">
+					<Setter Property="BorderThickness" Value="0"/>
+				</Style>
+			</ListView.Resources>
+			<ListView.View>
+				<GridView>
+					<GridViewColumn Header="Name" Width="100">
+						<GridViewColumn.CellTemplate>
+							<DataTemplate DataType="panelProjectEnvironmentVariables:EnvVariableVM">
+								<TextBox Text="{Binding Name}"/>
+							</DataTemplate>
+						</GridViewColumn.CellTemplate>
+					</GridViewColumn>
+					<GridViewColumn Header="Encrypted">
+						<GridViewColumn.CellTemplate>
+							<DataTemplate DataType="panelProjectEnvironmentVariables:EnvVariableVM">
+								<CheckBox IsChecked="{Binding IsEncrypted}"/>
+							</DataTemplate>
+						</GridViewColumn.CellTemplate>
+					</GridViewColumn>
+					<GridViewColumn Header="Value" Width="150">
+						<GridViewColumn.CellTemplate>
+							<DataTemplate DataType="panelProjectEnvironmentVariables:EnvVariableVM">
+								<TextBox Text="{Binding Value}"/>
+							</DataTemplate>
+						</GridViewColumn.CellTemplate>
+					</GridViewColumn>
+					<GridViewColumn Header="Value" Width="25">
+						<GridViewColumn.CellTemplate>
+							<DataTemplate DataType="panelProjectEnvironmentVariables:EnvVariableVM">
+								<Button Command="{Binding DeleteAction}">
+									<Button.Template>
+										<ControlTemplate>
+											<Grid>
+												<TextBlock Text="O" FontSize="20" FontFamily="Wingdings 2" Foreground="Red" HorizontalAlignment="Center" VerticalAlignment="Center"/>
+											</Grid>
+										</ControlTemplate>
+									</Button.Template>
+								</Button>
+							</DataTemplate>
+						</GridViewColumn.CellTemplate>
+					</GridViewColumn>
+				</GridView>
+			</ListView.View>
+		</ListView>
 	</DockPanel>
 </UserControl>

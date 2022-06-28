@@ -10,8 +10,9 @@
     xmlns:viewModels="clr-namespace:KsWare.AppVeyorClient.UI.ViewModels"
     xmlns:ksv="http://ksware.de/Presentation/ViewFramework"
     xmlns:kslab="http://ksware.de/Presentation/Labs"
+    xmlns:input="clr-namespace:KsWare.Presentation.Input"
     mc:Ignorable="d" 
-    d:DesignHeight="300" d:DesignWidth="300"
+    d:DesignHeight="300" d:DesignWidth="700"
 	d:DataContext="{d:DesignInstance Type={x:Type panelConfiguration:ConfigurationPanelVM}}"
 >
 <FrameworkElement.Resources>
@@ -22,6 +23,11 @@
 	</ResourceDictionary>
 </FrameworkElement.Resources>
 	<DockPanel>
+		<UIElement.InputBindings>
+			<KeyBinding Key="H" Modifiers="Control" Command="{Binding OpenReplaceDialogAction}" />
+		</UIElement.InputBindings>
+		<panelConfiguration:PopupView DataContext="{Binding Popup}" IsOpen="{Binding IsOpen}" AllowsTransparency="True" StaysOpen="True"/>
+
 		<WrapPanel DockPanel.Dock="Top" IsEnabled="{Binding YamlEditorController.IsEnabled}">
 			<FrameworkElement.Resources>
 				<Style x:Key="ButtonStyle" TargetType="Button">
@@ -49,7 +55,31 @@
 			<Button Content="Load" Command="{Binding LoadAction}" ToolTip="Loads the configuration from file."/>
 			<Button Content="Save" Command="{Binding SaveAction}" ToolTip="Saves the configuration to file."/>
 			<Canvas Width="12"/>
-			<Button Content="Edit Script" Command="{Binding EditScriptAction}" ToolTip="Edit selected script block" Padding="6 0"/>
+			<Button Content="Edit Block" Command="{Binding EditScriptBlockAction}" ToolTip="Edit selected script block" Padding="6 0"/>
+			<Button ToolTip="Navigate to AppVeyor CI" Command="{Binding OpenAppVeyorAction}" MinWidth="22">
+				<Image Source="/KsWare.AppVeyorClient;component/Ressources/appveyor-favicon-16x16.png" Height="15" />
+			</Button>
+			<Button ToolTip="Navigate to GitHub" Command="{Binding OpenGitHubAction}" MinWidth="22">
+				<Image Source="/KsWare.AppVeyorClient;component/Ressources/github-favicon.png" Height="15" />
+			</Button>
+			<ComboBox SelectedItem="{Binding SelectedEnvironmentVariable}" ItemsSource="{Binding EnvironmentVariables}" IsTextSearchEnabled="True" IsTextSearchCaseSensitive="False" TextSearch.TextPath="Name" IsEditable="True" Width="180" Margin="5 0 0 0">
+				<ComboBox.ItemTemplate>
+					<ItemContainerTemplate DataType="{x:Type panelConfiguration:EnvironmentVariableInfo}">
+						<DockPanel>
+							<TextBlock Text="{Binding Name}" Width="200"/>
+							<TextBlock Text="{Binding Description}" MinWidth="300" TextTrimming="CharacterEllipsis" ToolTip="{Binding Description}"/>
+						</DockPanel>
+					</ItemContainerTemplate>
+				</ComboBox.ItemTemplate>
+			</ComboBox>
+			<Button Content="V" ToolTip="Insert Variable" Command="{Binding InsertVariableAction}" MinWidth="22"/>
+			<Button Content="i" ToolTip="Context Help" Command="{Binding ContextHelpAction}" MinWidth="22" FontFamily="Webdings" FontSize="15" Foreground="#3030FE"/>
+			<Button ToolTip="Validate YAML" Command="{Binding ValidateYamlAction}" MinWidth="22">
+				<TextBlock FontFamily="Wingdings" FontSize="13" FontWeight="Bold">
+					<Run Text="D" Foreground="Red"/><Run Text="C" Foreground="DarkGreen"/>
+				</TextBlock>
+			</Button>
+			<Button Content="a" ToolTip="Encrypt Value" Command="{Binding EncryptAction}" MinWidth="22" FontFamily="Wingdings" />
 		</WrapPanel>
 		<StatusBar DockPanel.Dock="Bottom">
 			<StatusBarItem>
@@ -76,8 +106,8 @@
 <!--					</i:EventTrigger>-->
 <!--				</i:Interaction.Triggers>-->
 
-				<StackPanel DockPanel.Dock="Top" Designtime.Visibility="Visible" Visibility="{ksv:VisibilityBinding YamlEditorController.IsEnabled, TrueVisibleElseCollapsed}">
-					<DockPanel LastChildFill="False" Margin="0">
+				<StackPanel DockPanel.Dock="Top" Designtime.Visibility="Visible" Visibility="{VisibilityBinding YamlEditorController.IsEnabled, TrueVisibleElseCollapsed}">
+					<DockPanel Margin="0">
 						<ComboBox 
 							Style="{StaticResource ComboBoxFlatStyle}" 
 							ItemsSource="{Binding NavigationItems}"
@@ -94,7 +124,7 @@
 							<ComboBox.ItemTemplate>
 								<DataTemplate DataType="{x:Type viewModels:NavigationItemVM}">
 									<DockPanel>
-										<TextBlock Text="T" DockPanel.Dock="Right" Visibility="{ksv:VisibilityBinding HasTemplate, TrueVisibleElseCollapsed}"/>
+										<TextBlock Text="T" DockPanel.Dock="Right" Visibility="{VisibilityBinding HasTemplate, TrueVisibleElseCollapsed}"/>
 										<TextBlock x:Name="TextBlock" Text="{Binding DisplayName}" MinWidth="120"/>
 									</DockPanel>
 									
@@ -132,6 +162,10 @@
 								ToolTip="Navigate to previous occurrence."
 								/>
 						</StackPanel>
+						<Grid HorizontalAlignment="Stretch" Margin="5 0 5 0">
+							<TextBlock Text="{Binding EditorProjectName}" TextTrimming="CharacterEllipsis" VerticalAlignment="Center" 
+							           ToolTip="{Binding EditorProjectName}"/>
+						</Grid>
 					</DockPanel>
 					<Line Height="1" Stroke="DarkGray" StrokeThickness="1" Y1="0.5" Y2="0.5" X2="{Binding ActualWidth, RelativeSource={RelativeSource Self}}"  />
 				</StackPanel>
@@ -143,6 +177,15 @@
 					FontFamily="Consolas"
 					FontSize="12pt"
 					aee:TextEditorControllerBehavior.Controller="{Binding YamlEditorController}">
+					<UIElement.InputBindings>
+						<KeyBinding Key="F1" Command="{Binding ContextHelpAction}" />
+						<KeyBinding Key="Escape" Command="{Binding EscapeAction}" />
+						<KeyBinding Key="H" Modifiers="Control" Command="{Binding OpenReplaceDialogAction}" />
+					</UIElement.InputBindings>
+					<UIElement.CommandBindings>
+						<input:CommandBindingMapper Command="ApplicationCommands.Help" CommandBinding="{RootBinding Path=ContextHelpAction}"/>
+						<input:CommandBindingMapper Command="ApplicationCommands.Replace" CommandBinding="{RootBinding Path=OpenReplaceDialogAction}"/>
+					</UIElement.CommandBindings>
 					<avalonEdit:TextEditor.ContextMenu>
 						<ContextMenu 
 							DataContext="{Binding YamlEditorController.ContextMenu}"
@@ -181,6 +224,7 @@
 						<system:String>(unchanged)</system:String>
 						<system:String>Block</system:String>
 						<system:String>Split</system:String>
+						<system:String>Single</system:String>
 					</ComboBox>
 					<Button Content="Apply" Command="{Binding ApplyEditAction}" Margin="2" Padding="6 2"/>
 					<Button Content="Cancel" Command="{Binding CancelEditAction}" Margin="2" Padding="6 2" />

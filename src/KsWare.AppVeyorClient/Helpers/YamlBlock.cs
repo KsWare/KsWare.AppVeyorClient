@@ -1,8 +1,8 @@
-﻿namespace KsWare.AppVeyorClient.Helpers
-{
+﻿namespace KsWare.AppVeyorClient.Helpers {
+
 	public class YamlBlock {
-		public YamlBlock(int indentLength, string suffix, string content)
-		{
+
+		public YamlBlock(int indentLength, string suffix, string content) {
 			Indent=indentLength;
 			Suffix = suffix;
 			Content = content;

@@ -1,0 +1,36 @@
+﻿<Project Sdk="Microsoft.NET.Sdk">
+
+  <PropertyGroup>
+    <TargetFrameworks>netstandard2.0;netcoreapp3.1;net6.0-windows</TargetFrameworks>
+    <Copyright>Copyright © 2018-2022 by KsWare. All rights reserved.</Copyright>
+    <Company>KsWare</Company>
+    <Authors>SchreinerK</Authors>
+    <Version>0.1.0-alpha</Version>
+	<FileVersion>0.1.0</FileVersion>
+	  <InformationalVersion>0.1.0-alpa</InformationalVersion>
+    <Description>A managed .AppVeyor API</Description>
+    <PackageLicenseExpression>LGPL-3.0-only</PackageLicenseExpression>
+    <PackageIcon>PackageIcon.png</PackageIcon>
+    <PackageIconUrl />
+    <GeneratePackageOnBuild>true</GeneratePackageOnBuild>
+    <PackageProjectUrl>https://github.com/KsWare/KsWare.AppVeyorClient</PackageProjectUrl>
+    <RepositoryUrl>https://github.com/KsWare/KsWare.AppVeyorClient.git</RepositoryUrl>
+    <RepositoryType>git</RepositoryType>
+    <PackageTags>AppVeyor API</PackageTags>
+  </PropertyGroup>
+
+  <ItemGroup>
+    <PackageReference Include="Common.Logging" Version="3.4.1" />
+    <PackageReference Include="JetBrains.Annotations" Version="2022.1.0" />
+    <PackageReference Include="Newtonsoft.Json" Version="13.0.1" />
+    <PackageReference Include="System.Security.Cryptography.ProtectedData" Version="6.0.0" />
+  </ItemGroup>
+
+  <ItemGroup>
+    <None Include="..\..\PackageIcon.png">
+      <Pack>True</Pack>
+      <PackagePath></PackagePath>
+    </None>
+  </ItemGroup>
+
+</Project>

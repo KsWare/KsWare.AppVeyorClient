@@ -1,0 +1,30 @@
+
+# Exit on pull request
+- ps: >-
+    echo "PR: $env:APPVEYOR_PULL_REQUEST_NUMBER"
+    if($env:APPVEYOR_PULL_REQUEST_NUMBER -match "^\d+$") {
+        $env:APPVEYOR_SKIP_FINALIZE_ON_EXIT="true"
+        Write-Error -Message "`nERROR: PR detected. build canceled!" -ErrorAction Stop
+        Exit-AppveyorBuild
+    }
+
+# Save (commit) the new version number
+# $env:CommitVersionFile = Name of the file where the new version is puted in
+- ps: >-
+	Out-File "$ENV:APPVEYOR_BUILD_FOLDER\\$env:CommitVersionFile"
+	Add-Content "$ENV:APPVEYOR_BUILD_FOLDER\\$env:CommitVersionFile" "$ENV:APPVEYOR_BUILD_VERSION"
+	git add .
+	git commit -v -a -m "[skip ci] increment version $ENV:APPVEYOR_BUILD_VERSION"
+	git push --porcelain
+
+- ps: >-
+    # commit and push updated version file. (ignore errors)
+
+    Out-File "$ENV:APPVEYOR_BUILD_FOLDER\\$env:CommitVersionFile"
+
+    Add-Content "$ENV:APPVEYOR_BUILD_FOLDER\\$env:CommitVersionFile" "$ENV:APPVEYOR_BUILD_VERSION"
+
+    git add .
+
+    git commit -v -a -m "[skip ci] increment version $ENV:APPVEYOR_BUILD_VERSION"
+- cmd: git push --porcelain & exit 0

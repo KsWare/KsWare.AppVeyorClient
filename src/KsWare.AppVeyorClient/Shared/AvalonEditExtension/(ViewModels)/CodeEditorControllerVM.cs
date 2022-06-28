@@ -7,7 +7,7 @@ namespace KsWare.AppVeyorClient.Shared.AvalonEditExtension {
 	public class CodeEditorControllerVM : TextEditorControllerVM {
 
 		public CodeEditorControllerVM() {
-			RegisterChildren(()=>this);
+			RegisterChildren(() => this);
 		}
 
 		public void ExpandSelection() {
@@ -24,9 +24,9 @@ namespace KsWare.AppVeyorClient.Shared.AvalonEditExtension {
 				var li1 = Data.TextArea.Selection.EndPosition.Line;
 				selStart = Data.Document.GetLineByNumber(li0).Offset;
 				var l1 = Data.Document.GetLineByNumber(li1);
-				selEnd = l1.Offset + l1.TotalLength - l1.DelimiterLength;				
+				selEnd = l1.Offset + l1.TotalLength - l1.DelimiterLength;
 			}
-			
+
 			Data.Focus();
 			Data.Select(selStart, selEnd - selStart);
 //			Data.ScrollToHorizontalOffset(0);
@@ -44,7 +44,6 @@ namespace KsWare.AppVeyorClient.Shared.AvalonEditExtension {
 
 			// internal search panel
 			// SearchPanel.Install(Data);
-			
 		}
 
 //		private void DataOnSelectionChanged(object s, RoutedEventArgs e) {
@@ -57,21 +56,22 @@ namespace KsWare.AppVeyorClient.Shared.AvalonEditExtension {
 
 		private void DataOnPreviewKeyUp(object sender, KeyEventArgs e) {
 			var modKey = e.KeyboardDevice.Modifiers;
-			var combinedKey = (Key) ((int) modKey << 16 | (int) e.Key);
+			var combinedKey = (Key)(((int)modKey << 16) | (int)e.Key);
 			switch (combinedKey) {
-				case (Key) ((int) Key.Tab | (int) ModifierKeys.None << 16): OnTabPressed(e); break;
-//				case (Key) ((int) Key.Tab | (int) ModifierKeys.Shift << 16): OnTabBackPressed(e); break;
-				case (Key) ((int) Key.Back | (int) ModifierKeys.None << 16): e.Handled = true; break;
+				case Key.Tab: OnTabPressed(e); break;
+//				case (Key) ((int) Key.Tab | (int)ModifierKeys.Shift << 16): OnTabBackPressed(e); break;
+				case Key.Back: e.Handled = true; break;
 			}
 		}
+
 		private void DataOnPreviewKeyDown(object sender, KeyEventArgs e) {
 			var modKey = e.KeyboardDevice.Modifiers;
 
-			var combinedKey = (Key) ((int) modKey << 16 | (int) e.Key);
+			var combinedKey = (Key)(((int)modKey << 16) | (int)e.Key);
 			switch (combinedKey) {
-				case (Key)((int)Key.Tab | (int)ModifierKeys.None<<16) : OnTabPressed(e); break;
+				case Key.Tab: OnTabPressed(e); break;
 //				case (Key)((int)Key.Tab | (int)ModifierKeys.Shift<<16) : OnTabBackPressed(e); break;
-				case (Key)((int)Key.Back | (int)ModifierKeys.None<<16) : e.Handled = true; OnBackPressed(); break;
+				case Key.Back: e.Handled = true; OnBackPressed(); break;
 			}
 		}
 
@@ -99,7 +99,7 @@ namespace KsWare.AppVeyorClient.Shared.AvalonEditExtension {
 						if (Data.SelectionStart>1 && Data.Document.GetCharAt(pos.Offset - 2) == '\r') m = 2;
 					}
 					Data.Select(Data.SelectionStart-m,m);
-					Data.SelectedText = "";					
+					Data.SelectedText = "";
 				}
 			}
 		}
@@ -118,33 +118,30 @@ namespace KsWare.AppVeyorClient.Shared.AvalonEditExtension {
 
 			if (Data.SelectionLength > 0) {
 				var li0 = Data.TextArea.Selection.StartPosition.Line;
-				var cp0 = Data.TextArea.Selection.StartPosition.Column;
 				var li1 = Data.TextArea.Selection.EndPosition.Line;
-				var cp1 = Data.TextArea.Selection.EndPosition.Column;
 				var l0 = Data.Document.GetLineByNumber(li0);
+				var ss = Data.TextArea.Selection.StartPosition.Line;
+				var sl = Data.TextArea.Selection.Length;
 
 				for (int i = li0; i <= li1; i++) {
 					var l = i == li0 ? l0 : Data.Document.GetLineByNumber(i);
-					Data.Select(l.Offset,0);
-					Data.SelectedText=new string(' ', 4);
+					Data.Select(l.Offset, 0);
+					Data.SelectedText = new string(' ', 4);
 				}
 
-				var ss = l0.Offset + cp0 - 1 + 4;
-				var sl = li0 == li1 ? l0.Offset + cp1 - 1 + 4 : (li1 - li0 - 1) * 4;
-				Data.Select(ss,sl);
+				Data.Select(ss + 4, sl);
 			}
 			else {
-				var l=Data.Document.GetLineByOffset(Data.SelectionStart);
-				var lci=l.Offset;
-				var cp = Data.SelectionStart - lci;
-				var t = Data.Text.Substring(l.Offset, l.Length);
-				var sp= Regex.Match(t, @"^\x20*");
-				if (cp <= sp.Length) {
+				var selectedLine = Data.Document.GetLineByOffset(Data.SelectionStart);
+				var cp = Data.SelectionStart - selectedLine.Offset;
+				var lineText = Data.Text.Substring(selectedLine.Offset, selectedLine.Length);
+				var indentation = Regex.Match(lineText, @"^\x20*");
+				if (cp <= indentation.Length) {
 					var ti = cp / 4;
-					var ind = sp.Length / 4;
+					var ind = indentation.Length / 4;
 					var sp1 = (ind + 1) * 4;
-					Data.SelectedText=new string(' ',sp1-sp.Length);
-					Data.Select(lci + (ti+1) * 4, 0);
+					Data.SelectedText = new string(' ', sp1 - indentation.Length);
+					Data.Select(selectedLine.Offset + (ti + 1) * 4, 0);
 				}
 				else {
 //					int i = (cp / 4) * 4;

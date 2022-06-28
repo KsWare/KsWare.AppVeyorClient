@@ -1,0 +1,7 @@
+{
+  "profiles": {
+    "KsWare.AppVeyorClient": {
+      "commandName": "Project"
+    }
+  }
+}
