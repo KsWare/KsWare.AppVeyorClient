@@ -1,0 +1,44 @@
+﻿<Window 
+	x:Class="KsWare.AppVeyorClient.UI.PanelConfiguration.FindAndReplaceView"
+	xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
+	xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+	xmlns:d="http://schemas.microsoft.com/expression/blend/2008"
+	xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
+	xmlns:local="clr-namespace:KsWare.AppVeyorClient.UI.PanelConfiguration"
+	xmlns:system="clr-namespace:System;assembly=System.Runtime"
+	mc:Ignorable="d"
+	Title="Find and Replace" Height="276" Width="400"
+	d:DataContext="{d:DesignInstance local:FindAndReplaceVM, IsDesignTimeCreatable=False}">
+    <DockPanel Margin="5 0 5 5">
+		<StackPanel DockPanel.Dock="Top">
+		    <DockPanel Height="26">
+				<ComboBox IsEditable="True" Text="{Binding SearchText, UpdateSourceTrigger=PropertyChanged}" ItemsSource="{Binding SearchTextMru}" VerticalAlignment="Center"/>
+			</DockPanel>
+		    <DockPanel Height="26">
+			    <ComboBox IsEditable="True" Text="{Binding ReplaceText}" ItemsSource="{Binding ReplaceTextMru}" VerticalAlignment="Center"/>
+		    </DockPanel>
+		    
+			<StackPanel Orientation="Horizontal" Height="26">
+				<ToggleButton Content="Match Case" IsChecked="{Binding MatchCase}" VerticalAlignment="Center" Width="70"/>
+				<ToggleButton Content="RegEx" IsChecked="{Binding UseRegex}" VerticalAlignment="Center" Width="70" Margin="5 0 0 0" />
+			</StackPanel>
+
+			<WrapPanel Margin="0 10 0 0">
+				<Button Content="Find Next" Command="{Binding FindNextAction}" Width="80" Margin="0 0 5 5"/>
+				<Button Content="Find Prev" Command="{Binding FindPreviousAction}" Width="80" Margin="0 0 5 5"/>
+				<Button Content="Find All" Command="{Binding FindAllAction}" Width="80" Margin="0 0 5 5"/>
+				<Button Content="Replace Next" Command="{Binding ReplaceNextAction}" Width="80" Margin="0 0 5 5"/>
+				<Button Content="Replace All" Command="{Binding ReplaceAllAction}" Width="80" Margin="0 0 5 5"/>
+			</WrapPanel>
+		</StackPanel>
+		<ListView Margin="0 5 0 0" ItemsSource="{Binding SearchResults}" SelectedItem="{Binding SelectedSearchResult}">
+			<ListView.View>
+				<GridView>
+					<GridViewColumn Header="#" DisplayMemberBinding="{Binding Offset}"/>
+					<GridViewColumn Header="Text" DisplayMemberBinding="{Binding Text}"/>
+					<GridViewColumn Header="Offset" DisplayMemberBinding="{Binding Offset}"/>
+				</GridView>
+			</ListView.View>
+		</ListView>
+    </DockPanel>
+</Window>

@@ -15,13 +15,13 @@ using KsWare.Presentation.ViewModelFramework;
 
 namespace KsWare.AppVeyorClient.UI.App {
 
-	public class AppVM:ApplicationVM {
+	public class AppVM : ApplicationVM {
 
 		public new static AppVM Current => (AppVM)ApplicationVM.Current;
 		private static bool _firstLoad = true;
 
 		public AppVM() {
-			RegisterChildren(()=>this);
+			RegisterChildren(() => this);
 			StartupUri = typeof(MainWindowVM);
 		}
 

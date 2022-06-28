@@ -23,6 +23,7 @@ using KsWare.AppVeyorClient.UI.PanelProjectSelector;
 using KsWare.AppVeyorClient.UI.PanelSearch;
 using KsWare.AppVeyorClient.UI.ViewModels;
 using KsWare.Presentation;
+using KsWare.Presentation.ViewFramework.AttachedBehavior;
 using KsWare.Presentation.ViewModelFramework;
 using BindingMode = System.Windows.Data.BindingMode;
 using MessageBox = System.Windows.MessageBox;
@@ -64,6 +65,22 @@ namespace KsWare.AppVeyorClient.UI.PanelConfiguration {
 
 			if (YamlEditorController.MːData != null) YamlEditorControllerOnViewConnected(null, null);
 			else YamlEditorController.ViewConnected += YamlEditorControllerOnViewConnected;
+
+			OpenReplaceDialogAction = new SimpleCommand {
+				ExecuteDelegate = o => FindAndReplaceVM.ShowInstance(YamlEditorController),
+				CanExecuteDelegate = o => true
+			};
+		}
+
+		private IWindowVM Window {
+			get {
+				IObjectVM o = this;
+				while (o!=null) {
+					if (o is IWindowVM w) return w;
+					o = o.Parent;
+				}
+				return null;
+			}
 		}
 
 		private void YamlEditorControllerOnViewConnected(object sender, EventArgs e) {
@@ -158,6 +175,9 @@ namespace KsWare.AppVeyorClient.UI.PanelConfiguration {
 		public ActionVM ContextHelpAction { get; [UsedImplicitly] private set; }
 		public ActionVM EscapeAction { get; [UsedImplicitly] private set; }
 
+
+		public ICommand OpenReplaceDialogAction { get; }
+
 		public PopupVM Popup { get; } = new PopupVM();
 
 		private void DoEscape() {
@@ -232,7 +252,8 @@ namespace KsWare.AppVeyorClient.UI.PanelConfiguration {
 				selectedTemplate = templates.First();
 			}
 			else {
-				var dlg = new SelectSectionTemplateDialog {
+				var dlg = new SelectSectionTemplateDialogVM {
+					Owner = Window,
 					Templates = templates,
 					SelectedTemplate = templates.FirstOrDefault()
 				};
@@ -240,7 +261,7 @@ namespace KsWare.AppVeyorClient.UI.PanelConfiguration {
 				selectedTemplate = dlg.SelectedTemplate;
 			}
 
-			if(selectedTemplate==null) return;
+			if (selectedTemplate == null) return;
 
 			var navItemIndex = NavigationItems.IndexOf(SelectedNavigationItem);
 			for (int i = navItemIndex; i < NavigationItems.Count; i++) {

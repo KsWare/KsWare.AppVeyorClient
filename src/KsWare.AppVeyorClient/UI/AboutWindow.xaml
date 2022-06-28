@@ -6,13 +6,17 @@
 	xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
 	xmlns:local="clr-namespace:KsWare.AppVeyorClient.UI"
 	mc:Ignorable="d"
+	d:DataContext="{d:DesignInstance local:AboutWindowVM, IsDesignTimeCreatable=False}"
 	Title="About" Height="270" Width="457" WindowStartupLocation="CenterOwner" ShowInTaskbar="False" WindowStyle="ThreeDBorderWindow" >
+	<Window.InputBindings>
+		<KeyBinding Key="Escape" Command="{Binding CloseAction}"/>
+	</Window.InputBindings>
 	<DockPanel>
-		<Button DockPanel.Dock="Bottom" Content="OK" HorizontalAlignment="Center" Width="80" Margin="0 20 0 10" Click="Button_Click"/>
+		<Button DockPanel.Dock="Bottom" Content="OK" IsDefault="True" HorizontalAlignment="Center" Width="80" Margin="0 20 0 10" Command="{Binding CloseAction}"/>
 		<Grid Margin="10">
 			<StackPanel HorizontalAlignment="Center" VerticalAlignment="Center">
 				<TextBlock Text="AppVeyor Client" FontSize="16" FontWeight="Black"/>
-				<TextBlock Text="Copyright © 2018-2021 by KsWare. All rights reserved."/>
+				<TextBlock Text="Copyright © 2018-2022 by KsWare. All rights reserved."/>
 				<FlowDocumentScrollViewer Margin="0 10 0 0" Height="107" >
 					<FlowDocumentScrollViewer.Document>
 						<FlowDocument FontSize="12" FontFamily="Calibri" PagePadding="0 0 5 0" TextAlignment="Left" xml:space="preserve">

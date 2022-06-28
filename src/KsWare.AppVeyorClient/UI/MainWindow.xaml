@@ -38,6 +38,9 @@
 				<MenuItem Header="E_xit" Command="{Binding AppExitAction}" InputGestureText="Alt+F4"/>
 			</MenuItem>
 			<MenuItem Header="_Edit">
+				<MenuItem Command="Find"/>
+				<MenuItem Command="Replace"/>
+				<Separator/>
 				<MenuItem Command="ApplicationCommands.Undo"/> 
 				<MenuItem Command="ApplicationCommands.Redo"/> 
 				<Separator/>

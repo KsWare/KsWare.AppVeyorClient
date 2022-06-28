@@ -119,7 +119,7 @@ namespace KsWare.AppVeyorClient.UI {
 		/// </summary>
 		[UsedImplicitly]
 		private void DoAbout() {
-			new AboutWindow() { Owner = Application.Current.MainWindow }.ShowDialog();
+			new AboutWindowVM() { Owner = this }.ShowDialog();
 		}
 
 		/// <summary>

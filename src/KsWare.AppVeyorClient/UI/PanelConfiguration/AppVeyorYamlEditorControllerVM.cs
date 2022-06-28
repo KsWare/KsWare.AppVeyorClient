@@ -32,7 +32,7 @@ namespace KsWare.AppVeyorClient.UI.PanelConfiguration {
 
 		public AppVeyorYamlEditorControllerVM() {
 			RegisterChildren(() => this);
-			_appVeyorEnvironmentVariables=PrepareAppVeyorEnvironmentVariables();
+			_appVeyorEnvironmentVariables = PrepareAppVeyorEnvironmentVariables();
 		}
 
 		private SettingsVM Settings => AppVM.Current.Settings;
@@ -42,7 +42,7 @@ namespace KsWare.AppVeyorClient.UI.PanelConfiguration {
 			var list = new List<MyCompletionData>();
 			foreach (var line in lines) {
 				if(string.IsNullOrWhiteSpace(line) || line.Trim().StartsWith("#")) continue;
-				var tokens=line.Split(new[] {": "}, StringSplitOptions.None);
+				var tokens = line.Split(new[] { ": " }, StringSplitOptions.None);
 				list.Add(new MyCompletionData(tokens[0], tokens[1]));
 			}
 			return list;
@@ -53,7 +53,7 @@ namespace KsWare.AppVeyorClient.UI.PanelConfiguration {
 //			Fields[nameof(DisableSearchResultHighlighting)].SetBinding(new FieldBinding(Settings.Fields[nameof(SettingsVM.EnableYamlSearchResultHighlighting)] , BindingMode.TwoWay, InvertBoolConverter.Default));
 			Fields[nameof(DisableFolding)].SetBinding(new FieldBinding(Settings.Fields[nameof(SettingsVM.EnableYamlFolding)], BindingMode.TwoWay, InvertBoolConverter.Default));
 
-			base.OnViewConnected();  
+			base.OnViewConnected();
 
 			Data.TextArea.TextEntering += textEditor_TextArea_TextEntering;
 			Data.TextArea.TextEntered  += textEditor_TextArea_TextEntered;
@@ -92,7 +92,7 @@ namespace KsWare.AppVeyorClient.UI.PanelConfiguration {
 		}
 
 		private void UpdateFoldings(string reason) {
-			if(Settings.EnableYamlFolding==false) return;
+			if (Settings.EnableYamlFolding == false) return;
 
 			Debug.WriteLine($"UpdateFoldings: {reason}");
 			_foldingStrategy.UpdateFoldings(_foldingManager, Data.Document);
@@ -102,7 +102,7 @@ namespace KsWare.AppVeyorClient.UI.PanelConfiguration {
 			base.OnTextChanged(changedRegion);
 			if (changedRegion is IDocument) {
 				var text = ((IDocument) changedRegion).Text;
-				var variables=ParseVariables(text);
+				var variables = ParseVariables(text);
 				_dynamicVariables = variables.Select(v => new MyCompletionData(v)).ToList();
 
 				UpdateFoldings("Document changed");
@@ -192,7 +192,7 @@ namespace KsWare.AppVeyorClient.UI.PanelConfiguration {
 		public double Priority { get; private set; } = 1;
 
 		public void Complete(TextArea textArea, ISegment completionSegment, EventArgs insertionRequestEventArgs) {
-			textArea.Document.Replace(completionSegment, this.Text);
+			textArea.Document.Replace(completionSegment, Text);
 		}
 	}
 

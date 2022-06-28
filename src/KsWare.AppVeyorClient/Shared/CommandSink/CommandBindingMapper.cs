@@ -1,9 +1,12 @@
-﻿using System.Windows;
+﻿// GIST: https://gist.github.com/SchreinerK/0aa450669ba0f66dbf821f92b15c1a66
+
+using System.Windows;
 using System.Windows.Data;
 using System.Windows.Input;
 using KsWare.Presentation.ViewFramework;
 
-namespace KsWare.AppVeyorClient.Shared.CommandSink {
+// ReSharper disable once CheckNamespace
+namespace KsWare.Presentation.Input {
 
 	/// <summary>
 	/// Provides a <see cref="CommandBinding"/> for redirecting a <see cref="RoutedUICommand"/> to a command in a view model.

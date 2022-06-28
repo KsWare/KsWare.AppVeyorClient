@@ -140,16 +140,16 @@
     <PackageReference Include="JetBrains.Annotations" Version="2022.1.0">
 	    <PrivateAssets>all</PrivateAssets>
     </PackageReference>
-    <PackageReference Include="KsWare.Presentation" Version="0.30.8" />
-    <PackageReference Include="KsWare.Presentation.ViewFramework.Common" Version="0.3.0" />
+    <PackageReference Include="KsWare.Presentation" Version="0.19.57" />
+    <PackageReference Include="KsWare.Presentation.ViewFramework.Common" Version="0.2.6" />
     <PackageReference Include="Microsoft.CSharp" Version="4.7.0" />
-    <PackageReference Include="Microsoft.Xaml.Behaviors.Wpf" Version="1.1.39" />
+    <PackageReference Include="Microsoft.Xaml.Behaviors.Wpf" Version="1.1.31" />
     <PackageReference Include="Newtonsoft.Json" Version="13.0.1" />
-    <PackageReference Include="Microsoft.DotNet.UpgradeAssistant.Extensions.Default.Analyzers" Version="0.3.330701">
+    <PackageReference Include="Microsoft.DotNet.UpgradeAssistant.Extensions.Default.Analyzers" Version="0.3.242703">
       <PrivateAssets>all</PrivateAssets>
     </PackageReference>
     <PackageReference Include="AvalonEdit" Version="6.1.3.50" />
-    <PackageReference Include="Microsoft.Windows.Compatibility" Version="6.0.0" />
+    <PackageReference Include="Microsoft.Windows.Compatibility" Version="5.0.2" />
     <PackageReference Include="YamlDotNet" Version="11.2.1" />
   </ItemGroup>
   <ItemGroup>

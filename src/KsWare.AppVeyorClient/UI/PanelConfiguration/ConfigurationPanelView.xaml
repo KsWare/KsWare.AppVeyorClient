@@ -10,7 +10,7 @@
     xmlns:viewModels="clr-namespace:KsWare.AppVeyorClient.UI.ViewModels"
     xmlns:ksv="http://ksware.de/Presentation/ViewFramework"
     xmlns:kslab="http://ksware.de/Presentation/Labs"
-    xmlns:commandSink="clr-namespace:KsWare.AppVeyorClient.Shared.CommandSink"
+    xmlns:input="clr-namespace:KsWare.Presentation.Input"
     mc:Ignorable="d" 
     d:DesignHeight="300" d:DesignWidth="700"
 	d:DataContext="{d:DesignInstance Type={x:Type panelConfiguration:ConfigurationPanelVM}}"
@@ -23,6 +23,9 @@
 	</ResourceDictionary>
 </FrameworkElement.Resources>
 	<DockPanel>
+		<UIElement.InputBindings>
+			<KeyBinding Key="H" Modifiers="Control" Command="{Binding OpenReplaceDialogAction}" />
+		</UIElement.InputBindings>
 		<panelConfiguration:PopupView DataContext="{Binding Popup}" IsOpen="{Binding IsOpen}" AllowsTransparency="True" StaysOpen="True"/>
 
 		<WrapPanel DockPanel.Dock="Top" IsEnabled="{Binding YamlEditorController.IsEnabled}">
@@ -177,9 +180,11 @@
 					<UIElement.InputBindings>
 						<KeyBinding Key="F1" Command="{Binding ContextHelpAction}" />
 						<KeyBinding Key="Escape" Command="{Binding EscapeAction}" />
+						<KeyBinding Key="H" Modifiers="Control" Command="{Binding OpenReplaceDialogAction}" />
 					</UIElement.InputBindings>
 					<UIElement.CommandBindings>
-						<commandSink:CommandBindingMapper Command="ApplicationCommands.Help" CommandBinding="{RootBinding Path=ContextHelpAction}"/>
+						<input:CommandBindingMapper Command="ApplicationCommands.Help" CommandBinding="{RootBinding Path=ContextHelpAction}"/>
+						<input:CommandBindingMapper Command="ApplicationCommands.Replace" CommandBinding="{RootBinding Path=OpenReplaceDialogAction}"/>
 					</UIElement.CommandBindings>
 					<avalonEdit:TextEditor.ContextMenu>
 						<ContextMenu 
