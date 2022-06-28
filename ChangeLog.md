@@ -1,3 +1,6 @@
+# 0.5
+- use net 6.0
+- bump Newtonsoft.Json from 12.0.2 to 13.0.1.
 # 0.4
 - use .Net 5.0
 - context help for appveyor.yml
