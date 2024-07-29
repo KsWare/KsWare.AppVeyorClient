@@ -1,5 +1,6 @@
 ﻿using System;
 using System.Diagnostics;
+using System.Diagnostics.CodeAnalysis;
 using System.Threading.Tasks;
 using JetBrains.Annotations;
 using KsWare.AppVeyor.Api;
@@ -63,13 +64,14 @@ namespace KsWare.AppVeyorClient.UI.PanelApiTester {
 					switch (ContentType) {
 						case "application/json":
 							try {
+								// ReSharper disable once AsyncApostle.AsyncWait
 								var result = JsonConvert.SerializeObject(JsonConvert.DeserializeObject(task.Result), Formatting.Indented);
 							}
 							catch (Exception ex2) {}
 							break;
 					}
-
 					Debug.WriteLine($"ResultText changing");
+					// ReSharper disable once AsyncApostle.AsyncWait
 					ResultText = task.Result;
 				});
 

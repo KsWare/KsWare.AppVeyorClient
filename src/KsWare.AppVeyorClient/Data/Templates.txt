@@ -3,18 +3,18 @@
 pull_requests:							# Pull Requests do not increment build number
   do_not_increment_build_number: true
 
-image: Visual Studio 2019
-
-image: Visual Studio 2017
+#INCLUDE image-templates.txt
 
 configuration: Release
 
 platform: Any CPU
 
+# Branches (include)
 branches:							# Branches to build
   only:								# Only branches specified below [only|except]
   - includeBranchA
 
+# Branches (exclude)
 branches:							# Branches to build
   except:							# All except branches specified below [only|except]
   - exludeBranchA
@@ -73,8 +73,6 @@ clone_folder: c:\buildroot						# Clone directory
 clone_script:
 - REM [CLONE] Multiline content. DO NOT EDIT on appveyor.com!
 
-image: Visual Studio 2019
-
 init:
 - REM [INIT] Multiline content. DO NOT EDIT on appveyor.com!
 
@@ -99,6 +97,9 @@ services:
 - mssql2016			# SQL Server 2016 Developer
 - mssql2017			# SQL Server 2017 Developer
 - mysql				# MySQL
+- postgresql12		# PostgreSQL 12
+- postgresql11		# PostgreSQL 11
+- postgresql10		# PostgreSQL 10
 - postgresql		# PostgreSQL
 - mongodb			# MongoDB
 - iis				# Internet Information Services (IIS)
@@ -127,7 +128,7 @@ cache: src\packages
 nuget:
   # Automatically configure NuGet sources during a build:
   account_feed: false				# Project feed
-  project_feed: false				# # Account feed
+  project_feed: false				# Account feed
   # Artifacts publishing: 
   disable_publish_on_pr: false		# Do not publish NuGet package artifacts to account/project feeds on Pull Requests
   disable_publish_octopus: false	# Do not publish Octopus Deploy .nupkg artifacts to account/project feeds
@@ -138,6 +139,8 @@ deploy:
   on:
     branch: /(master)|(develop)/
     deploy_nuget: true
+
+#INCLUDE deploy-templates.txt
 
 before_build:
 - REM [BEFORE BUILD] Multiline content. DO NOT EDIT on appveyor.com!

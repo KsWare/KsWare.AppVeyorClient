@@ -13,14 +13,15 @@
   assembly_info:
   dotnet_csproj:
 -- Environment
-  image:
-  clone_folder:
-  init:
-  environment:
-  services:
+  image:				# Build worker image
+  clone_folder:			# Clone directory (i) Specify custom path on a build server into which repository sources will be cloned. This path will be build root folder.
+  init:					# Init script
+  environment:			# Environment variables (i) These are "global" environment variables that will be added to each matrix job.
+  services:				# Services (i) Select which OS services must be started during the build process.
   hosts:
-  install:
+  install:				# Install script
   cache:
+  on_image_bake:		# Image bake script
 -- Build
   configuration:
   platform:
@@ -41,9 +42,12 @@
   - provider: WebDeploy
   - provider: FTP
   - provider: NuGet
+  - provider: GitHub
   - provider: Octopus
   - provider: AzureWebJob
   - provider: AzureAppServiceZipDeploy
+  - provider: Local
+  - provider: BinTray
   after_deploy:
 -- Nuget
   nuget:

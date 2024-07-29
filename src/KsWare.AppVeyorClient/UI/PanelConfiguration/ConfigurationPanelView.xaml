@@ -125,7 +125,12 @@
 								<DataTemplate DataType="{x:Type viewModels:NavigationItemVM}">
 									<DockPanel>
 										<TextBlock Text="T" DockPanel.Dock="Right" Visibility="{VisibilityBinding HasTemplate, TrueVisibleElseCollapsed}"/>
-										<TextBlock x:Name="TextBlock" Text="{Binding DisplayName}" MinWidth="120"/>
+										<TextBlock 
+											x:Name="TextBlock" 
+											Text="{Binding DisplayName}" 
+											MinWidth="120"
+											ToolTip="{Binding Description}"
+										/>
 									</DockPanel>
 									
 									<DataTemplate.Triggers>
@@ -148,17 +153,17 @@
 								Width="150"
 								ToolTip="Search: Type a word to highlight all occurrences."
 								/>
-							<TextBlock Text="{Binding CurrentResultIndex}" Foreground="LightGray" Margin="4 0 0 0"/>
-							<TextBlock Text="/" Foreground="LightGray"  />
-							<TextBlock Text="{Binding ResultCount}" Foreground="LightGray" />
+							<TextBlock Text="{Binding CurrentResultIndex}" Margin="4 0 0 0"/>
+							<TextBlock Text="/" />
+							<TextBlock Text="{Binding ResultCount}" />
 							<Button 
-								Content="" 
-								Command="{Binding NextResultAction}" FontFamily="Wingdings 3" Width="18" Margin="4 0 0 0"
+								Content="▼" 
+								Command="{Binding NextResultAction}" Width="18" Margin="4 0 0 0"
 								ToolTip="Navigate to next occurrence."
 								/>
 							<Button 
-								Content="" 
-								Command="{Binding PreviousResultAction}" FontFamily="Wingdings 3" Width="18"
+								Content="▲" 
+								Command="{Binding PreviousResultAction}" Width="18"
 								ToolTip="Navigate to previous occurrence."
 								/>
 						</StackPanel>

@@ -1,3 +1,15 @@
+# 0.6 [2024-07-27}
+- use .Net 8.0
+- fix template selection
+- INCLUDE support for template file 
+- more templates (deploy-templates.txt, image-templates.txt)
+- update all nuget packages
+- replace Wingdings 3 with Unicode chars
+- update About dialog
+
+# 0.5
+- Bugfixes 
+ 
 # 0.4
 - use .Net 5.0
 - context help for appveyor.yml

@@ -33,7 +33,8 @@
 				Width="60"
 				/>
 			<TextBlock 
-				Text="p" FontFamily="Wingdings 3" VerticalAlignment="Center" Foreground="Red" 
+				Text="↻" VerticalAlignment="Center" FontSize="14px" Foreground="Red"
+				Margin="2 0 0 0"
 				DockPanel.Dock="Right"
 				Visibility="{VisibilityBinding ErrorProvider.HasError, TrueVisibleElseCollapsed}"
 				ToolTip="{Binding ErrorProvider.ErrorMessage}"

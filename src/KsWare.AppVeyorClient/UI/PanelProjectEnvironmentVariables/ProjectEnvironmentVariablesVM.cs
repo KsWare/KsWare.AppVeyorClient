@@ -69,6 +69,7 @@ namespace KsWare.AppVeyorClient.UI.PanelProjectEnvironmentVariables {
 
 //					StatusBarText              = "Get done.";
 					var sb = new StringBuilder();
+					// ReSharper disable once AsyncApostle.AsyncWait
 					var envvars = task.Result;
 					// "value":"very-secret-key-in-clear-text"
 					foreach (var var in envvars) {

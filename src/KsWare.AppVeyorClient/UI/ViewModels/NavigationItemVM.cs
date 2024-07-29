@@ -20,6 +20,9 @@ namespace KsWare.AppVeyorClient.UI.ViewModels {
 		public bool HasTemplate { get => Fields.GetValue<bool>(); set => Fields.SetValue(value); }
 
 		public bool IsGroupTitle { get => Fields.GetValue<bool>(); set => Fields.SetValue(value); }
+		
+		public string Description { get; set; }
+
 	}
 
 }

@@ -1,0 +1,63 @@
+# available images, as of 2024-07-29
+
+image: macOS-BigSur
+
+image: macOS-Catalina
+
+image: macOS-Monterey
+
+image: macOS-Sonoma
+
+image: macOS-Ventura
+
+image: Previous macOS
+
+image: Previous macOS-Mojave
+
+image: Previous Ubuntu2004Previous Ubuntu2204
+
+image: Previous Visual Studio 2022
+
+image: Ubuntu2004
+
+image: Ubuntu2004-arm_hidden
+
+image: Ubuntu2204
+
+image: Visual Studio 2022
+
+image: Visual Studio 2019
+
+image: Visual Studio 2017
+
+image: Visual Studio 2015
+
+image: Visual Studio 2013
+
+image: Previous Visual Studio 2019
+
+image: Previous Visual Studio 2017
+
+image: Previous Visual Studio 2015
+
+image: Previous Visual Studio 2013
+
+image: Ubuntu
+
+image: Ubuntu1804
+
+image: Ubuntu1604
+
+image: Previous Ubuntu
+
+image: Previous Ubuntu1804
+
+image: Previous Ubuntu1604
+
+image: macOS
+
+image: macOS-Mojave
+
+image: Visual Studio 2019 Preview
+
+image: WMF 5

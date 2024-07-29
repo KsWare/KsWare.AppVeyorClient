@@ -1,0 +1,123 @@
+# NuGet (GitHub package provider)
+- provider: NuGet
+  server: https://nuget.pkg.github.com/<ACCOUNT-NAME>/index.json
+  api_key:
+    secure: <ACCESS-TOKEN>
+  artifact: NuGet.org
+  on:
+    branch: features/kux
+    deploy_pre_nuget: true
+
+# NuGet package provider
+- provider: NuGet
+  skip_symbols: true
+  api_key:
+    secure: <ACCESS-TOKEN>
+  on:
+    branch: /master|develop/
+    deploy_nuget: true
+
+# NuGet
+- provider: NuGet
+  Deployment_settings: value
+  server: NuGet server or source URL
+  debug: true
+  api_key:
+    secure: <ACCESS-TOKEN>
+  username:
+    secure: <USER-NAME>
+  skip_symbols: false
+  symbol_server: Symbol server URL
+  artifact: Artifact(s)
+  on:
+    branch: branch
+    env: valu
+
+# GitHub Releases
+- provider: GitHub
+  auth_token:
+    secure: <GITHUB-ACCESS-TOKEN for 'repo'>
+  artifact: /.*\.nupkg/
+  prerelease: true
+  force_update: true
+  tag: v$(buildVersion).$(patchNumber)
+  on:
+    branch: /master|develop/
+    deploy_github: true
+
+# GitHub Releases (complete)
+- provider: GitHub
+  tag: tag
+  release: releasse
+  description: Release description
+  auth_token:
+    secure: <GITHUB-ACCESS-TOKEN for 'repo'>
+  repository: Repository name
+  artifact:								# Artifact(s) to deploy
+  draft: true
+  prerelease: true
+  force_update: true
+  on:
+    branch: branch
+    env_var: match_value
+
+# Local Build Server
+- provider: Local
+  Deployment_settings: value
+  on:
+    branch: branch
+    env: valu
+
+# FTP
+- provider: FTP
+  Deployment_settings1: value
+  Deployment_settings2: value
+  host: ftphost
+  protocol: ftp
+  username: username
+  password:
+    secure: <PASSWORD>
+  folder: Remote folder
+  artifact: Artifact(s)
+  application: Application
+  active_mode: true
+  beta: true
+  debug: true
+  on:
+    branch: branch
+    env1: value
+	env2: value
+
+# BinTray (generic)
+- provider: BinTray
+  var_deployment_settings_A: value-B
+  var_deployment_settings_B: value-B
+  debug: true
+  username: <BinTray username>
+  api_key:
+    secure: <BinTray API key>
+  subject: Subject
+  repo: Repository
+  package: Package
+  version: Version
+  artifact: Artifact(s) to deploy
+  publish: true
+  override: true
+  explode: true							# (i) Unpack uploaded archive
+  on:
+    branch: branch
+    env-var: match-value
+
+# WebHook (generic)
+- provider: Webhook
+  Deployment_settings_A: value-A
+  Deployment_settings_B: value-B
+  debug: true
+  url: https://url
+  skip_ssl: true						# use this for testing only
+  authorization:						# Optional "Authorization" header
+    secure: <"Authorization" header>
+  request_timeout: <Request timeout>	# Optional. Timeout in minutes.
+  on:
+    branch: branch
+    env: valu

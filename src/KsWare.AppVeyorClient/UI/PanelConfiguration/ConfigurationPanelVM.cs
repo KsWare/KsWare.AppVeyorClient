@@ -114,18 +114,23 @@ namespace KsWare.AppVeyorClient.UI.PanelConfiguration {
 		public ListVM<NavigationItemVM> NavigationItems { get; [UsedImplicitly] private set; }
 
 		private void FillNavigation() {
-			var lines = File.ReadAllLines("Data\\Navigation.txt");
-			foreach (var line in lines) Add(line);
+			var lines = File.ReadAllLines(@"Data\Navigation.txt");
+			foreach (var line in lines) add(line);
 
-			void Add(string key) {
-				key = key.Trim();
+			void add(string line) {
+				var match = Regex.Match(line, @"^\s*(?<key>[^#]+?)\s*(?:#\s*(?<description>.*?))?\s*(?:\(i\)\s*(?<tooltip>.*))?$",RegexOptions.IgnoreCase|RegexOptions.ExplicitCapture|RegexOptions.Compiled);
+				if(!match.Success) return;
+				var key = match.Groups["key"].Value;
+				var description = match.Groups["description"].Value;
+				var tooltip = match.Groups["tooltip"].Value;
 				var pattern = @"(?mnx-is)^" + Regex.Escape(key) + @"(\x20|\r\n|\n)";
 				NavigationItems.Add(new NavigationItemVM {
-					DisplayName = key.StartsWith("-- ") ? key.Substring(3) : "  "+key,
-					IsGroupTitle = key.StartsWith("-- "),
-					RegexPattern = key.StartsWith("-- ") ? null : pattern,
+					DisplayName = line.StartsWith("-- ") ? line.Substring(3) : "  "+key,
+					IsGroupTitle = line.StartsWith("-- "),
+					RegexPattern = line.StartsWith("-- ") ? null : pattern,
 					Regex = new Regex(pattern,RegexOptions.Compiled),
-					HasTemplate = _sectionTemplates.Any(t=>t.Key==key)
+					HasTemplate = _sectionTemplates.Any(t=>t.Key==key),
+					Description = description+" "+tooltip
 				});
 			}
 		}
@@ -133,12 +138,19 @@ namespace KsWare.AppVeyorClient.UI.PanelConfiguration {
 		private void FillSectionTemplates() {
 			_sectionTemplates.Clear();
 
-			var lines = File.ReadAllLines("Data\\Templates.txt");
+			var lines = File.ReadAllLines(@"Data\Templates.txt").ToList();
 
 			var templateString = new StringBuilder();
 			var template = new SectionTemplateData();
 			_sectionTemplates.Add(template);
-			foreach (var line in lines) {
+			for (var index = 0; index < lines.Count; index++) {
+				var line = lines[index];
+				if (IsInclude(line, out var file)) {
+					lines.RemoveAt(index);
+					InsertFile(lines, index, file);
+					index--; continue;
+				}
+
 				if (string.IsNullOrWhiteSpace(line)) {
 					template.Content = templateString.ToString().TrimEnd();
 
@@ -150,8 +162,14 @@ namespace KsWare.AppVeyorClient.UI.PanelConfiguration {
 
 				templateString.AppendLine(line);
 				if (template.Key == null) {
-					var match = Regex.Match(line, @"^(?<key>[a-z_0-9]+:)", RegexOptions.Compiled | RegexOptions.IgnoreCase);
-					if (match.Success) { template.Key = match.Groups["key"].Value; }
+					// use the first line which is not a comment as key
+					// - provider: <name>    -OR-
+					// <name>: 
+					var match = Regex.Match(line, @"^(?!#)\s*((?<key>-\sprovider:.*?)|(?<key>[^:]+:).*?)\s*(?:#.*)?$",
+						RegexOptions.IgnoreCase | RegexOptions.Compiled);
+					if (match.Success) {
+						template.Key = match.Groups["key"].Value;
+					}
 				}
 			}
 
@@ -162,6 +180,21 @@ namespace KsWare.AppVeyorClient.UI.PanelConfiguration {
 				if(string.IsNullOrWhiteSpace(_sectionTemplates[i].Key))
 					_sectionTemplates.RemoveAt(i);
 			}
+		}
+
+		private bool IsInclude(string line, out string file) {
+			var match = Regex.Match(line, @"^#\s*INCLUDE\s+(?<file>.*?)\s*$", RegexOptions.Compiled | RegexOptions.IgnoreCase);
+			if (!match.Success) { file = null; return false; }
+			file = match.Groups["file"].Value;
+			// TODO support absolute path
+			if (!File.Exists($@"Data\{file}")) { file = null; return false; }
+			return true;
+		}
+
+		private void InsertFile(List<string> list, int index, string file) {
+			// TODO support absolute path
+			foreach (var line in File.ReadAllLines($@"Data\{file}"))
+				list.Insert(index++,line);
 		}
 
 		private Client Client => AppVM.Client;
@@ -502,6 +535,7 @@ namespace KsWare.AppVeyorClient.UI.PanelConfiguration {
 				else {
 					StatusBarText = "Get done.";
 						// ReSharper disable once AsyncConverter.AsyncWait // ContinueWithUIDispatcher
+						// ReSharper disable once AsyncApostle.AsyncWait
 						YamlEditorController.Text = task.Result;
 					YamlEditorController.ResetHasChanges();
 					EditorProjectName = ProjectSelector.SelectedProject.Data.Name;
@@ -607,6 +641,7 @@ namespace KsWare.AppVeyorClient.UI.PanelConfiguration {
 						return;
 					}
 
+					// ReSharper disable once AsyncApostle.AsyncWait
 					var result = task.Result;
 					if (result.IsValid) {
 						StatusBarText = $"Validation successful.";
@@ -637,12 +672,14 @@ namespace KsWare.AppVeyorClient.UI.PanelConfiguration {
 				.ContinueWithUIDispatcher(task => {
 					if (task.Exception!=null) throw task.Exception;
 					StatusBarText = "Value encrypted";
+					// ReSharper disable once AsyncApostle.AsyncWait
 					YamlEditorController.Data.SelectedText = task.Result;
 				});
 		}
 
 	}
 
+	[DebuggerDisplay("{Key}: {Content}")]
 	public class SectionTemplateData {
 		public string Key { get; set; }
 		public string Content { get; set; }

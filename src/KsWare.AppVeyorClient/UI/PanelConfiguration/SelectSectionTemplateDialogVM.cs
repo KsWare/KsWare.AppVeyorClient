@@ -21,13 +21,13 @@ namespace KsWare.AppVeyorClient.UI.PanelConfiguration {
 		public ActionVM CancelAction { get; private set; }
 
 		protected override void DoClose() {
-			Data.DialogResult = true;
+			DialogResult = true;
 			base.DoClose();
 		}
 
 		private void DoCancel() {
-			Data.DialogResult = false;
-			Data.Close();
+			DialogResult = false;
+			Close();
 		}
 
 	}

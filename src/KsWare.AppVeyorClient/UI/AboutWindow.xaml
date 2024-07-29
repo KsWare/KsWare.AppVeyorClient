@@ -13,23 +13,27 @@
 	</Window.InputBindings>
 	<DockPanel>
 		<Button DockPanel.Dock="Bottom" Content="OK" IsDefault="True" HorizontalAlignment="Center" Width="80" Margin="0 20 0 10" Command="{Binding CloseAction}"/>
-		<Grid Margin="10">
-			<StackPanel HorizontalAlignment="Center" VerticalAlignment="Center">
-				<TextBlock Text="AppVeyor Client" FontSize="16" FontWeight="Black"/>
-				<TextBlock Text="Copyright © 2018-2022 by KsWare. All rights reserved."/>
-				<FlowDocumentScrollViewer Margin="0 10 0 0" Height="107" >
-					<FlowDocumentScrollViewer.Document>
-						<FlowDocument FontSize="12" FontFamily="Calibri" PagePadding="0 0 5 0" TextAlignment="Left" xml:space="preserve">
-							<List Padding="15 0 0 0">
-								<ListItem><Paragraph><Run>This app is not related to </Run><Hyperlink NavigateUri="https://www.appveyor.com/about/" Click="Hyperlink_OnClick">Appveyor Systems Inc.</Hyperlink><Run> It is a free independent development to improve the user experience with appveyor.yml files and </Run><Hyperlink NavigateUri="https://ci.appveyor.com" Click="Hyperlink_OnClick">ci.appveyor.com</Hyperlink> </Paragraph></ListItem>
-								<ListItem><Paragraph><Run>The </Run><Hyperlink NavigateUri="https://www.appveyor.com/assets/img/favicons/favicon-32x32.png" Click="Hyperlink_OnClick"> app logo </Hyperlink> <InlineUIContainer BaselineAlignment="Center">
-              <Image Source="https://www.appveyor.com/assets/img/favicons/favicon-16x16.png" Height="11" /></InlineUIContainer><Run> belongs to Appveyor Systems Inc. The original logo is used to make the functionality of this app clear.</Run></Paragraph></ListItem>
-							</List>
-						</FlowDocument>
-					</FlowDocumentScrollViewer.Document>
-				</FlowDocumentScrollViewer>
-			</StackPanel>
-		</Grid>
+		<DockPanel Margin="10">
+			<TextBlock Text="AppVeyor Client" FontSize="16" FontWeight="Black" DockPanel.Dock="Top"/>
+			<TextBlock Text="Copyright © 2018-2024 by KsWare. All rights reserved." DockPanel.Dock="Top"/>
+			<FlowDocumentScrollViewer Margin="0 10 0 0" BorderBrush="LightGray" BorderThickness="0 1 0 1">
+				<FlowDocumentScrollViewer.Document>
+					<FlowDocument FontSize="12" FontFamily="Segoe UI Variable Text" PagePadding="0 0 5 0" TextAlignment="Left" xml:space="preserve">
+						<List Padding="15 0 0 0">
+							<ListItem><Paragraph><Run>This app is not related to </Run><Hyperlink NavigateUri="https://www.appveyor.com/about/" Click="Hyperlink_OnClick">Appveyor Systems Inc.</Hyperlink><Run> It is a free independent development to improve the user experience with appveyor.yml files and </Run><Hyperlink NavigateUri="https://ci.appveyor.com" Click="Hyperlink_OnClick">ci.appveyor.com</Hyperlink> </Paragraph></ListItem>
+							<ListItem><Paragraph><Run>The </Run><Hyperlink NavigateUri="https://www.appveyor.com/assets/img/favicons/favicon-32x32.png" Click="Hyperlink_OnClick"> app logo </Hyperlink> <InlineUIContainer BaselineAlignment="Center">
+          <Image Source="https://www.appveyor.com/assets/img/favicons/favicon-16x16.png" Height="11" /></InlineUIContainer><Run> belongs to Appveyor Systems Inc. The original logo is used to make the functionality of this app clear.</Run></Paragraph></ListItem>
+						</List>
+						<Paragraph FontWeight="Bold" Margin="0 10 0 4" Padding="0">3rd party libraries</Paragraph>
+						<List Padding="15 0 0 0" Margin="0">
+							<ListItem><Paragraph><Run>AvalonEdit (MIT)</Run></Paragraph></ListItem>
+							<ListItem><Paragraph><Run>KsWare.Presentation (GPL 3.0)</Run></Paragraph></ListItem>
+							<ListItem><Paragraph><Run>Newtonsoft.Json (MIT)</Run></Paragraph></ListItem>
+							<ListItem><Paragraph><Run>YamlDotNet (MIT)</Run></Paragraph></ListItem>
+						</List>
+					</FlowDocument>
+				</FlowDocumentScrollViewer.Document>
+			</FlowDocumentScrollViewer>
+		</DockPanel>
 	</DockPanel>
-
 </Window>
