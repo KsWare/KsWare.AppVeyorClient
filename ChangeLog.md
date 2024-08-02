@@ -1,8 +1,12 @@
-# 0.6 [2024-07-27}
+# 0.6 [2024-08-02}
 - use .Net 8.0
 - fix template selection
 - INCLUDE support for template file 
-- more templates (deploy-templates.txt, image-templates.txt)
+- hierarchical templates (deploy, notification) 
+- more templates
+    - deploy-templates.txt
+	- image-templates.txt
+	- notification-templates.txt
 - update all nuget packages
 - replace Wingdings 3 with Unicode chars
 - update About dialog

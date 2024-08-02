@@ -1,0 +1,17 @@
+
+PUT ci.appveyor.com/api/account/KsWare/global-yaml
+accept: application/json, text/plain, */*
+response
+{"isValid":true,"line":0,"column":0}
+{
+    "isValid": false,
+    "errorMessage": "Invalid setting or section: -ps (Line: 2, Column: 1)",
+    "line": 2,
+    "column": 1
+}
+
+GET https://ci.appveyor.com/api/account/KsWare/global-yaml
+Content-Encoding: gzip
+Content-Type: text/plain
+
+

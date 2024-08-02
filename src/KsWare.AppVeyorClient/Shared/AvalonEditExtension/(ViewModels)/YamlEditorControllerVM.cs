@@ -104,13 +104,13 @@ namespace KsWare.AppVeyorClient.Shared.AvalonEditExtension {
 				else {
 					// find block-end
 					while (true) {
+						if (tr.EndLine.NextLine == null) break;
 						tr.EndLine = tr.EndLine.NextLine;
 						var s = Data.GetLineText(tr.EndLine);
 						if (!Regex.IsMatch(s, @"^\x20{4}|^\s*$")) { // code has always 4 spaces because each command start without indentation
 							tr.EndLine = tr.EndLine.PreviousLine;
 							break;
 						}
-						if (tr.EndLine.NextLine == null) break;
 					}
 				}
 			}

@@ -1,4 +1,6 @@
 ﻿using System.Text.RegularExpressions;
+using JetBrains.Annotations;
+using KsWare.Presentation;
 using KsWare.Presentation.ViewModelFramework;
 
 namespace KsWare.AppVeyorClient.UI.ViewModels {
@@ -22,6 +24,9 @@ namespace KsWare.AppVeyorClient.UI.ViewModels {
 		public bool IsGroupTitle { get => Fields.GetValue<bool>(); set => Fields.SetValue(value); }
 		
 		public string Description { get; set; }
+
+		[Hierarchy(HierarchyType.Reference)][CanBeNull]
+		public NavigationItemVM ParentNav { get; set; }
 
 	}
 

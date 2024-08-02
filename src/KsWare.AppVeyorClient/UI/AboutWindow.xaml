@@ -7,15 +7,19 @@
 	xmlns:local="clr-namespace:KsWare.AppVeyorClient.UI"
 	mc:Ignorable="d"
 	d:DataContext="{d:DesignInstance local:AboutWindowVM, IsDesignTimeCreatable=False}"
-	Title="About" Height="270" Width="457" WindowStartupLocation="CenterOwner" ShowInTaskbar="False" WindowStyle="ThreeDBorderWindow" >
+	Title="About" Height="270" Width="457" WindowStartupLocation="CenterOwner" ShowInTaskbar="False" WindowStyle="ThreeDBorderWindow"
+>
 	<Window.InputBindings>
 		<KeyBinding Key="Escape" Command="{Binding CloseAction}"/>
 	</Window.InputBindings>
 	<DockPanel>
 		<Button DockPanel.Dock="Bottom" Content="OK" IsDefault="True" HorizontalAlignment="Center" Width="80" Margin="0 20 0 10" Command="{Binding CloseAction}"/>
 		<DockPanel Margin="10">
-			<TextBlock Text="AppVeyor Client" FontSize="16" FontWeight="Black" DockPanel.Dock="Top"/>
-			<TextBlock Text="Copyright © 2018-2024 by KsWare. All rights reserved." DockPanel.Dock="Top"/>
+			<DockPanel DockPanel.Dock="Top">
+				<TextBlock Text="AppVeyor Client" FontSize="16" FontWeight="Black"/>
+				<TextBlock Text="{Binding Version}" FontSize="12" Margin="9 0 0 0" VerticalAlignment="Bottom" FontWeight="Black"/>
+			</DockPanel>
+			<TextBlock Text="{Binding Copyright}" DockPanel.Dock="Top"/>
 			<FlowDocumentScrollViewer Margin="0 10 0 0" BorderBrush="LightGray" BorderThickness="0 1 0 1">
 				<FlowDocumentScrollViewer.Document>
 					<FlowDocument FontSize="12" FontFamily="Segoe UI Variable Text" PagePadding="0 0 5 0" TextAlignment="Left" xml:space="preserve">

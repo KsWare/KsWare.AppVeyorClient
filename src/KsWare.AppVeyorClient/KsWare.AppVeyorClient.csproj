@@ -67,6 +67,7 @@
 	<ItemGroup>
 		<None Remove="Data\deploy-templates.txt" />
 		<None Remove="Data\image-templates.txt" />
+		<None Remove="Data\notification-templates.txt" />
 		<None Remove="KsWare.AppVeyorClient.csproj.DotSettings" />
 		<None Remove="Ressources\appveyor-favicon-16x16.png" />
 		<None Remove="Ressources\appveyor-favicon-32x32.png" />
@@ -104,7 +105,10 @@
 		<Content Include="Data\Navigation.txt">
 			<CopyToOutputDirectory>Always</CopyToOutputDirectory>
 		</Content>
-		<Resource Include="Data\ScriptBlockTemplates.txt" />
+		<Content Include="Data\notification-templates.txt">
+		  <CopyToOutputDirectory>Always</CopyToOutputDirectory>
+		</Content>
+		<Content Include="Data\ScriptBlockTemplates.txt" />
 		<Content Include="Data\Templates.txt">
 			<CopyToOutputDirectory>Always</CopyToOutputDirectory>
 		</Content>

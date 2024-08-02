@@ -115,23 +115,29 @@ namespace KsWare.AppVeyorClient.UI.PanelConfiguration {
 
 		private void FillNavigation() {
 			var lines = File.ReadAllLines(@"Data\Navigation.txt");
-			foreach (var line in lines) add(line);
 
+			var parent = (string) null;
+			var parentNav = (NavigationItemVM) null;
+			foreach (var line in lines) add(line);
 			void add(string line) {
 				var match = Regex.Match(line, @"^\s*(?<key>[^#]+?)\s*(?:#\s*(?<description>.*?))?\s*(?:\(i\)\s*(?<tooltip>.*))?$",RegexOptions.IgnoreCase|RegexOptions.ExplicitCapture|RegexOptions.Compiled);
 				if(!match.Success) return;
+				var hasParent = line.StartsWith("  - "); // - provider: FTP
 				var key = match.Groups["key"].Value;
 				var description = match.Groups["description"].Value;
 				var tooltip = match.Groups["tooltip"].Value;
 				var pattern = @"(?mnx-is)^" + Regex.Escape(key) + @"(\x20|\r\n|\n)";
+				if (!hasParent) parent = key;
 				NavigationItems.Add(new NavigationItemVM {
 					DisplayName = line.StartsWith("-- ") ? line.Substring(3) : "  "+key,
 					IsGroupTitle = line.StartsWith("-- "),
 					RegexPattern = line.StartsWith("-- ") ? null : pattern,
 					Regex = new Regex(pattern,RegexOptions.Compiled),
-					HasTemplate = _sectionTemplates.Any(t=>t.Key==key),
-					Description = description+" "+tooltip
+					HasTemplate = _sectionTemplates.Any(t=>t.Key==key && (!hasParent || t.Parent == parent)),
+					Description = description+" "+tooltip,
+					ParentNav = parentNav
 				});
+				if (!hasParent) parentNav = NavigationItems.Last;
 			}
 		}
 
@@ -157,6 +163,11 @@ namespace KsWare.AppVeyorClient.UI.PanelConfiguration {
 					templateString = new StringBuilder();
 					template = new SectionTemplateData();
 					_sectionTemplates.Add(template);
+					continue;
+				}
+
+				if(line.IsMatch(@"^\[(?<parent>[^\]]*)\]",out var m)) {
+					template.Parent = m!.Groups["parent"].Value.Trim();
 					continue;
 				}
 
@@ -278,7 +289,8 @@ namespace KsWare.AppVeyorClient.UI.PanelConfiguration {
 
 		private void DoInsertTemplate() {
 			if(SelectedNavigationItem==null) return;
-			var templates = _sectionTemplates.Where(t => t.Key == SelectedNavigationItem.DisplayName.Trim()).ToArray();
+			var n = SelectedNavigationItem;
+			var templates = _sectionTemplates.Where(t => t.Key == n.DisplayName.Trim() && (n.ParentNav==null || t.Parent == n.ParentNav.DisplayName.Trim())).ToArray();
 
 			SectionTemplateData selectedTemplate = null;
 			if (Keyboard.Modifiers == ModifierKeys.Control && templates.Length > 0) {
@@ -683,6 +695,8 @@ namespace KsWare.AppVeyorClient.UI.PanelConfiguration {
 	public class SectionTemplateData {
 		public string Key { get; set; }
 		public string Content { get; set; }
+		public string Parent { get; set; }
+
 	}
 
 	// http://stackoverflow.com/questions/3790454/in-yaml-how-do-i-break-a-string-over-multiple-lines/21699210#21699210
