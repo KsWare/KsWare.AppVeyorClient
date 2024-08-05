@@ -55,8 +55,7 @@ namespace KsWare.AppVeyorClient.UI.PanelApiTester {
 		[UsedImplicitly]
 		private void DoSend() {
 			Client.Base.SendAsync(Client.Base.CreateRequest("GET", Url, null, ContentType))
-				.ContinueWithUIDispatcher(delegate(Task<string> task) {
-				
+				.ContinueWithUIDispatcher(task => {
 					if (task.Exception != null) {
 						ResultText = task.Exception.ToString();
 						return;
@@ -64,14 +63,13 @@ namespace KsWare.AppVeyorClient.UI.PanelApiTester {
 					switch (ContentType) {
 						case "application/json":
 							try {
-								// ReSharper disable once AsyncApostle.AsyncWait
-								var result = JsonConvert.SerializeObject(JsonConvert.DeserializeObject(task.Result), Formatting.Indented);
+								var result = JsonConvert.SerializeObject(JsonConvert.DeserializeObject(task.Result),
+									Formatting.Indented);
 							}
-							catch (Exception ex2) {}
+							catch (Exception ex2) { }
 							break;
 					}
 					Debug.WriteLine($"ResultText changing");
-					// ReSharper disable once AsyncApostle.AsyncWait
 					ResultText = task.Result;
 				});
 

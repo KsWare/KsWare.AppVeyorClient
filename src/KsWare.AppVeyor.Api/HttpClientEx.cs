@@ -83,9 +83,14 @@ namespace KsWare.AppVeyor.Api {
 
 		public Task<string> GetTextAsync(string api) => SendAsync("GET", api);
 
-		public Task PutTextAsync(string api, string text) => SendAsync("PUT", api, text, "text/plain");
+		public Task<string> PutTextAsync(string api, string text) => SendAsync("PUT", api, text, "text/plain");
+		
+		public async Task<T> PutTextAsync<T>(string api, string text) {
+			var content = await SendAsync("PUT", api, text, "text/plain").ConfigureAwait(false);
+			return typeof(T) == typeof(string) ? (T)(object)content : FromJson<T>(content);
+		}
 
-		[Obsolete("use PostJsonAsync")]
+		[Obsolete("use PutJsonAsync")]
 		public Task PutJsonTextAsync(string api, string jsonString) {
 			return SendAsync("PUT", api, jsonString, "application/json");
 		}
@@ -102,12 +107,12 @@ namespace KsWare.AppVeyor.Api {
 
 		public async Task<T> PostJsonAsync<T>(string api, object json) {
 			var jsonString = json is string s ? s : ToJsonString(json);
-			var content = await SendAsync("POST", api, jsonString, "application/json");
+			var content = await SendAsync("POST", api, jsonString, "application/json").ConfigureAwait(false);
 			return typeof(T) == typeof(string) ? (T)(object)content : FromJson<T>(content);
 		}
 
 		public async Task<T> PostTextAsync<T>(string api, string content) {
-			var responseText = await SendAsync("POST", api, content, "text/plain");
+			var responseText = await SendAsync("POST", api, content, "text/plain").ConfigureAwait(false);
 			return typeof(T) == typeof(string) ? (T)(object)content : FromJson<T>(responseText);
 		}
 
@@ -165,9 +170,9 @@ namespace KsWare.AppVeyor.Api {
 			}
 		}
 
-		private async Task<string> SendAsync(string method, string api, string content = null, string contentType = null) {
+		private Task<string> SendAsync(string method, string api, string content = null, string contentType = null) {
 			var message = CreateRequest(method, api, content, contentType);
-			return await SendAsync(message);
+			return SendAsync(message);
 		}
 
 		// public string Send(string method, string api, string content, string contentType, out Exception exception) {

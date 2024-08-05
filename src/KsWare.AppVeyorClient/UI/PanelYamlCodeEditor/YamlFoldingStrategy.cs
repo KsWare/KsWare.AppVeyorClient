@@ -4,12 +4,11 @@ using System.IO;
 using System.Linq;
 using System.Text;
 using System.Text.RegularExpressions;
-using System.Threading.Tasks;
 using System.Xml;
 using ICSharpCode.AvalonEdit.Document;
 using ICSharpCode.AvalonEdit.Folding;
 
-namespace KsWare.AppVeyorClient.UI.PanelConfiguration {
+namespace KsWare.AppVeyorClient.UI.PanelYamlCodeEditor {
 
 	public class YamlFoldingStrategy {
 

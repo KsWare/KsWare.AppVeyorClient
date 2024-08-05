@@ -15,6 +15,7 @@ namespace KsWare.AppVeyor.Api {
 			BuildWorker =new BuildWorker(_httpClientEx);
 			Project = new ProjectClient(_httpClientEx);
 			Team = new TeamClient(_httpClientEx);
+			Common = new CommonClient(_httpClientEx);
 			ClientOnTokenChanged(null, null);
 		}
 
@@ -31,9 +32,12 @@ namespace KsWare.AppVeyor.Api {
 
 		public TeamClient Team { get; }
 
+		public CommonClient Common { get; set; }
+
 		public BuildWorker BuildWorker  { get;}
 
 		public HttpClientEx Base => _httpClientEx;
+		
 
 		public void SetToken(SecureString secureToken) {
 			_httpClientEx.SetToken(secureToken);

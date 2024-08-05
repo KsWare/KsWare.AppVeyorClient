@@ -1,6 +1,7 @@
-﻿using KsWare.Presentation.ViewModelFramework;
+﻿using KsWare.AppVeyorClient.UI.PanelConfiguration;
+using KsWare.Presentation.ViewModelFramework;
 
-namespace KsWare.AppVeyorClient.UI.PanelConfiguration {
+namespace KsWare.AppVeyorClient.UI.PanelYamlCodeEditor {
 
 	public class SelectSectionTemplateDialogVM : DialogWindowVM {
 

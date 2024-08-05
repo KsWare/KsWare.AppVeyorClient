@@ -9,7 +9,7 @@ using KsWare.AppVeyorClient.Shared.AvalonEditExtension;
 using KsWare.Presentation;
 using KsWare.Presentation.ViewModelFramework;
 
-namespace KsWare.AppVeyorClient.UI.PanelConfiguration {
+namespace KsWare.AppVeyorClient.UI.PanelYamlCodeEditor {
 	/// <summary>
 	/// Interaction logic for FindAndReplaceView.xaml
 	/// </summary>

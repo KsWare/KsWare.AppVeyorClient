@@ -1,0 +1,54 @@
+﻿-- General
+  shallow_clone:		# true - enables shallow clone (one commit only, via SCM API) for all projects.
+  clone_depth:			# <number> - cloning depth for all projects.
+  clone_script			# custom repository cloning script overriding built-in cloning method for all projects, for example:
+-- Environment
+  clone_folder:			# Clone directory (i) Specify custom path on a build server into which repository sources will be cloned. This path will be build root folder.
+  init:					# Init script
+  environment:			# Environment variables (i) These are "global" environment variables that will be added to each matrix job.
+  services:				# Services (i) Select which OS services must be started during the build process.
+  hosts:
+  install:				# Install script
+  cache:
+  on_image_bake:		# Image bake script
+-- Build
+  build_script			# to run your custom scripts instead of automatic MSBuild
+  before_build:			# scripts to run before build
+  before_package:		# scripts to run *after* solution is built and *before* automatic packaging occurs (web apps, NuGet packages, Azure Cloud Services)
+  after_build:			# scripts to run after build (working directory and environment changes are persisted from the previous steps)
+-- Tests
+  test_script:			# custom scripts to run on test phase.
+  before_test:			# scripts to run before test phase.
+  after_test:			# scripts to run after test phase.
+-- Artifacts
+  artifacts:
+-- Deploy
+  deploy_script:
+  before_deploy:
+  deploy:
+  - provider: WebDeploy
+  - provider: FTP
+  - provider: NuGet
+  - provider: GitHub
+  - provider: Octopus
+  - provider: AzureWebJob
+  - provider: AzureAppServiceZipDeploy
+  - provider: Local
+  - provider: BinTray
+  after_deploy:
+-- Nuget
+  nuget:
+-- Notifications
+  notifications:
+  - provider: Email
+  - provider: Webhook
+  - provider: HipChat
+  - provider: Slack
+  - provider: Campfire
+  - provider: GitHubPullRequest
+  - provider: VSOTeamRoom
+-- Global handlers
+  on_success:			# on successful build
+  on_failure:			# on build failure
+  on_finish:			# after build failure or success
+

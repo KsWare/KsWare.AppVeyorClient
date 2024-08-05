@@ -10,7 +10,8 @@
     xmlns:panelProjectEnvironmentVariables="clr-namespace:KsWare.AppVeyorClient.UI.PanelProjectEnvironmentVariables"
     xmlns:panelAvalonEditor="clr-namespace:KsWare.AppVeyorClient.UI.PanelAvalonEditor"
     xmlns:panelApiTester="clr-namespace:KsWare.AppVeyorClient.UI.PanelApiTester"
-    xmlns:panelCommon="clr-namespace:KsWare.AppVeyorClient.UI.PanelCommon"
+	xmlns:panelCommon="clr-namespace:KsWare.AppVeyorClient.UI.PanelCommon"
+	xmlns:panelGlobalYaml="clr-namespace:KsWare.AppVeyorClient.UI.PanelGlobalYaml"
     mc:Ignorable="d"
     Title="Appveyor Client" Height="600" Width="800"
 	d:DataContext="{d:DesignInstance Type={x:Type ui:MainWindowVM}}"
@@ -71,6 +72,9 @@
 			</TabItem>
 			<TabItem Header="Project Environment Variables" DataContext="{Binding ProjectEnvironmentVariablesPanel}">
 				<panelProjectEnvironmentVariables:ProjectEnvironmentVariablesView/>
+			</TabItem>
+			<TabItem Header="Global.yaml" DataContext="{Binding GlobalYamlPanel}">
+				<panelGlobalYaml:GlobalYamlView/>
 			</TabItem>
 			<TabItem Header="Avalon Editor" Visibility="Collapsed">
 				<panelAvalonEditor:AvalonEditorPanel/>

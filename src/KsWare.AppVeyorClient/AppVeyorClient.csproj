@@ -9,28 +9,36 @@
 	</PropertyGroup>
 	<PropertyGroup>
 		<OutputPath></OutputPath>
-		<GeneratePackageOnBuild>true</GeneratePackageOnBuild>
+		<GeneratePackageOnBuild>False</GeneratePackageOnBuild>
 		<Copyright>Copyright © 2018-2024 by KsWare. All rights reserved.</Copyright>
 		<Product>AppVeyorClient</Product>
 		<Company>KsWare</Company>
 		<Authors>SchreinerK</Authors>
-		<Description>A window client for AppVeyor. (www.appveyor.com)</Description>
-		<AssemblyVersion>0.3.22</AssemblyVersion>
-		<FileVersion>0.3.22</FileVersion>
-		<Version>0.3.22-beta</Version>
-		<PackageLicenseExpression>LGPL-3.0-only</PackageLicenseExpression>
+		<Description>A window client for AppVeyor (www.appveyor.com)</Description>
+		<VersionPrefix>0.7.1</VersionPrefix>
 		<PackageProjectUrl>https://github.com/KsWare/KsWare.AppVeyorClient</PackageProjectUrl>
 		<RepositoryUrl>https://github.com/KsWare/KsWare.AppVeyorClient.git</RepositoryUrl>
 		<RepositoryType>git</RepositoryType>
-		<PackageTags>appverior client</PackageTags>
+		<PackageTags>appveyor client window yaml code-editor</PackageTags>
 		<PackageReleaseNotes></PackageReleaseNotes>
 	</PropertyGroup>
+	<PropertyGroup>
+		<ApplicationVersion>$(VersionPrefix).*</ApplicationVersion>
+		<ApplicationRevision>0</ApplicationRevision>
+	</PropertyGroup>
+	
 	<PropertyGroup>
 		<ApplicationIcon>UI\Resources\appveyor_blue.ico</ApplicationIcon>
 	</PropertyGroup>
 	<PropertyGroup>
 		<PackageIcon>PackageIcon.png</PackageIcon>
 		<PackageIconUrl />
+		<AssemblyName>KsWare.AppVeyorClient</AssemblyName>
+		<RootNamespace>KsWare.AppVeyorClient</RootNamespace>
+		<PackageId>KsWare.AppVeyorClient</PackageId>
+		<PackageReadmeFile>README.md</PackageReadmeFile>
+		<PackageRequireLicenseAcceptance>True</PackageRequireLicenseAcceptance>
+		<PackageLicenseFile>LICENSE.txt</PackageLicenseFile>
 	</PropertyGroup>
 	<PropertyGroup Condition="'$(Configuration)|$(Platform)'=='Debug|AnyCPU'">
 		<PlatformTarget>AnyCPU</PlatformTarget>
@@ -54,9 +62,17 @@
 		<None Remove="Shared\AvalonEditExtension\**" />
 		<None Remove="Shared\PresentationFramework\%28TextBox%29\**" />
 		<None Remove="Shared\WpfPropertyGrid\**" />
+		<None Include="..\..\LICENSE.txt">
+		  <Pack>True</Pack>
+		  <PackagePath>\</PackagePath>
+		</None>
 		<None Include="..\..\PackageIcon.png">
 			<Pack>True</Pack>
 			<PackagePath></PackagePath>
+		</None>
+		<None Include="..\..\README.md">
+		  <Pack>True</Pack>
+		  <PackagePath>\</PackagePath>
 		</None>
 		<Page Remove="Api\**" />
 		<Page Remove="publish\**" />
@@ -67,6 +83,7 @@
 	<ItemGroup>
 		<None Remove="Data\deploy-templates.txt" />
 		<None Remove="Data\image-templates.txt" />
+		<None Remove="Data\Navigation-Global.txt" />
 		<None Remove="Data\notification-templates.txt" />
 		<None Remove="KsWare.AppVeyorClient.csproj.DotSettings" />
 		<None Remove="Ressources\appveyor-favicon-16x16.png" />
@@ -102,7 +119,10 @@
 		<Content Include="Data\image-templates.txt">
 		  <CopyToOutputDirectory>Always</CopyToOutputDirectory>
 		</Content>
-		<Content Include="Data\Navigation.txt">
+		<Content Include="Data\Navigation-Global.txt">
+		  <CopyToOutputDirectory>Always</CopyToOutputDirectory>
+		</Content>
+		<Content Include="Data\Navigation-Project.txt">
 			<CopyToOutputDirectory>Always</CopyToOutputDirectory>
 		</Content>
 		<Content Include="Data\notification-templates.txt">

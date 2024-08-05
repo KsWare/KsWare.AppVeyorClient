@@ -1,4 +1,11 @@
-# 0.6 [2024-08-02}
+# 0.7.1 [2024-08-05]
+- full code editor for global.yaml (same features as for project)
+- KsWare Open Commercial License
+
+# 0.7.0 [2024-08-03]
+- simple editor for global.yaml
+
+# 0.6 [2024-08-02]
 - use .Net 8.0
 - fix template selection
 - INCLUDE support for template file 

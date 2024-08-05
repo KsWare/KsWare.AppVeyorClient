@@ -1,6 +1,4 @@
-﻿using System.Windows;
-
-namespace KsWare.AppVeyorClient.UI.PanelConfiguration {
+﻿namespace KsWare.AppVeyorClient.UI.PanelYamlCodeEditor {
 	//KUX remove code behind
 
 	/// <summary>

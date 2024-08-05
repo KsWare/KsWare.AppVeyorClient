@@ -13,14 +13,14 @@ using ICSharpCode.AvalonEdit.Editing;
 using ICSharpCode.AvalonEdit.Folding;
 using ICSharpCode.AvalonEdit.Highlighting;
 using ICSharpCode.AvalonEdit.Highlighting.Xshd;
-using KsWare.AppVeyorClient.Shared.AvalonEditExtension;
 using KsWare.AppVeyorClient.Shared;
+using KsWare.AppVeyorClient.Shared.AvalonEditExtension;
 using KsWare.AppVeyorClient.UI.App;
 using KsWare.AppVeyorClient.UI.ViewModels;
 using KsWare.Presentation;
 using BindingMode = System.Windows.Data.BindingMode;
 
-namespace KsWare.AppVeyorClient.UI.PanelConfiguration {
+namespace KsWare.AppVeyorClient.UI.PanelYamlCodeEditor {
 
 	public class AppVeyorYamlEditorControllerVM : YamlEditorControllerVM {
 

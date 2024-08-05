@@ -1,0 +1,60 @@
+KsWare Open Commercial License
+Copyright © 2002-2024 by KsWare
+
+Deutsche Version, siehe unten.
+
+------------------------------------------------------------------------------
+[ENGLISH]
+
+Permission is hereby granted, free of charge, to use the source code and compiled binary files (collectively referred to as "Software") and the associated documentation files (the "Documentation") under the following conditions:
+
+## Use of Source Code
+It is permitted to use, modify, further develop, or create derivative works from the source code for private purposes, as long as these modifications and derivative works are not made publicly available.
+
+## Use of Binary Files
+The binary files may be used for commercial purposes and distributed unchanged.
+
+Prohibition of Commercial Distribution
+Neither the source code nor the binary files may be distributed or sold for a fee.
+
+## Copyright Notice
+All existing copyright, patent, trademark, and attribution notices must be retained. A copy of this license must be included with every copy or substantial portion of the Software.
+
+## Modification Notice
+If you modify files, you must note in those files that they have been changed and indicate the date of the change.
+
+## Disclaimer of Liability
+The Software is provided "as is", without warranty of any kind, express or implied, including but not limited to the warranties of merchantability, fitness for a particular purpose, and non-infringement. In no event shall the authors or copyright holders be liable for any claims, damages, or other liabilities, whether in an action of contract, tort, or otherwise, arising from, out of, or in connection with the Software or the use or other dealings in the Software.
+
+By using the Software, you agree to these terms. If you do not agree with these terms, you may not use the Software.
+
+------------------------------------------------------------------------------
+[DEUTSCH]
+
+Hiermit wird unentgeltlich die Erlaubnis erteilt, den Quellcode und die kompilierten Binärdateien (zusammen als "Software" bezeichnet) und die zugehörigen Dokumentationsdateien (die "Dokumentation") unter den folgenden Bedingungen zu nutzen:
+
+## Nutzung des Quellcodes
+
+Es ist erlaubt, den Quellcode für private Zwecke zu nutzen, zu verändern, weiterzuentwickeln oder abgeleitete Werke zu erstellen, solange diese Änderungen und abgeleiteten Werke nicht öffentlich verfügbar gemacht werden.
+
+## Nutzung der Binärdateien
+
+Die Binärdateien dürfen für kommerzielle Zwecke genutzt und unverändert verbreitet werden. 
+
+## Verbot der entgeltlichen Weitergabe
+
+Weder der Quellcode noch die Binärdateien dürfen gegen Entgelt weitergegeben oder verkauft werden.
+
+## Urheberrechtsvermerk
+
+Alle bestehenden Urheberrechts-, Patent-, Marken- und Attributionshinweise müssen beibehalten werden. Eine Kopie dieser Lizenz muss mit jeder Kopie oder wesentlichen Teilen der Software mitgeliefert werden.
+
+## Änderungshinweis
+
+Wenn Sie Dateien ändern, müssen Sie in diesen Dateien anmerken, dass sie geändert wurden, und das Datum der Änderung angeben.
+
+## Haftungsausschluss
+
+Die Software wird ohne Mängelgewähr und ohne jegliche ausdrückliche oder implizierte Garantie zur Verfügung gestellt, einschließlich, aber nicht beschränkt auf die Garantien der Marktgängigkeit, der Eignung für einen bestimmten Zweck und der Nichtverletzung. In keinem Fall sind die Autoren oder Rechteinhaber für irgendwelche Ansprüche, Schäden oder sonstige Verpflichtungen haftbar, sei es aufgrund eines Vertrags, eines Delikts oder anderweitig, die sich aus, aufgrund oder im Zusammenhang mit der Software oder der Nutzung oder anderen Handlungen in der Software ergeben.
+
+Durch die Nutzung der Software stimmen Sie diesen Bedingungen zu. Wenn Sie mit diesen Bedingungen nicht einverstanden sind, dürfen Sie die Software nicht nutzen.

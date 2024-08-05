@@ -1,7 +1,6 @@
 ﻿using System.Collections.Generic;
-using System.Collections.ObjectModel;
 
-namespace KsWare.AppVeyorClient.UI.PanelConfiguration {
+namespace KsWare.AppVeyorClient.UI.PanelYamlCodeEditor {
 
 	public class EnvironmentVariableInfo {
 

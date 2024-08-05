@@ -16,6 +16,7 @@ using KsWare.AppVeyorClient.UI.Common;
 using KsWare.AppVeyorClient.UI.PanelApiTester;
 using KsWare.AppVeyorClient.UI.PanelCommon;
 using KsWare.AppVeyorClient.UI.PanelConfiguration;
+using KsWare.AppVeyorClient.UI.PanelGlobalYaml;
 using KsWare.AppVeyorClient.UI.PanelProjectEnvironmentVariables;
 using KsWare.AppVeyorClient.UI.PanelProjectSelector;
 using KsWare.Presentation.ViewModelFramework;
@@ -42,6 +43,7 @@ namespace KsWare.AppVeyorClient.UI {
 			var args = Environment.GetCommandLineArgs();
 			if (args.Length > 1 && File.Exists(args.Last()))
 				Application.Current.Dispatcher.Invoke(DispatcherPriority.ApplicationIdle, new Action(() => {
+					//TODO support global.yaml
 					Select(ConfigurationPanel);
 					ConfigurationPanel.LoadFile(args.Last());
 				}));
@@ -58,6 +60,8 @@ namespace KsWare.AppVeyorClient.UI {
 		public CommonPanelVM CommonPanel { get; [UsedImplicitly] private set; }
 
 		public ProjectEnvironmentVariablesVM ProjectEnvironmentVariablesPanel { get; [UsedImplicitly] private set; }
+
+		public GlobalYamlVM GlobalYamlPanel { get; [UsedImplicitly] private set; }
 
 		public ConfigurationPanelVM ConfigurationPanel { get; [UsedImplicitly] private set; }
 

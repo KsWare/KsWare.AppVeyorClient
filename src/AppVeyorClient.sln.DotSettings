@@ -50,6 +50,8 @@ $END$</s:String>
 	<s:Boolean x:Key="/Default/PatternsAndTemplates/LiveTemplates/Template/=5A26917BE87D754F884BAC681E62F389/@KeyIndexDefined">True</s:Boolean>
 	<s:String x:Key="/Default/PatternsAndTemplates/LiveTemplates/Template/=5A26917BE87D754F884BAC681E62F389/Field/=name/Expression/@EntryValue">clipboard()</s:String>
 	<s:Int64 x:Key="/Default/PatternsAndTemplates/LiveTemplates/Template/=5A26917BE87D754F884BAC681E62F389/Field/=name/InitialRange/@EntryValue">-1</s:Int64>
+	<s:Boolean x:Key="/Default/PatternsAndTemplates/LiveTemplates/Template/=5A26917BE87D754F884BAC681E62F389/Field/=name/@KeyIndexDefined">True</s:Boolean>
+	<s:Int64 x:Key="/Default/PatternsAndTemplates/LiveTemplates/Template/=5A26917BE87D754F884BAC681E62F389/Field/=name/Order/@EntryValue">0</s:Int64>
 	<s:String x:Key="/Default/PatternsAndTemplates/LiveTemplates/Template/=5A26917BE87D754F884BAC681E62F389/Shortcut/@EntryValue">pi</s:String>
 	<s:String x:Key="/Default/PatternsAndTemplates/LiveTemplates/Template/=5A26917BE87D754F884BAC681E62F389/Text/@EntryValue">public int $name$ { get; set; }&#xD;
 &#xD;
@@ -60,8 +62,6 @@ $END$</s:String>
 	<s:Boolean x:Key="/Default/PatternsAndTemplates/LiveTemplates/Template/=5A26917BE87D754F884BAC681E62F389/Scope/=C3001E7C0DA78E4487072B7E050D86C5/@KeyIndexDefined">True</s:Boolean>
 	<s:String x:Key="/Default/PatternsAndTemplates/LiveTemplates/Template/=5A26917BE87D754F884BAC681E62F389/Scope/=C3001E7C0DA78E4487072B7E050D86C5/Type/@EntryValue">InCSharpFile</s:String>
 	<s:String x:Key="/Default/PatternsAndTemplates/LiveTemplates/Template/=5A26917BE87D754F884BAC681E62F389/Scope/=C3001E7C0DA78E4487072B7E050D86C5/CustomProperties/=minimumLanguageVersion/@EntryIndexedValue">2.0</s:String>
-	<s:Boolean x:Key="/Default/PatternsAndTemplates/LiveTemplates/Template/=5A26917BE87D754F884BAC681E62F389/Field/=name/@KeyIndexDefined">True</s:Boolean>
-	<s:Int64 x:Key="/Default/PatternsAndTemplates/LiveTemplates/Template/=5A26917BE87D754F884BAC681E62F389/Field/=name/Order/@EntryValue">0</s:Int64>
 	<s:Boolean x:Key="/Default/PatternsAndTemplates/LiveTemplates/Template/=F700CE7C45DB6B4C9DD0D16C6A190E28/@KeyIndexDefined">True</s:Boolean>
 	<s:Boolean x:Key="/Default/PatternsAndTemplates/LiveTemplates/Template/=F700CE7C45DB6B4C9DD0D16C6A190E28/Applicability/=Live/@EntryIndexedValue">True</s:Boolean>
 	<s:Boolean x:Key="/Default/PatternsAndTemplates/LiveTemplates/Template/=F700CE7C45DB6B4C9DD0D16C6A190E28/Field/=name/@KeyIndexDefined">True</s:Boolean>

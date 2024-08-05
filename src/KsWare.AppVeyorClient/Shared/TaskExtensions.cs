@@ -1,5 +1,6 @@
 ﻿using System;
 using System.Globalization;
+using System.Runtime.CompilerServices;
 using System.Threading;
 using System.Threading.Tasks;
 using System.Windows.Threading;
@@ -12,6 +13,8 @@ namespace KsWare.AppVeyorClient.Shared {
 		private static readonly TaskFactory MyTaskFactory = new TaskFactory(CancellationToken.None, TaskCreationOptions.None,
 			TaskContinuationOptions.None, TaskScheduler.Default);
 
+		private static SynchronizationContext s_uiContext;
+		
 		public static T RunSync<T>(Func<Task<T>> func) {
 			var cultureUi = CultureInfo.CurrentUICulture;
 			var culture   = CultureInfo.CurrentCulture;
@@ -56,32 +59,60 @@ namespace KsWare.AppVeyorClient.Shared {
 			}
 		}
 
-		public static void ContinueWithDispatcher<T>(this Task<T> task, Dispatcher dispatcher, Action<Task<T>> continuationAction) {
-			task.ContinueWith(task1 => { dispatcher.BeginInvoke(continuationAction, task1); });
+		public static void ContinueWithDispatcher<T>(this Task<T> task, Dispatcher dispatcher, Action<TaskInfo<T>> continuationAction) {
+			task.ContinueWith(t => { dispatcher.BeginInvoke(continuationAction, new TaskInfo<T>(t)); });
 		}
 
-		public static void ContinueWithDispatcher(this Task task,
-			Dispatcher dispatcher,
-			Action<Task> continuationAction) {
-			task.ContinueWith(task1 => { dispatcher.BeginInvoke(continuationAction, task1); });
+		public static void ContinueWithDispatcher(this Task task, Dispatcher dispatcher, Action<TaskInfo> continuationAction) {
+			task.ContinueWith(t => { dispatcher.BeginInvoke(continuationAction, new TaskInfo(t)); });
 		}
 
 		public static void ContinueWithDispatcher<T>(this Task<T> task,
-			Action<Task<T>> continuationAction) {
-			task.ContinueWith(task1 => { Dispatcher.CurrentDispatcher.BeginInvoke(continuationAction, task1); });
+			Action<TaskInfo<T>> continuationAction) {
+			task.ContinueWith(t => { Dispatcher.CurrentDispatcher.BeginInvoke(continuationAction, new TaskInfo<T>(t)); });
 		}
 
-		public static void ContinueWithDispatcher(this Task task, Action<Task> continuationAction) {
-			task.ContinueWith(task1 => { Dispatcher.CurrentDispatcher.BeginInvoke(continuationAction, task1); });
+		public static void ContinueWithDispatcher(this Task task, Action<TaskInfo> continuationAction) {
+			task.ContinueWith(t => { Dispatcher.CurrentDispatcher.BeginInvoke(continuationAction, new TaskInfo(t)); });
 		}
 
-		public static void ContinueWithUIDispatcher<T>(this Task<T> task, Action<Task<T>> continuationAction) {
-			task.ContinueWith(task1 => { ApplicationDispatcher.BeginInvoke(continuationAction, task1); });
+		public static void ContinueWithUIDispatcher<T>(this Task<T> task, Action<TaskInfo<T>> continuationAction) {
+			task.ContinueWith(t => { ApplicationDispatcher.BeginInvoke(continuationAction, new TaskInfo<T>(t)); });
 		}
 
-		public static void ContinueWithUIDispatcher(this Task task, Action<Task> continuationAction) {
-			task.ContinueWith(task1 => { ApplicationDispatcher.BeginInvoke(continuationAction, task1); });
+		public static void ContinueWithUIDispatcher(this Task task, Action<TaskInfo> continuationAction) {
+			task.ContinueWith(t => { ApplicationDispatcher.BeginInvoke(continuationAction, new TaskInfo(t)); });
 		}
+
+		// experimental
+		public static void ContinueOnUIThread(this Task task, Action<TaskInfo> continuationAction) {
+			if (UIContext == null) throw new InvalidOperationException("UI context not initialized. Call InitializeUIContext from the UI thread.");
+			task.ContinueWith(t => {
+				UIContext.Post(_ => continuationAction(new TaskInfo(t)), null);
+			}, TaskScheduler.Default);
+		}
+
+		// experimental
+		public static void ContinueOnUIThread<T>(this Task<T> task, Action<TaskInfo<T>> continuationAction) {
+			if (UIContext == null) throw new InvalidOperationException("UI context not initialized. Call InitializeUIContext from the UI thread.");
+			task.ContinueWith(t => {
+				UIContext.Post(_ => continuationAction(new TaskInfo<T>(t)), null);
+			}, TaskScheduler.Default);
+		}
+
+		public static SynchronizationContext UIContext {
+			get {
+				if (s_uiContext == null) {
+					#pragma warning disable CS0618
+					var dispatcher = ApplicationDispatcher.ThreadDispatcher;
+					#pragma warning restore CS0618
+					dispatcher.Invoke(() => s_uiContext = SynchronizationContext.Current);
+				}
+				return s_uiContext;
+			}
+			set => s_uiContext = value;
+		}
+
 	}
 
 	public class RunSyncResult<T> {
@@ -95,5 +126,38 @@ namespace KsWare.AppVeyorClient.Shared {
 		public T Result { get; }
 
 		public Exception Exception { get; }
+	}
+
+	public class TaskInfo {
+
+		public TaskInfo(Task task) {
+			IsCompleted = task.IsCompleted;
+			IsCanceled = task.IsCanceled;
+			IsFaulted = task.IsFaulted;
+
+			if (task.IsFaulted) {
+				Exception = task.Exception;
+			}
+			else if (!task.IsCanceled) {
+				var taskType = task.GetType();
+				if (taskType.IsGenericType) {
+					var resultProperty = taskType.GetProperty("Result");
+					Result = resultProperty?.GetValue(task);
+				}
+			}
+		}
+
+		public object Result { get; }
+		public bool IsCompleted { get;}
+		public bool IsCanceled { get;}
+		public bool IsFaulted { get;}
+		public Exception Exception { get;}
+
+	}
+
+	public class TaskInfo<T> : TaskInfo{
+
+		public TaskInfo(Task<T> task) : base(task) { }
+		public new T Result => (T)base.Result;
 	}
 }
