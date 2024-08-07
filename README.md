@@ -22,5 +22,5 @@ This app is an independently developed client for the CI service provided by
 and is not officially affiliated or supported by Appveyor Systems Inc.
 It improves the user experience with appveyor.yml files and the service [(ci.appveyor.com)](https://ci.appveyor.com/)
 
-The app logo ![Logo](docs/images/favicon-16x16.png) belongs to [Appveyor Systems Inc.](https://www.appveyor.com/about/) and is used for this app to illustrate the functionality of this app for the user.
+The app logo ![Logo](docs/images/favicon-16x16.png) belongs to [Appveyor Systems Inc.](https://www.appveyor.com/about/) and is used for this app to illustrate the functionality for the user.
 
