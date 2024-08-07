@@ -14,11 +14,13 @@ A windows client for [AppVeyor](https://www.appveyor.com/).
 [Web-Installer](http://www.ksware.de/software/AppVeyorClient/setup.exe) •
 [Application](http://www.ksware.de/software/AppVeyorClient/KsWare.AppVeyorClient.application)
 
-![Screenshot_842](docs/images/Screenshot_842.png)
+![Screenshot_842](docs/images/Screenshot_82.png)  
+[more...](docs/index.md)
 
-## Used Technologies
+This app is an independently developed client for the CI service provided by 
+[Appveyor Systems Inc. (www.appveyor.com)](https://www.appveyor.com/about/) 
+and is not officially affiliated or supported by Appveyor Systems Inc.
+It improves the user experience with appveyor.yml files and the service [(ci.appveyor.com)](https://ci.appveyor.com/)
 
-- Visual Studio 2019
-- .NET 4.7.2, C# 7.2, WPF
-- NuGet: [AvalonEdit](https://github.com/icsharpcode/AvalonEdit), [KsWare Presentation Framework](https://github.com/KsWare/KsWare.Presentation), [Common.Logging](https://github.com/net-commons/common-logging), [AutoMapper](https://github.com/AutoMapper/AutoMapper), Nunit 3.x, [Newtonsoft.Json](https://github.com/JamesNK/Newtonsoft.Json), System.Windows.Interactivity.WPF
+The app logo ![Logo](docs/images/favicon-16x16.png) belongs to [Appveyor Systems Inc.](https://www.appveyor.com/about/) and is used for this app to illustrate the functionality of this app for the user.
 
