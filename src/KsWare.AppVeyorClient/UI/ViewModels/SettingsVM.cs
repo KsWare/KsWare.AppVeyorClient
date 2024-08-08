@@ -57,10 +57,15 @@ namespace KsWare.AppVeyorClient.UI.ViewModels {
 			};
 		}
 
-		// WORKARROUND reload property grid
+		// WORKAROUND reload property grid
 		[Browsable(false), JsonIgnore, IgnoreDataMember, Hierarchy(HierarchyType.Ignore)]
 		public SettingsVM Data { get => Fields.GetValue<SettingsVM>(); set => Fields.SetValue(value); }	
 
+		[Category("AppVeyor")]
+		[DisplayName("Account Name")]
+		[Description("This is the default account name that is used if no account has been selected.")]
+		public string AccountName { get => Fields.GetValue<string>(); set => Fields.SetValue(value); }
+		
 		[Category("AppVeyor")]
 		[DisplayName("Save Token")]
 		[Description("If enabled, saves the token into a encrypted store on disk.")]
@@ -94,7 +99,7 @@ namespace KsWare.AppVeyorClient.UI.ViewModels {
 			RaiseDataChanged();
 		}
 
-		// WORKARROUND reload property grid
+		// WORKAROUND reload property grid
 		private void RaiseDataChanged() {
 			Data = null;
 			Data = this; 

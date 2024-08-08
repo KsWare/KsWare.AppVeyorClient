@@ -26,11 +26,11 @@
 			</ContextMenu>
 		</FrameworkElement.ContextMenu>		
 		<DockPanel>
-			<TextBlock 
-				Text="Project " 
+			<Label 
+				Content="Project:" 
 				VerticalAlignment="Center" 
 				ToolTip="Select a project to work with. All operations that require a project use this selected project."
-				Width="60"
+				HorizontalContentAlignment="Center" Padding="2" Width="60"
 				/>
 			<TextBlock 
 				Text="↻" VerticalAlignment="Center" FontSize="14px" Foreground="Red"

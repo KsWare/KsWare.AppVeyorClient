@@ -8,7 +8,7 @@ Quick Navigate:
 Select Environment Variables:
 ![Variables](images/Screenshot_84.png)
 
-Edit Globaö.yaml:
+Edit Global.yaml:
 ![Variables](images/Screenshot_85.png)
 
 

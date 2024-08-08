@@ -19,22 +19,16 @@
 	</FrameworkElement.Resources>
 	<DockPanel>
 		<StackPanel DockPanel.Dock="Top">
-			<StackPanel x:Name="TokenPanel">
-				<!-- <DockPanel Margin="0 0 4 0"> -->
-				<!-- 	<Button DockPanel.Dock="Right" Style="{DynamicResource HelpButton}" Command="{Binding HelpUrlAction}" -->
-				<!-- 	        CommandParameter="https://ci.appveyor.com/api-keys" /> -->
-				<!-- 	<Label Content="AppVeyor Account:" /> -->
-				<!-- </DockPanel> -->
-				<!-- <TextBox x:Name="AccountTextBoxBox" LostFocus="AtAccountTextBoxBoxLostFocus" Margin="4 0" /> -->
-
-				<DockPanel Margin="0 0 4 0">
-					<Button DockPanel.Dock="Right" Style="{DynamicResource HelpButton}" Command="{Binding HelpUrlAction}"
-					        CommandParameter="https://ci.appveyor.com/api-keys" />
-					<Label Content="AppVeyor API Token: " />
-				</DockPanel>
-				<PasswordBox x:Name="TokenPasswordBox" LostFocus="AtTokenTextBoxLostFocus" Margin="4 0" 
+			<DockPanel x:Name="TokenPanel">
+				<Label Content="AppVeyor API Token: " Width="125" />
+				<Button Content="..." Command="{Binding HelpUrlAction}" CommandParameter="https://ci.appveyor.com/api-keys" Width="22" Height="22"  DockPanel.Dock="Right" />
+				<PasswordBox x:Name="TokenPasswordBox" VerticalAlignment="Center"  LostFocus="AtTokenTextBoxLostFocus" Margin="4 0" 
 				             ToolTip="Please input an account-specific API key (v1)"/>
-			</StackPanel>
+			</DockPanel>
+			<DockPanel Visibility="Collapsed">
+				<Label Content="Account Name:" Width="129"/>
+				<TextBox Text="{Binding AccountName}" VerticalAlignment="Center"/>
+			</DockPanel>
 		</StackPanel>
 
 		<DockPanel>
@@ -57,8 +51,12 @@
 				</StackPanel.Resources>
 				<Label Content="AppVeyor"/>
 				<DockPanel Margin="8 0 0 0">
-					<Label Content="Save Token" Width="200" Padding="0 1 0 1" />
-					<CheckBox IsChecked="{Binding SaveToken}"/>
+					<Label Content="Account Name" Width="117" Padding="0 1 0 1" />
+					<TextBox Text="{Binding AccountName}" VerticalAlignment="Center" BorderBrush="#E6E6E6"/>
+				</DockPanel>
+				<DockPanel Margin="8 0 0 0">
+					<Label Content="Save Token" Width="117" Padding="0 1 0 1" />
+					<CheckBox IsChecked="{Binding SaveToken}" VerticalAlignment="Center"/>
 				</DockPanel>
 				<Label Content="YAML"/>
 				<DockPanel Margin="8 0 0 0">

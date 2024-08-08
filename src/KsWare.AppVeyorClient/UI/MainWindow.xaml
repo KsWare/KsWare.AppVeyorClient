@@ -62,7 +62,7 @@
 		</Menu>
 		<DockPanel DockPanel.Dock="Top">
 			<StackPanel DockPanel.Dock="Right">
-				<Button Content="New Window" Command="{Binding NewWindowAction}" />
+				<Button Content="New Window" Command="{Binding NewWindowAction}"  Padding="6 2"/>
 			</StackPanel>
 			<panelProjectSelector:ProjectSelector DataContext="{Binding ProjectSelector}" Margin="0 0 0 6" />
 		</DockPanel>

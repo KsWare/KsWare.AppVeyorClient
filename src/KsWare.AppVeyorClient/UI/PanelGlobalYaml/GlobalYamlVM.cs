@@ -1,24 +1,12 @@
 ﻿using System;
-using System.Collections.Generic;
 using System.Diagnostics;
 using System.IO;
-using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
 using System.Windows;
-using JetBrains.Annotations;
 using KsWare.AppVeyor.Api;
-using KsWare.AppVeyor.Api.Contracts;
 using KsWare.AppVeyorClient.Shared;
-using KsWare.AppVeyorClient.Shared.AvalonEditExtension;
 using KsWare.AppVeyorClient.UI.App;
 using KsWare.AppVeyorClient.UI.Common;
-using KsWare.AppVeyorClient.UI.PanelConfiguration;
-using KsWare.AppVeyorClient.UI.PanelProjectEnvironmentVariables;
-using KsWare.AppVeyorClient.UI.PanelProjectSelector;
 using KsWare.AppVeyorClient.UI.PanelYamlCodeEditor;
-using KsWare.Presentation;
-using KsWare.Presentation.ViewModelFramework;
 using Microsoft.Win32;
 
 namespace KsWare.AppVeyorClient.UI.PanelGlobalYaml {
@@ -39,7 +27,7 @@ namespace KsWare.AppVeyorClient.UI.PanelGlobalYaml {
 			StatusBarText = "Get global.yaml";
 //			var d = AccountSelector.SelectedAccount.Data;
 //			var accountName = d.AccountName;
-			var accountName = "KsWare"; //TODO
+			var accountName = AppVM.Current.Settings.AccountName;
 			Client.Common.GetGlobalYamlAsync(accountName).ContinueWithUIDispatcher<string>(task => {
 				if (task.Exception != null) {
 					StatusBarText = $"Get failed. {task.Exception.Message}";
@@ -77,7 +65,8 @@ namespace KsWare.AppVeyorClient.UI.PanelGlobalYaml {
 		}
 
 		protected override void DoPost() {
-			Client.Common.PutGlobalYamlAsync(YamlEditorController.Text, null).ContinueWithUIDispatcher(task => {
+			var accountName = AppVM.Current.Settings.AccountName;
+			Client.Common.PutGlobalYamlAsync(YamlEditorController.Text, accountName).ContinueWithUIDispatcher(task => {
 				if (task.Exception != null) {
 					StatusBarText = $"Update failed. {task.Exception.Message}";
 					MessageBox.Show($"Update failed.\n\nDetails:\n{task.Exception.Message}", "Error", MessageBoxButton.OK, MessageBoxImage.Error);
@@ -94,7 +83,7 @@ namespace KsWare.AppVeyorClient.UI.PanelGlobalYaml {
 
 		protected override void DoValidateYaml() {
 			StatusBarText = "Validating global.yaml...";
-			var accountName = "KsWare"; //TODO
+			var accountName = AppVM.Current.Settings.AccountName;
 			Client.Project.ValidateYaml(YamlEditorController.Text, accountName)
 				.ContinueWithUIDispatcher(OnFinishValidateYaml);
 		}
