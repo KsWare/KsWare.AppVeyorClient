@@ -1,7 +1,10 @@
 ﻿using System;
 using System.ComponentModel;
 using System.Windows;
+using System.Windows.Media;
+using System.Xml;
 using ICSharpCode.AvalonEdit;
+using ICSharpCode.AvalonEdit.Highlighting;
 using JetBrains.Annotations;
 using KsWare.Presentation.Core.Providers;
 using KsWare.Presentation.ViewModelFramework;
@@ -98,7 +101,20 @@ namespace KsWare.AppVeyorClient.Shared.AvalonEditExtension {
 			//				ItemsSource = ContextMenu.Items,
 			//				ItemTemplate = 
 			//			};
+
+			SetSyntaxHighlighting();
+			Data.Background = BrushConverterEx.Default.ConvertFrom("#1E1E1E");
+			Data.Foreground = Brushes.WhiteSmoke;
+			Data.LineNumbersForeground = BrushConverterEx.Default.ConvertFrom("#8A8A8A");
+
 			ViewConnected?.Invoke(this, EventArgs.Empty);
+		}
+
+		private void SetSyntaxHighlighting() {
+			var reader = XmlReader.Create("Data\\Powershell.xshd");
+			var reader2 = XmlReader.Create("Data\\Powershell-Dark-Colors.xshd");
+			// Data.SyntaxHighlighting = HighlightingLoader.Load(reader, HighlightingManager.Instance);
+			Data.SyntaxHighlighting = MergingHighlightingLoader.Load(reader, reader2, HighlightingManager.Instance);
 		}
 
 		public event EventHandler ViewConnected;

@@ -5,11 +5,13 @@
 	xmlns:ksv="clr-namespace:KsWare.Presentation.ViewFramework;assembly=KsWare.Presentation.ViewFramework"
 	xmlns:kslab="http://ksware.de/Presentation/Labs"
 	xmlns:app="clr-namespace:KsWare.AppVeyorClient.UI.App"
+	ThemeManager.Source="Aero2Dark"
 >
 	<Application.Resources>
 		<ResourceDictionary>
 			<ResourceDictionary.MergedDictionaries>
-				<kslab:SharedResourceDictionary Source="pack://application:,,,/KsWare.AppVeyorClient;component/UI/Resources/Generic.xaml" />
+				<!-- <kslab:SharedResourceDictionary Source="/KsWare.AppVeyorClient;component/UI/Resources/Dark.xaml" /> -->
+				<!-- <kslab:SharedResourceDictionary Source="/KsWare.AppVeyorClient;component/UI/Resources/Generic.xaml" /> -->
 			</ResourceDictionary.MergedDictionaries>
 			<Style x:Key="Dummy" />
 		</ResourceDictionary>

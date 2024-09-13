@@ -79,4 +79,5 @@ $END$</s:String>
 $END$</s:String>
 	<s:Boolean x:Key="/Default/UserDictionary/Words/=Appveyor/@EntryIndexedValue">True</s:Boolean>
 	<s:Boolean x:Key="/Default/UserDictionary/Words/=pwsh/@EntryIndexedValue">True</s:Boolean>
-	<s:Boolean x:Key="/Default/UserDictionary/Words/=Veyor/@EntryIndexedValue">True</s:Boolean></wpf:ResourceDictionary>
+	<s:Boolean x:Key="/Default/UserDictionary/Words/=Veyor/@EntryIndexedValue">True</s:Boolean>
+	<s:Boolean x:Key="/Default/UserDictionary/Words/=Xshd/@EntryIndexedValue">True</s:Boolean></wpf:ResourceDictionary>

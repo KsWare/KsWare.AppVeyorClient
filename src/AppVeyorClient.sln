@@ -1,6 +1,6 @@
 ﻿
 Microsoft Visual Studio Solution File, Format Version 12.00
-# Visual Studio Version 17
+# 17
 VisualStudioVersion = 17.9.34622.214
 MinimumVisualStudioVersion = 10.0.40219.1
 Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "AppVeyorClient", "KsWare.AppVeyorClient\AppVeyorClient.csproj", "{E11C87D0-2B64-4D73-8BC6-B3FB747BE726}"
@@ -22,6 +22,12 @@ EndProject
 Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "KsWare.AppVeyor.Api.Tests", "KsWare.AppVeyor.Api.Tests\KsWare.AppVeyor.Api.Tests.csproj", "{A38D034A-26D3-46EA-81E7-26073E44782E}"
 EndProject
 Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "Tests", "Tests", "{CEA945BB-BA80-409E-850C-57866E5FC3A7}"
+EndProject
+Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "Libraries", "Libraries", "{7C11485F-F446-4D6A-9BE1-B16B2F5FDF38}"
+EndProject
+Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "KsWare.Presentation.Themes.Aero2Dark", "..\..\KsWare.Presentation.Themes.Aero2Dark\src\KsWare.Presentation.Themes.Aero2Dark\KsWare.Presentation.Themes.Aero2Dark.csproj", "{C416D04E-6A5F-450A-8BAF-F7DF5E8980C1}"
+EndProject
+Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "KsWare.Presentation.Resources.Core", "..\..\KsWare.Presentation.Resources.Core\src\KsWare.Presentation.Resources.Core\KsWare.Presentation.Resources.Core.csproj", "{AEF083B7-7908-4DBC-AC55-E71268EAFD96}"
 EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
@@ -45,6 +51,14 @@ Global
 		{A38D034A-26D3-46EA-81E7-26073E44782E}.Debug|Any CPU.Build.0 = Debug|Any CPU
 		{A38D034A-26D3-46EA-81E7-26073E44782E}.Release|Any CPU.ActiveCfg = Release|Any CPU
 		{A38D034A-26D3-46EA-81E7-26073E44782E}.Release|Any CPU.Build.0 = Release|Any CPU
+		{C416D04E-6A5F-450A-8BAF-F7DF5E8980C1}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{C416D04E-6A5F-450A-8BAF-F7DF5E8980C1}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{C416D04E-6A5F-450A-8BAF-F7DF5E8980C1}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{C416D04E-6A5F-450A-8BAF-F7DF5E8980C1}.Release|Any CPU.Build.0 = Release|Any CPU
+		{AEF083B7-7908-4DBC-AC55-E71268EAFD96}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{AEF083B7-7908-4DBC-AC55-E71268EAFD96}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{AEF083B7-7908-4DBC-AC55-E71268EAFD96}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{AEF083B7-7908-4DBC-AC55-E71268EAFD96}.Release|Any CPU.Build.0 = Release|Any CPU
 	EndGlobalSection
 	GlobalSection(SolutionProperties) = preSolution
 		HideSolutionNode = FALSE
@@ -52,6 +66,8 @@ Global
 	GlobalSection(NestedProjects) = preSolution
 		{92B3F74D-53E7-4D69-B54A-083CA80DE6E5} = {CEA945BB-BA80-409E-850C-57866E5FC3A7}
 		{A38D034A-26D3-46EA-81E7-26073E44782E} = {CEA945BB-BA80-409E-850C-57866E5FC3A7}
+		{C416D04E-6A5F-450A-8BAF-F7DF5E8980C1} = {7C11485F-F446-4D6A-9BE1-B16B2F5FDF38}
+		{AEF083B7-7908-4DBC-AC55-E71268EAFD96} = {7C11485F-F446-4D6A-9BE1-B16B2F5FDF38}
 	EndGlobalSection
 	GlobalSection(ExtensibilityGlobals) = postSolution
 		SolutionGuid = {29688F03-6F49-4BD5-A3E1-0742E4DC1653}

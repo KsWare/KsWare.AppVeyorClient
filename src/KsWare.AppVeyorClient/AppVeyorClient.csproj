@@ -62,15 +62,15 @@
 		<None Remove="Shared\AvalonEditExtension\**" />
 		<None Remove="Shared\PresentationFramework\%28TextBox%29\**" />
 		<None Remove="Shared\WpfPropertyGrid\**" />
-		<None Include="..\..\LICENSE.txt">
+		<None Include="..\..\LICENSE.txt" Link="Properties\LICENSE.txt">
 		  <Pack>True</Pack>
 		  <PackagePath>\</PackagePath>
 		</None>
-		<None Include="..\..\PackageIcon.png">
+		<None Include="..\..\PackageIcon.png" Link="Properties\PackageIcon.png">
 			<Pack>True</Pack>
 			<PackagePath></PackagePath>
 		</None>
-		<None Include="..\..\README.md">
+		<None Include="..\..\README.md" Link="Properties\README.md">
 		  <Pack>True</Pack>
 		  <PackagePath>\</PackagePath>
 		</None>
@@ -81,16 +81,15 @@
 		<Compile Remove="UI\Common\KeyAction.cs" />
 	</ItemGroup>
 	<ItemGroup>
+		<None Remove="AppVeyorClient.csproj.DotSettings" />
+		<None Remove="Data\AppVeyor-yaml-Dark-Colors.xshd" />
 		<None Remove="Data\deploy-templates.txt" />
 		<None Remove="Data\image-templates.txt" />
 		<None Remove="Data\Navigation-Global.txt" />
 		<None Remove="Data\notification-templates.txt" />
+		<None Remove="Data\Powershell-Dark-Colors.xshd" />
+		<None Remove="Data\Powershell.xshd" />
 		<None Remove="KsWare.AppVeyorClient.csproj.DotSettings" />
-		<None Remove="Ressources\appveyor-favicon-16x16.png" />
-		<None Remove="Ressources\appveyor-favicon-32x32.png" />
-		<None Remove="Ressources\AppVeyorYamlDoc.yaml" />
-		<None Remove="Ressources\github-favicon-dark.png" />
-		<None Remove="Ressources\github-favicon.png" />
 	</ItemGroup>
 	<ItemGroup>
 		<Page Remove="UI\App\App.xaml" />
@@ -109,10 +108,14 @@
 		<Compile Include="Shared\AvalonEditExtension\ColorizeSearchRegex.cs" />
 		<Compile Include="Shared\AvalonEditExtension\ColorizeSearchText.cs" />
 		<Compile Include="Shared\AvalonEditExtension\DocumentPosition.cs" />
+		<Compile Include="Shared\AvalonEditExtension\MergingHighlightingLoader.cs" />
 		<Compile Include="Shared\AvalonEditExtension\TextEditorExtensions.cs" />
 		<Compile Include="Shared\PresentationFramework\%28TextBox%29\CodeTextBoxControllerVM.cs" />
 		<Compile Include="Shared\PresentationFramework\%28TextBox%29\TextBoxControllerBehavior.cs" />
 		<Compile Include="Shared\PresentationFramework\%28TextBox%29\TextBoxControllerVM.cs" />
+		<Content Include="Data\AppVeyor-yaml-Dark-Colors.xshd">
+		  <CopyToOutputDirectory>Always</CopyToOutputDirectory>
+		</Content>
 		<Content Include="Data\deploy-templates.txt">
 		  <CopyToOutputDirectory>Always</CopyToOutputDirectory>
 		</Content>
@@ -128,6 +131,12 @@
 		<Content Include="Data\notification-templates.txt">
 		  <CopyToOutputDirectory>Always</CopyToOutputDirectory>
 		</Content>
+		<Content Include="Data\Powershell-Dark-Colors.xshd">
+		  <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
+		</Content>
+		<Content Include="Data\Powershell.xshd">
+		  <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
+		</Content>
 		<Content Include="Data\ScriptBlockTemplates.txt" />
 		<Content Include="Data\Templates.txt">
 			<CopyToOutputDirectory>Always</CopyToOutputDirectory>
@@ -137,13 +146,14 @@
 		<Content Include="Data\AppVeyor-Yaml.xshd">
 			<CopyToOutputDirectory>Always</CopyToOutputDirectory>
 		</Content>
+		<Content Include="shared\avaloneditextension\info.txt" />
 	</ItemGroup>
 	<ItemGroup>
-		<Resource Include="Ressources\appveyor-favicon-16x16.png" />
-		<Resource Include="Ressources\appveyor-favicon-32x32.png" />
-		<Resource Include="Ressources\AppVeyorYamlDoc.yaml" />
-		<Resource Include="Ressources\github-favicon-dark.png" />
-		<Resource Include="Ressources\github-favicon.png" />
+		<Resource Include="Resources\appveyor-favicon-16x16.png" />
+		<Resource Include="Resources\appveyor-favicon-32x32.png" />
+		<Resource Include="Resources\AppVeyorYamlDoc.yaml" />
+		<Resource Include="Resources\github-favicon-dark.png" />
+		<Resource Include="Resources\github-favicon.png" />
 		<Resource Include="UI\Resources\appveyor_blue.ico" />
 	</ItemGroup>
 	<ItemGroup>
@@ -176,6 +186,7 @@
 			<PrivateAssets>all</PrivateAssets>
 		</PackageReference>
 		<PackageReference Include="KsWare.Presentation" Version="0.43.4" />
+		<PackageReference Include="KsWare.Presentation.Themes.Aero2Dark" Version="0.1.5" Condition="'$(Configuration)' == 'Release'"/>
 		<PackageReference Include="KsWare.Presentation.ViewFramework.Common" Version="0.3.0" />
 		<PackageReference Include="Microsoft.CSharp" Version="4.7.0" />
 		<PackageReference Include="Microsoft.Xaml.Behaviors.Wpf" Version="1.1.122" />
@@ -189,8 +200,11 @@
 	</ItemGroup>
 	<ItemGroup>
 		<Folder Include="Properties\PublishProfiles\" />
+		<Folder Include="Shared\Theme\" />
 	</ItemGroup>
 	<ItemGroup>
+		<ProjectReference Include="..\..\..\KsWare.Presentation.Resources.Core\src\KsWare.Presentation.Resources.Core\KsWare.Presentation.Resources.Core.csproj" Condition="'$(Configuration)' == 'Debug'"/>
+		<ProjectReference Include="..\..\..\KsWare.Presentation.Themes.Aero2Dark\src\KsWare.Presentation.Themes.Aero2Dark\KsWare.Presentation.Themes.Aero2Dark.csproj" Condition="'$(Configuration)' == 'Debug'"/>
 		<ProjectReference Include="..\KsWare.AppVeyor.Api\KsWare.AppVeyor.Api.csproj" />
 	</ItemGroup>
 </Project>

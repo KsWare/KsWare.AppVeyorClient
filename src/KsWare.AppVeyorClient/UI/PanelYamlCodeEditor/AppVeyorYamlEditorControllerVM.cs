@@ -6,7 +6,9 @@ using System.Linq;
 using System.Text.RegularExpressions;
 using System.Windows;
 using System.Windows.Input;
+using System.Windows.Media;
 using System.Xml;
+using ICSharpCode.AvalonEdit;
 using ICSharpCode.AvalonEdit.CodeCompletion;
 using ICSharpCode.AvalonEdit.Document;
 using ICSharpCode.AvalonEdit.Editing;
@@ -55,6 +57,11 @@ namespace KsWare.AppVeyorClient.UI.PanelYamlCodeEditor {
 
 			base.OnViewConnected();
 
+			SetSyntaxHighlighting();
+			Data.Background = BrushConverterEx.Default.ConvertFrom("#1E1E1E");
+			Data.Foreground = Brushes.WhiteSmoke;
+			Data.LineNumbersForeground = BrushConverterEx.Default.ConvertFrom("#8A8A8A");
+
 			Data.TextArea.TextEntering += textEditor_TextArea_TextEntering;
 			Data.TextArea.TextEntered  += textEditor_TextArea_TextEntered;
 
@@ -82,13 +89,18 @@ namespace KsWare.AppVeyorClient.UI.PanelYamlCodeEditor {
 
 		protected override void OnDisableSyntaxHighlightingChanged(bool value) {
 			if (Data == null) return;
-			if (false == value) {
-				var reader = XmlReader.Create("Data\\AppVeyor-yaml.xshd");
-				Data.SyntaxHighlighting = HighlightingLoader.Load(reader, HighlightingManager.Instance);
-			}
-			else {
+			if (false == value)
+				SetSyntaxHighlighting();
+			else
 				Data.SyntaxHighlighting = null;
-			}
+
+		}
+
+		private void SetSyntaxHighlighting() {
+			var reader = XmlReader.Create("Data\\AppVeyor-yaml.xshd");
+			var reader2 = XmlReader.Create("Data\\AppVeyor-yaml-Dark-Colors.xshd");
+			// Data.SyntaxHighlighting = HighlightingLoader.Load(reader, HighlightingManager.Instance);
+			Data.SyntaxHighlighting = MergingHighlightingLoader.Load(reader, reader2, HighlightingManager.Instance);
 		}
 
 		private void UpdateFoldings(string reason) {

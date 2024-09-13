@@ -46,7 +46,9 @@ namespace KsWare.AppVeyorClient.Shared.AvalonEditExtension {
 
 		public bool UseRegex { get; set; }
 
-		public Brush Background { get; set; } = new SolidColorBrush { Color = Colors.Yellow };
+		//TODO Add to settings
+//		public Brush Background { get; set; } = new SolidColorBrush { Color = Colors.Yellow };
+		public Brush Background { get; set; } = new SolidColorBrush { Color = Color.FromRgb(0,167,170) };
 
 		/// <summary>
 		/// Override this method to colorize an individual document line.
@@ -54,8 +56,8 @@ namespace KsWare.AppVeyorClient.Shared.AvalonEditExtension {
 		/// <param name="line">The line.</param>
 		protected override void ColorizeLine(DocumentLine line) {
 			if (string.IsNullOrEmpty(SearchText)) return;
-			int lineStartOffset = line.Offset;
-			string text = CurrentContext.Document.GetText(line);
+			var lineStartOffset = line.Offset;
+			var text = CurrentContext.Document.GetText(line);
 
 			if (UseRegex) {
 				try {
@@ -70,7 +72,7 @@ namespace KsWare.AppVeyorClient.Shared.AvalonEditExtension {
 				}
 			}
 			else {
-				int start = 0;
+				var start = 0;
 				int index;
 				while ((index = text.IndexOf(SearchText, start, Comparison)) >= 0) {
 					Format(lineStartOffset + index, SearchText.Length);

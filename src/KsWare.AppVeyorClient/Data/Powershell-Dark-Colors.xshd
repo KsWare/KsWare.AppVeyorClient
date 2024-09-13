@@ -1,0 +1,15 @@
+<?xml version="1.0"?>
+<SyntaxDefinition name="PowerShell" extensions=".ps1;.psm1;.psd1" xmlns="http://icsharpcode.net/sharpdevelop/syntaxdefinition/2008">
+	<Color name="Comment" foreground="#57A64A" exampleText="// comment" />	<!-- Original: Green -->
+	<Color name="String" foreground="#D69D85" exampleText="string text = &quot;Hello, World!&quot;"/>	<!-- Original: Blue -->
+	<Color name="Char" foreground="#D69D85" exampleText="char linefeed = '\n';"/>	<!-- Original: Magenta -->
+	<Color name="Punctuation" foreground="#D4D4D4" exampleText="a(b.c);" />	<!-- Original: Default -->
+	<Color name="NumberLiteral" foreground="#B5CEA8" exampleText="3.1415f"/>	<!-- Original: DarkBlue -->
+	<Color name="Keywords" fontWeight="bold" foreground="#569CD6" exampleText="if (a)"/>	<!-- Original: Blue -->
+	<Color name="Variable" foreground="#9CDCFE" exampleText="$param = 1" />	<!-- Original: Maroon -->
+	<Color name="ExceptionKeywords" fontWeight="bold" foreground="#4EC9B0" />	<!-- Original: Teal -->
+	<Color name="GotoKeywords" foreground="#C586C0" />	<!-- Original: Navy -->
+	<Color name="ReferenceTypes" foreground="#4EC9B0" />	<!-- Original: Red -->
+	<Color name="Command" fontWeight="bold" foreground="#DCDCAA" />	<!-- Original: MidnightBlue -->
+	<Color name="Operators" foreground="#D4D4D4" exampleText="-eq"/>	<!-- Original: #FF8515EA -->
+</SyntaxDefinition>

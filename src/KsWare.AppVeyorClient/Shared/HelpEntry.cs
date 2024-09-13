@@ -11,7 +11,7 @@ namespace KsWare.AppVeyorClient.Shared {
 	public class HelpEntry {
 
 		public static Dictionary<string,HelpEntry> LoadResource() {
-			var uri = new Uri("pack://application:,,,/KsWare.AppVeyorClient;component/Ressources/AppVeyorYamlDoc.yaml");
+			var uri = new Uri("pack://application:,,,/KsWare.AppVeyorClient;component/Resources/AppVeyorYamlDoc.yaml");
 			var info = Application.GetResourceStream(uri);
 			using var r = new StreamReader(info.Stream);
 			var deserializer = new DeserializerBuilder()

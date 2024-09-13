@@ -12,7 +12,7 @@
 >
 
 	<DockPanel>
-		<WrapPanel DockPanel.Dock="Top">
+		<ToolBar DockPanel.Dock="Top" ToolBarTray.IsLocked="True" OverflowMode="Never">
 			<FrameworkElement.Resources>
 				<Style TargetType="Button">
 					<Setter Property="MinWidth" Value="40"/>
@@ -26,7 +26,7 @@
 			<Button Content="Save" Command="{Binding SaveAction}"/>
 			<Canvas Width="5"/>
 			<Button Content="+" Command="{Binding AddAction}"/>
-		</WrapPanel>
+		</ToolBar>
 		<!-- <TextBox Text="{Binding PlainText}" FontFamily="Consolas" FontSize="12" -->
 		<!--          HorizontalScrollBarVisibility="Visible" -->
 		<!--          VerticalScrollBarVisibility="Visible" AcceptsReturn="True" AcceptsTab="True" /> -->

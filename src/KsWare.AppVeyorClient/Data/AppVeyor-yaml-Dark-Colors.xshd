@@ -1,0 +1,11 @@
+﻿<?xml version="1.0"?>
+<SyntaxDefinition name="AppVeyor-XAML" extensions=".yml .yaml" xmlns="http://icsharpcode.net/sharpdevelop/syntaxdefinition/2008">
+	<Color name="Comment" foreground="#57A64A" exampleText="#comment" />	<!-- Green -->
+	<Color name="Key" fontWeight="bold" foreground="#569CD6" background="#333333" exampleText="key:" />	<!-- Light Blue, Background set to Dark Mode -->
+	<Color name="SubKey" fontWeight="bold" foreground="#569CD6" exampleText="- key:" />	<!-- Light Blue -->
+	<Color name="DoubleQuoted" foreground="#CE9178" exampleText="&quot;hello&quot;" />	<!-- Light Red -->
+	<Color name="EscapeSequence" foreground="#D7BA7D" exampleText="\t\r\n" />	<!-- Light Yellow -->
+	<Color name="SingleQuoted" foreground="#D69D85" exampleText="'hello'" />	<!-- Light Purple -->
+	<Color name="PsVariable" foreground="#9CDCFE" exampleText="$Variable" />	<!-- Light Cyan -->
+	<Color name="Block" background="#1E1E1E" exampleText="" />	<!-- Background set to Dark Mode -->
+</SyntaxDefinition>

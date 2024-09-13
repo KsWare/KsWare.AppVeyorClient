@@ -1,17 +1,4 @@
-﻿using System;
-using System.Collections.Generic;
-using System.Diagnostics;
-using System.IO;
-using System.Net.Http;
-using System.Net.Http.Headers;
-using System.Security;
-using System.Security.Cryptography;
-using System.Text;
-using System.Windows;
-using System.Windows.Controls;
-using KsWare.AppVeyorClient.UI.App;
-using Microsoft.Win32;
-using Newtonsoft.Json;
+﻿using System.Windows;
 
 namespace KsWare.AppVeyorClient.UI {
 
@@ -20,9 +7,19 @@ namespace KsWare.AppVeyorClient.UI {
 	/// </summary>
 	public partial class MainWindow : Window {
 
-
 		public MainWindow() {
 			InitializeComponent();
+
+
+			Loaded += (sender, args) => {
+				PresentationSource source = PresentationSource.FromVisual(this);
+
+				double dpiX, dpiY;
+				if (source != null) {
+					dpiX = 96.0 * source.CompositionTarget.TransformToDevice.M11;
+					dpiY = 96.0 * source.CompositionTarget.TransformToDevice.M22;
+				}
+			};
 		}
 	}
 

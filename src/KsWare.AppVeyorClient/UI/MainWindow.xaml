@@ -13,7 +13,7 @@
 	xmlns:panelCommon="clr-namespace:KsWare.AppVeyorClient.UI.PanelCommon"
 	xmlns:panelGlobalYaml="clr-namespace:KsWare.AppVeyorClient.UI.PanelGlobalYaml"
     mc:Ignorable="d"
-    Title="Appveyor Client" Height="600" Width="800"
+    Title="Appveyor Client" 
 	d:DataContext="{d:DesignInstance Type={x:Type ui:MainWindowVM}}"
 	Language="en-US"
 >
@@ -27,7 +27,7 @@
 		<KeyBinding  Key="W" Modifiers="Control" Command="{Binding NewWindowAction}"/>
 	</Window.InputBindings>
 
-	<DockPanel Margin="4 0 4 4">
+	<DockPanel Margin="4 0 4 4" >
 		<Menu DockPanel.Dock="Top">
 			<MenuItem Header="_File">
 				<MenuItem Header="_New">

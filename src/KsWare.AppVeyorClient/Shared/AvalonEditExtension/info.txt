@@ -1,0 +1,7 @@
+see also
+https://www.nuget.org/packages/Dirkster.HL
+https://github.com/Dirkster99/AvalonEditHighlightingThemes
+
+
+https://github.com/firstfloorsoftware/mui Obsolete
+https://github.com/Kinnara/ModernWpf
