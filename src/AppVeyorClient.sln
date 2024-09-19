@@ -23,7 +23,7 @@ Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "KsWare.AppVeyor.Api.Tests",
 EndProject
 Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "Tests", "Tests", "{CEA945BB-BA80-409E-850C-57866E5FC3A7}"
 EndProject
-Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "Libraries", "Libraries", "{7C11485F-F446-4D6A-9BE1-B16B2F5FDF38}"
+Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "Packages", "Packages", "{7C11485F-F446-4D6A-9BE1-B16B2F5FDF38}"
 EndProject
 Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "KsWare.Presentation.Themes.Aero2Dark", "..\..\KsWare.Presentation.Themes.Aero2Dark\src\KsWare.Presentation.Themes.Aero2Dark\KsWare.Presentation.Themes.Aero2Dark.csproj", "{C416D04E-6A5F-450A-8BAF-F7DF5E8980C1}"
 EndProject

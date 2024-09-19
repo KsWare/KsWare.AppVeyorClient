@@ -1,210 +1,211 @@
-﻿<Project Sdk="Microsoft.NET.Sdk">
-	<PropertyGroup>
-		<TargetFramework>net8.0-windows</TargetFramework>
-		<OutputType>WinExe</OutputType>
-		<GenerateAssemblyInfo>true</GenerateAssemblyInfo>
-		<UseWindowsForms>true</UseWindowsForms>
-		<UseWPF>true</UseWPF>
-		<ImportWindowsDesktopTargets>true</ImportWindowsDesktopTargets>
-	</PropertyGroup>
-	<PropertyGroup>
-		<OutputPath></OutputPath>
-		<GeneratePackageOnBuild>False</GeneratePackageOnBuild>
-		<Copyright>Copyright © 2018-2024 by KsWare. All rights reserved.</Copyright>
-		<Product>AppVeyorClient</Product>
-		<Company>KsWare</Company>
-		<Authors>SchreinerK</Authors>
-		<Description>A window client for AppVeyor (www.appveyor.com)</Description>
-		<VersionPrefix>0.7.1</VersionPrefix>
-		<PackageProjectUrl>https://github.com/KsWare/KsWare.AppVeyorClient</PackageProjectUrl>
-		<RepositoryUrl>https://github.com/KsWare/KsWare.AppVeyorClient.git</RepositoryUrl>
-		<RepositoryType>git</RepositoryType>
-		<PackageTags>appveyor client window yaml code-editor</PackageTags>
-		<PackageReleaseNotes></PackageReleaseNotes>
-	</PropertyGroup>
-	<PropertyGroup>
-		<ApplicationVersion>$(VersionPrefix).*</ApplicationVersion>
-		<ApplicationRevision>0</ApplicationRevision>
-	</PropertyGroup>
-	
-	<PropertyGroup>
-		<ApplicationIcon>UI\Resources\appveyor_blue.ico</ApplicationIcon>
-	</PropertyGroup>
-	<PropertyGroup>
-		<PackageIcon>PackageIcon.png</PackageIcon>
-		<PackageIconUrl />
-		<AssemblyName>KsWare.AppVeyorClient</AssemblyName>
-		<RootNamespace>KsWare.AppVeyorClient</RootNamespace>
-		<PackageId>KsWare.AppVeyorClient</PackageId>
-		<PackageReadmeFile>README.md</PackageReadmeFile>
-		<PackageRequireLicenseAcceptance>True</PackageRequireLicenseAcceptance>
-		<PackageLicenseFile>LICENSE.txt</PackageLicenseFile>
-	</PropertyGroup>
-	<PropertyGroup Condition="'$(Configuration)|$(Platform)'=='Debug|AnyCPU'">
-		<PlatformTarget>AnyCPU</PlatformTarget>
-	</PropertyGroup>
-	<PropertyGroup Condition="'$(Configuration)|$(Platform)'=='Release|AnyCPU'">
-		<PlatformTarget>AnyCPU</PlatformTarget>
-	</PropertyGroup>
-	<ItemGroup>
-		<Compile Remove="Api\**" />
-		<Compile Remove="publish\**" />
-		<Compile Remove="Shared\AvalonEditExtension\**" />
-		<Compile Remove="Shared\PresentationFramework\%28TextBox%29\**" />
-		<Compile Remove="Shared\WpfPropertyGrid\**" />
-		<EmbeddedResource Remove="Api\**" />
-		<EmbeddedResource Remove="publish\**" />
-		<EmbeddedResource Remove="Shared\AvalonEditExtension\**" />
-		<EmbeddedResource Remove="Shared\PresentationFramework\%28TextBox%29\**" />
-		<EmbeddedResource Remove="Shared\WpfPropertyGrid\**" />
-		<None Remove="Api\**" />
-		<None Remove="publish\**" />
-		<None Remove="Shared\AvalonEditExtension\**" />
-		<None Remove="Shared\PresentationFramework\%28TextBox%29\**" />
-		<None Remove="Shared\WpfPropertyGrid\**" />
-		<None Include="..\..\LICENSE.txt" Link="Properties\LICENSE.txt">
-		  <Pack>True</Pack>
-		  <PackagePath>\</PackagePath>
-		</None>
-		<None Include="..\..\PackageIcon.png" Link="Properties\PackageIcon.png">
-			<Pack>True</Pack>
-			<PackagePath></PackagePath>
-		</None>
-		<None Include="..\..\README.md" Link="Properties\README.md">
-		  <Pack>True</Pack>
-		  <PackagePath>\</PackagePath>
-		</None>
-		<Page Remove="Api\**" />
-		<Page Remove="publish\**" />
-	</ItemGroup>
-	<ItemGroup>
-		<Compile Remove="UI\Common\KeyAction.cs" />
-	</ItemGroup>
-	<ItemGroup>
-		<None Remove="AppVeyorClient.csproj.DotSettings" />
-		<None Remove="Data\AppVeyor-yaml-Dark-Colors.xshd" />
-		<None Remove="Data\deploy-templates.txt" />
-		<None Remove="Data\image-templates.txt" />
-		<None Remove="Data\Navigation-Global.txt" />
-		<None Remove="Data\notification-templates.txt" />
-		<None Remove="Data\Powershell-Dark-Colors.xshd" />
-		<None Remove="Data\Powershell.xshd" />
-		<None Remove="KsWare.AppVeyorClient.csproj.DotSettings" />
-	</ItemGroup>
-	<ItemGroup>
-		<Page Remove="UI\App\App.xaml" />
-	</ItemGroup>
-	<ItemGroup>
-		<ApplicationDefinition Include="UI\App\App.xaml">
-			<Generator>XamlIntelliSenseFileGenerator</Generator>
-		</ApplicationDefinition>
-	</ItemGroup>
-	<ItemGroup>
-		<Compile Include="Shared\AvalonEditExtension\%28ViewModels%29\CodeEditorControllerVM.cs" />
-		<Compile Include="Shared\AvalonEditExtension\%28ViewModels%29\TextEditorBehavior.cs" />
-		<Compile Include="Shared\AvalonEditExtension\%28ViewModels%29\TextEditorControllerBehavior.cs" />
-		<Compile Include="Shared\AvalonEditExtension\%28ViewModels%29\TextEditorControllerVM.cs" />
-		<Compile Include="Shared\AvalonEditExtension\%28ViewModels%29\YamlEditorControllerVM.cs" />
-		<Compile Include="Shared\AvalonEditExtension\ColorizeSearchRegex.cs" />
-		<Compile Include="Shared\AvalonEditExtension\ColorizeSearchText.cs" />
-		<Compile Include="Shared\AvalonEditExtension\DocumentPosition.cs" />
-		<Compile Include="Shared\AvalonEditExtension\MergingHighlightingLoader.cs" />
-		<Compile Include="Shared\AvalonEditExtension\TextEditorExtensions.cs" />
-		<Compile Include="Shared\PresentationFramework\%28TextBox%29\CodeTextBoxControllerVM.cs" />
-		<Compile Include="Shared\PresentationFramework\%28TextBox%29\TextBoxControllerBehavior.cs" />
-		<Compile Include="Shared\PresentationFramework\%28TextBox%29\TextBoxControllerVM.cs" />
-		<Content Include="Data\AppVeyor-yaml-Dark-Colors.xshd">
-		  <CopyToOutputDirectory>Always</CopyToOutputDirectory>
-		</Content>
-		<Content Include="Data\deploy-templates.txt">
-		  <CopyToOutputDirectory>Always</CopyToOutputDirectory>
-		</Content>
-		<Content Include="Data\image-templates.txt">
-		  <CopyToOutputDirectory>Always</CopyToOutputDirectory>
-		</Content>
-		<Content Include="Data\Navigation-Global.txt">
-		  <CopyToOutputDirectory>Always</CopyToOutputDirectory>
-		</Content>
-		<Content Include="Data\Navigation-Project.txt">
-			<CopyToOutputDirectory>Always</CopyToOutputDirectory>
-		</Content>
-		<Content Include="Data\notification-templates.txt">
-		  <CopyToOutputDirectory>Always</CopyToOutputDirectory>
-		</Content>
-		<Content Include="Data\Powershell-Dark-Colors.xshd">
-		  <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
-		</Content>
-		<Content Include="Data\Powershell.xshd">
-		  <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
-		</Content>
-		<Content Include="Data\ScriptBlockTemplates.txt" />
-		<Content Include="Data\Templates.txt">
-			<CopyToOutputDirectory>Always</CopyToOutputDirectory>
-		</Content>
-	</ItemGroup>
-	<ItemGroup>
-		<Content Include="Data\AppVeyor-Yaml.xshd">
-			<CopyToOutputDirectory>Always</CopyToOutputDirectory>
-		</Content>
-		<Content Include="shared\avaloneditextension\info.txt" />
-	</ItemGroup>
-	<ItemGroup>
-		<Resource Include="Resources\appveyor-favicon-16x16.png" />
-		<Resource Include="Resources\appveyor-favicon-32x32.png" />
-		<Resource Include="Resources\AppVeyorYamlDoc.yaml" />
-		<Resource Include="Resources\github-favicon-dark.png" />
-		<Resource Include="Resources\github-favicon.png" />
-		<Resource Include="UI\Resources\appveyor_blue.ico" />
-	</ItemGroup>
-	<ItemGroup>
-		<Content Include="Data\AppVeyorEnvironmentVariables.txt">
-			<CopyToOutputDirectory>Always</CopyToOutputDirectory>
-		</Content>
-	</ItemGroup>
-	<ItemGroup>
-		<BootstrapperPackage Include="Microsoft.Net.Framework.3.5.SP1">
-			<Visible>False</Visible>
-			<ProductName>.NET Framework 3.5 SP1</ProductName>
-			<Install>false</Install>
-		</BootstrapperPackage>
-	</ItemGroup>
-	<ItemGroup>
-		<PublishFile Include="Shared\WpfPropertyGrid\WpfPropertyGrid.txt">
-			<Visible>False</Visible>
-			<Group>
-			</Group>
-			<TargetPath>
-			</TargetPath>
-			<PublishState>Exclude</PublishState>
-			<IncludeHash>True</IncludeHash>
-			<FileType>File</FileType>
-		</PublishFile>
-	</ItemGroup>
-	<ItemGroup>
-		<PackageReference Include="Common.Logging" Version="3.4.1" />
-		<PackageReference Include="JetBrains.Annotations" Version="2024.2.0">
-			<PrivateAssets>all</PrivateAssets>
-		</PackageReference>
-		<PackageReference Include="KsWare.Presentation" Version="0.43.4" />
-		<PackageReference Include="KsWare.Presentation.Themes.Aero2Dark" Version="0.1.5" Condition="'$(Configuration)' == 'Release'"/>
-		<PackageReference Include="KsWare.Presentation.ViewFramework.Common" Version="0.3.0" />
-		<PackageReference Include="Microsoft.CSharp" Version="4.7.0" />
-		<PackageReference Include="Microsoft.Xaml.Behaviors.Wpf" Version="1.1.122" />
-		<PackageReference Include="Newtonsoft.Json" Version="13.0.3" />
-		<PackageReference Include="Microsoft.DotNet.UpgradeAssistant.Extensions.Default.Analyzers" Version="0.4.421302">
-			<PrivateAssets>all</PrivateAssets>
-		</PackageReference>
-		<PackageReference Include="AvalonEdit" Version="6.3.0.90" />
-		<PackageReference Include="Microsoft.Windows.Compatibility" Version="8.0.7" />
-		<PackageReference Include="YamlDotNet" Version="16.0.0" />
-	</ItemGroup>
-	<ItemGroup>
-		<Folder Include="Properties\PublishProfiles\" />
-		<Folder Include="Shared\Theme\" />
-	</ItemGroup>
-	<ItemGroup>
-		<ProjectReference Include="..\..\..\KsWare.Presentation.Resources.Core\src\KsWare.Presentation.Resources.Core\KsWare.Presentation.Resources.Core.csproj" Condition="'$(Configuration)' == 'Debug'"/>
-		<ProjectReference Include="..\..\..\KsWare.Presentation.Themes.Aero2Dark\src\KsWare.Presentation.Themes.Aero2Dark\KsWare.Presentation.Themes.Aero2Dark.csproj" Condition="'$(Configuration)' == 'Debug'"/>
-		<ProjectReference Include="..\KsWare.AppVeyor.Api\KsWare.AppVeyor.Api.csproj" />
-	</ItemGroup>
+﻿<?xml version="1.0" encoding="utf-8"?>
+<Project Sdk="Microsoft.NET.Sdk">
+  <PropertyGroup>
+    <TargetFramework>net8.0-windows</TargetFramework>
+    <OutputType>WinExe</OutputType>
+    <GenerateAssemblyInfo>true</GenerateAssemblyInfo>
+    <UseWindowsForms>true</UseWindowsForms>
+    <UseWPF>true</UseWPF>
+    <ImportWindowsDesktopTargets>true</ImportWindowsDesktopTargets>
+  </PropertyGroup>
+  <PropertyGroup>
+    <OutputPath></OutputPath>
+    <GeneratePackageOnBuild>False</GeneratePackageOnBuild>
+    <Copyright>Copyright © 2018-2024 by KsWare. All rights reserved.</Copyright>
+    <Product>AppVeyorClient</Product>
+    <Company>KsWare</Company>
+    <Authors>SchreinerK</Authors>
+    <Description>A window client for AppVeyor (www.appveyor.com)</Description>
+    <VersionPrefix>0.7.1</VersionPrefix>
+    <PackageProjectUrl>https://github.com/KsWare/KsWare.AppVeyorClient</PackageProjectUrl>
+    <RepositoryUrl>https://github.com/KsWare/KsWare.AppVeyorClient.git</RepositoryUrl>
+    <RepositoryType>git</RepositoryType>
+    <PackageTags>appveyor client window yaml code-editor</PackageTags>
+    <PackageReleaseNotes></PackageReleaseNotes>
+  </PropertyGroup>
+  <PropertyGroup>
+    <ApplicationVersion>$(VersionPrefix).*</ApplicationVersion>
+    <ApplicationRevision>0</ApplicationRevision>
+  </PropertyGroup>
+  <PropertyGroup>
+    <ApplicationIcon>UI\Resources\appveyor_blue.ico</ApplicationIcon>
+  </PropertyGroup>
+  <PropertyGroup>
+    <PackageIcon>PackageIcon.png</PackageIcon>
+    <PackageIconUrl />
+    <AssemblyName>KsWare.AppVeyorClient</AssemblyName>
+    <RootNamespace>KsWare.AppVeyorClient</RootNamespace>
+    <PackageId>KsWare.AppVeyorClient</PackageId>
+    <PackageReadmeFile>README.md</PackageReadmeFile>
+    <PackageRequireLicenseAcceptance>True</PackageRequireLicenseAcceptance>
+    <PackageLicenseFile>LICENSE.txt</PackageLicenseFile>
+  </PropertyGroup>
+  <PropertyGroup Condition="'$(Configuration)|$(Platform)'=='Debug|AnyCPU'">
+    <PlatformTarget>AnyCPU</PlatformTarget>
+  </PropertyGroup>
+  <PropertyGroup Condition="'$(Configuration)|$(Platform)'=='Release|AnyCPU'">
+    <PlatformTarget>AnyCPU</PlatformTarget>
+  </PropertyGroup>
+  <ItemGroup>
+    <Compile Remove="Api\**" />
+    <Compile Remove="publish\**" />
+    <Compile Remove="Shared\AvalonEditExtension\**" />
+    <Compile Remove="Shared\PresentationFramework\%28TextBox%29\**" />
+    <Compile Remove="Shared\WpfPropertyGrid\**" />
+    <EmbeddedResource Remove="Api\**" />
+    <EmbeddedResource Remove="publish\**" />
+    <EmbeddedResource Remove="Shared\AvalonEditExtension\**" />
+    <EmbeddedResource Remove="Shared\PresentationFramework\%28TextBox%29\**" />
+    <EmbeddedResource Remove="Shared\WpfPropertyGrid\**" />
+    <None Remove="Api\**" />
+    <None Remove="publish\**" />
+    <None Remove="Shared\AvalonEditExtension\**" />
+    <None Remove="Shared\PresentationFramework\%28TextBox%29\**" />
+    <None Remove="Shared\WpfPropertyGrid\**" />
+    <None Include="..\..\LICENSE.txt" Link="Properties\LICENSE.txt">
+      <Pack>True</Pack>
+      <PackagePath>\</PackagePath>
+    </None>
+    <None Include="..\..\PackageIcon.png" Link="Properties\PackageIcon.png">
+      <Pack>True</Pack>
+      <PackagePath></PackagePath>
+    </None>
+    <None Include="..\..\README.md" Link="Properties\README.md">
+      <Pack>True</Pack>
+      <PackagePath>\</PackagePath>
+    </None>
+    <Page Remove="Api\**" />
+    <Page Remove="publish\**" />
+  </ItemGroup>
+  <ItemGroup>
+    <Compile Remove="UI\Common\KeyAction.cs" />
+  </ItemGroup>
+  <ItemGroup>
+    <None Remove="AppVeyorClient.csproj.DotSettings" />
+    <None Remove="Data\AppVeyor-yaml-Dark-Colors.xshd" />
+    <None Remove="Data\deploy-templates.txt" />
+    <None Remove="Data\image-templates.txt" />
+    <None Remove="Data\Navigation-Global.txt" />
+    <None Remove="Data\notification-templates.txt" />
+    <None Remove="Data\Powershell-Dark-Colors.xshd" />
+    <None Remove="Data\Powershell.xshd" />
+    <None Remove="KsWare.AppVeyorClient.csproj.DotSettings" />
+  </ItemGroup>
+  <ItemGroup>
+    <Page Remove="UI\App\App.xaml" />
+  </ItemGroup>
+  <ItemGroup>
+    <ApplicationDefinition Include="UI\App\App.xaml">
+      <Generator>XamlIntelliSenseFileGenerator</Generator>
+    </ApplicationDefinition>
+  </ItemGroup>
+  <ItemGroup>
+    <Compile Include="Shared\AvalonEditExtension\%28ViewModels%29\CodeEditorControllerVM.cs" />
+    <Compile Include="Shared\AvalonEditExtension\%28ViewModels%29\TextEditorBehavior.cs" />
+    <Compile Include="Shared\AvalonEditExtension\%28ViewModels%29\TextEditorControllerBehavior.cs" />
+    <Compile Include="Shared\AvalonEditExtension\%28ViewModels%29\TextEditorControllerVM.cs" />
+    <Compile Include="Shared\AvalonEditExtension\%28ViewModels%29\YamlEditorControllerVM.cs" />
+    <Compile Include="Shared\AvalonEditExtension\ColorizeSearchRegex.cs" />
+    <Compile Include="Shared\AvalonEditExtension\ColorizeSearchText.cs" />
+    <Compile Include="Shared\AvalonEditExtension\DocumentPosition.cs" />
+    <Compile Include="Shared\AvalonEditExtension\MergingHighlightingLoader.cs" />
+    <Compile Include="Shared\AvalonEditExtension\TextEditorExtensions.cs" />
+    <Compile Include="Shared\PresentationFramework\%28TextBox%29\CodeTextBoxControllerVM.cs" />
+    <Compile Include="Shared\PresentationFramework\%28TextBox%29\TextBoxControllerBehavior.cs" />
+    <Compile Include="Shared\PresentationFramework\%28TextBox%29\TextBoxControllerVM.cs" />
+    <Content Include="Data\AppVeyor-yaml-Dark-Colors.xshd">
+      <CopyToOutputDirectory>Always</CopyToOutputDirectory>
+    </Content>
+    <Content Include="Data\deploy-templates.txt">
+      <CopyToOutputDirectory>Always</CopyToOutputDirectory>
+    </Content>
+    <Content Include="Data\image-templates.txt">
+      <CopyToOutputDirectory>Always</CopyToOutputDirectory>
+    </Content>
+    <Content Include="Data\Navigation-Global.txt">
+      <CopyToOutputDirectory>Always</CopyToOutputDirectory>
+    </Content>
+    <Content Include="Data\Navigation-Project.txt">
+      <CopyToOutputDirectory>Always</CopyToOutputDirectory>
+    </Content>
+    <Content Include="Data\notification-templates.txt">
+      <CopyToOutputDirectory>Always</CopyToOutputDirectory>
+    </Content>
+    <Content Include="Data\Powershell-Dark-Colors.xshd">
+      <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
+    </Content>
+    <Content Include="Data\Powershell.xshd">
+      <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
+    </Content>
+    <Content Include="Data\ScriptBlockTemplates.txt" />
+    <Content Include="Data\Templates.txt">
+      <CopyToOutputDirectory>Always</CopyToOutputDirectory>
+    </Content>
+  </ItemGroup>
+  <ItemGroup>
+    <Content Include="Data\AppVeyor-Yaml.xshd">
+      <CopyToOutputDirectory>Always</CopyToOutputDirectory>
+    </Content>
+    <Content Include="shared\avaloneditextension\info.txt" />
+  </ItemGroup>
+  <ItemGroup>
+    <Resource Include="Resources\appveyor-favicon-16x16.png" />
+    <Resource Include="Resources\appveyor-favicon-32x32.png" />
+    <Resource Include="Resources\AppVeyorYamlDoc.yaml" />
+    <Resource Include="Resources\github-favicon-dark.png" />
+    <Resource Include="Resources\github-favicon.png" />
+    <Resource Include="UI\Resources\appveyor_blue.ico" />
+  </ItemGroup>
+  <ItemGroup>
+    <Content Include="Data\AppVeyorEnvironmentVariables.txt">
+      <CopyToOutputDirectory>Always</CopyToOutputDirectory>
+    </Content>
+  </ItemGroup>
+  <ItemGroup>
+    <BootstrapperPackage Include="Microsoft.Net.Framework.3.5.SP1">
+      <Visible>False</Visible>
+      <ProductName>.NET Framework 3.5 SP1</ProductName>
+      <Install>false</Install>
+    </BootstrapperPackage>
+  </ItemGroup>
+  <ItemGroup>
+    <PublishFile Include="Shared\WpfPropertyGrid\WpfPropertyGrid.txt">
+      <Visible>False</Visible>
+      <Group></Group>
+      <TargetPath></TargetPath>
+      <PublishState>Exclude</PublishState>
+      <IncludeHash>True</IncludeHash>
+      <FileType>File</FileType>
+    </PublishFile>
+  </ItemGroup>
+  <ItemGroup>
+    <PackageReference Include="Common.Logging" Version="3.4.1" />
+    <PackageReference Include="JetBrains.Annotations" Version="2024.2.0">
+      <PrivateAssets>all</PrivateAssets>
+    </PackageReference>
+    <PackageReference Include="KsWare.Presentation" Version="0.43.4" />
+    <PackageReference Include="KsWare.Presentation.ViewFramework.Common" Version="0.3.0" />
+    <PackageReference Include="Microsoft.CSharp" Version="4.7.0" />
+    <PackageReference Include="Microsoft.Xaml.Behaviors.Wpf" Version="1.1.135" />
+    <PackageReference Include="Newtonsoft.Json" Version="13.0.3" />
+    <PackageReference Include="Microsoft.DotNet.UpgradeAssistant.Extensions.Default.Analyzers" Version="0.4.421302">
+      <PrivateAssets>all</PrivateAssets>
+    </PackageReference>
+    <PackageReference Include="AvalonEdit" Version="6.3.0.90" />
+    <PackageReference Include="Microsoft.Windows.Compatibility" Version="8.0.8" />
+    <PackageReference Include="YamlDotNet" Version="16.1.2" />
+  </ItemGroup>
+  <ItemGroup>
+    <Folder Include="Properties\PublishProfiles\" />
+    <Folder Include="Shared\Theme\" />
+  </ItemGroup>
+  <ItemGroup>
+    <PackageReference Include="KsWare.Presentation.Themes.Aero2Dark" Version="0.1.5" XCondition="'$(Configuration)' == 'Release'" />
+    <PackageReference Include="KsWare.Presentation.Resources.Core" Version="0.1.9" XCondition="'$(Configuration)' == 'Release'" />
+    <ProjectReference Condition="False" Include="..\..\..\KsWare.Presentation.Resources.Core\src\KsWare.Presentation.Resources.Core\KsWare.Presentation.Resources.Core.csproj" XCondition="'$(Configuration)' == 'Debug'" />
+    <ProjectReference Condition="False" Include="..\..\..\KsWare.Presentation.Themes.Aero2Dark\src\KsWare.Presentation.Themes.Aero2Dark\KsWare.Presentation.Themes.Aero2Dark.csproj" XCondition="'$(Configuration)' == 'Debug'" />
+  </ItemGroup>
+  <ItemGroup>
+    <ProjectReference Include="..\KsWare.AppVeyor.Api\KsWare.AppVeyor.Api.csproj" />
+  </ItemGroup>
 </Project>
