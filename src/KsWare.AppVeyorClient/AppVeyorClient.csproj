@@ -62,6 +62,7 @@
     <None Remove="Shared\AvalonEditExtension\**" />
     <None Remove="Shared\PresentationFramework\%28TextBox%29\**" />
     <None Remove="Shared\WpfPropertyGrid\**" />
+    <None Include="..\..\ChangeLog.md" Link="Properties\ChangeLog.md" />
     <None Include="..\..\LICENSE.txt" Link="Properties\LICENSE.txt">
       <Pack>True</Pack>
       <PackagePath>\</PackagePath>

@@ -1,3 +1,6 @@
+# 0.7.2 [2024-09-19]
+- small changes
+
 # 0.7.1 [2024-08-05]
 - full code editor for global.yaml (same features as for project)
 - KsWare Open Commercial License
