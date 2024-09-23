@@ -119,9 +119,10 @@ namespace KsWare.AppVeyorClient.UI.PanelYamlCodeEditor {
 		private void FillNavigation() {
 			var lines = File.ReadAllLines(NavigationTemplate);
 
-			var parent = (string) null;
-			var parentNav = (NavigationItemVM) null;
+			var parentNav = new Stack<NavigationItemVM>();
 			foreach (var line in lines) add(line);
+			return;
+
 			void add(string line) {
 				var match = Regex.Match(line, @"^\s*(?<key>[^#]+?)\s*(?:#\s*(?<description>.*?))?\s*(?:\(i\)\s*(?<tooltip>.*))?$",RegexOptions.IgnoreCase|RegexOptions.ExplicitCapture|RegexOptions.Compiled);
 				if(!match.Success) return;
@@ -130,17 +131,21 @@ namespace KsWare.AppVeyorClient.UI.PanelYamlCodeEditor {
 				var description = match.Groups["description"].Value;
 				var tooltip = match.Groups["tooltip"].Value;
 				var pattern = @"(?mnx-is)^" + Regex.Escape(key) + @"(\x20|\r\n|\n)";
-				if (!hasParent) parent = key;
+				if (!hasParent && parentNav.Count > 1) parentNav.Pop();
+				var isGroupTitle = line.StartsWith("-- ");
+				if(isGroupTitle) parentNav.Clear();
+				var parentKey = parentNav.Count == 2 ? parentNav.Peek().Key : null;
 				NavigationItems.Add(new NavigationItemVM {
+					Key = key,
 					DisplayName = line.StartsWith("-- ") ? line.Substring(3) : "  "+key,
-					IsGroupTitle = line.StartsWith("-- "),
+					IsGroupTitle = isGroupTitle,
 					RegexPattern = line.StartsWith("-- ") ? null : pattern,
 					Regex = new Regex(pattern,RegexOptions.Compiled),
-					HasTemplate = _sectionTemplates.Any(t=>t.Key==key && (!hasParent || t.Parent == parent)),
+					HasTemplate = _sectionTemplates.Any(t=>t.Key==key && (!hasParent || t.Parent == parentKey)),
 					Description = description+" "+tooltip,
-					ParentNav = parentNav
+					ParentNav = parentNav.Count>0 ? parentNav.Peek() : null
 				});
-				if (!hasParent) parentNav = NavigationItems.Last;
+				parentNav.Push(NavigationItems.Last);
 			}
 		}
 
@@ -296,7 +301,8 @@ namespace KsWare.AppVeyorClient.UI.PanelYamlCodeEditor {
 		private void DoInsertTemplate() {
 			if(SelectedNavigationItem==null) return;
 			var n = SelectedNavigationItem;
-			var templates = _sectionTemplates.Where(t => t.Key == n.DisplayName.Trim() && (n.ParentNav==null || t.Parent == n.ParentNav.DisplayName.Trim())).ToArray();
+			var templates = _sectionTemplates.Where(t => t.Key == n.DisplayName.Trim() && (n.ParentNav==null || n.ParentNav.IsGroupTitle || t.Parent == n.ParentNav.DisplayName.Trim())).ToArray();
+			var t1 = _sectionTemplates       .Where(t => t.Key == n.DisplayName.Trim()).ToArray();
 
 			SectionTemplateData selectedTemplate = null;
 			if (Keyboard.Modifiers == ModifierKeys.Control && templates.Length > 0) {

@@ -1,3 +1,6 @@
+# 0.7.3 [2024-09-23]
+- fix a bug in template selection
+
 # 0.7.2 [2024-09-19]
 - small changes
 

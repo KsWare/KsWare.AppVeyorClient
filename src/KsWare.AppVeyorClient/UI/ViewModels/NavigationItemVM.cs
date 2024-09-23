@@ -1,10 +1,12 @@
-﻿using System.Text.RegularExpressions;
+﻿using System.Diagnostics;
+using System.Text.RegularExpressions;
 using JetBrains.Annotations;
 using KsWare.Presentation;
 using KsWare.Presentation.ViewModelFramework;
 
 namespace KsWare.AppVeyorClient.UI.ViewModels {
 
+	[DebuggerDisplay("{DisplayName}")]
 	public class NavigationItemVM : ObjectVM {
 
 		public NavigationItemVM() {
@@ -27,6 +29,8 @@ namespace KsWare.AppVeyorClient.UI.ViewModels {
 
 		[Hierarchy(HierarchyType.Reference)][CanBeNull]
 		public NavigationItemVM ParentNav { get; set; }
+
+		public string Key { get; set; }
 
 	}
 
